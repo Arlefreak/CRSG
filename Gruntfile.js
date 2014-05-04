@@ -25,23 +25,23 @@ module.exports = function(grunt) {
 		    'js/src/States/LeaderBoards.js',
 		    'js/src/States/Play.js',
 		    'js/src/Main.js'],
-		    dest: 'build/DropTheLight.js',
+		    dest: 'build/crsg.js',
 	    },
 	},
 	replace: {
 	    example: {
-		src: ['build/DropTheLight.js'],             // source files array (supports minimatch)
-		dest: 'build/DropTheLight.js',             // destination directory or file
+		src: ['build/crsg.js'],             // source files array (supports minimatch)
+		dest: 'build/crsg.js',             // destination directory or file
 		replacements: [{
 		    from: 'js/res/',                   // string replacement
-		    to: '/static/Games/DropTheLight/assets/'
+		    to: '/static/Games/crsg/assets/'
 		}]
 	    }            
 	},  
 	uglify: {
 	    build: {
-		src: 'build/DropTheLight.js',
-		dest: 'build/DropTheLight.min.js'
+		src: 'build/crsg.js',
+		dest: 'build/crsg.min.js'
 	    }
 	},
 	imagemin: {

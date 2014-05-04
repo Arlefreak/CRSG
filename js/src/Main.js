@@ -1,5 +1,5 @@
 'use strict';
-var gameWidth, gameHeight;
+var gameWidth, gameHeight, isMoving;
 var BootS, PreloaderS, MainMenuS, PlayS, CreditsS, LeaderBoardsS, game;
 
 var WebFontConfig;
@@ -21,6 +21,7 @@ WebFontConfig = {
 window.onload = function () {
 	gameWidth = window.innerWidth;
 	gameHeight = window.innerHeight;
+	isMoving = false;
 	game = new Phaser.Game(gameWidth, gameHeight, Phaser.AUTO, 'gameContainer');
 	
 	// Game States

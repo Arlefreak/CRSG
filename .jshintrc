@@ -6,13 +6,16 @@
 "dropTheLights": true,
 "gameWidth": true,
 "gameHeight": true,
+"isMoving": true,
 "BootS": true,
 "PreloaderS": true,
 "MainMenuS": true,
 "PlayS": true,
 "CreditsS": true,
 "LeaderBoardsS": true,
-"game": true
+"game": true,
+"Grid": true
+
 },
 // Ignore Environment Globals
 "browser"       : true,   // Standard browser globals e.g. `window`, `document`.

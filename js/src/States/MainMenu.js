@@ -4,106 +4,38 @@
 
 	Menu.prototype = {
 		create: function() {
-			game.stage.backgroundColor = '#fff';
+			game.stage.backgroundColor = '#333333';
 			this.LIGHT_RADIUS = gameWidth/2;
 			this.highScore = 0;
 			this.lastScore = 0;
 			this.getScore();
 
-			if(this.LIGHT_RADIUS > 400){
-				this.LIGHT_RADIUS = 400;
-			}
-
-			this.shadowTexture = this.game.add.bitmapData(this.game.width, this.game.height);
-			this.shadowTexture.context.fillStyle = 'rgb(0, 0, 0)';
-			this.shadowTexture.context.fillRect(0, 0, this.game.width, this.game.height);
-
-			var gradient = this.shadowTexture.context.createRadialGradient(
-				game.world.centerX + 10 , game.world.centerY + 10, this.LIGHT_RADIUS * 0.75,
-				game.world.centerX + 10, game.world.centerY + 10, this.LIGHT_RADIUS);
-			gradient.addColorStop(0, 'rgba(255, 255, 255, 1.0)');
-			gradient.addColorStop(1, 'rgba(255, 255, 255, 0.0)');
-
-			this.shadowTexture.context.beginPath();
-			this.shadowTexture.context.fillStyle = gradient;
-			this.shadowTexture.context.arc(game.world.centerX + 10, game.world.centerY + 10,
-				this.LIGHT_RADIUS, 0, Math.PI*2);
-			this.shadowTexture.context.fill();
-
-
-			var light =  game.add.bitmapData(100, 100);
-			light.context.beginPath();
-			light.context.arc(10, 10 , 10, 0, 2 * Math.PI, false);
-			light.context.fillStyle = 'rgba(0, 0, 0, 1.0)';
-			light.context.fill();
-			game.add.sprite(game.world.centerX, game.world.centerY,light);
-
+			/* Keyboard */
 			this.enterKey = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
-			this.enterKey.onDown.add(this.startGame, this);
+			this.enterKey.onDown.add( function () { this.startState('play'); }, this);
+
+			/* Text */
+			this.titleTxt = game.add.text(game.world.centerX, game.world.centerY - 250, "CRSG", {
+				font: "100px Source Code Pro",
+				fill: "#f0f0f0",
+				align: "center"
+			});
+
+			/* Buttons */
+			this.bttPlay = game.add.button(game.world.centerX , game.world.centerY , 'buttons', function () { this.startState('play'); }, this, 'bttStartHover', 'bttStartInactive', 'bttStartActive');
+			this.bttAbout = game.add.button(game.world.centerX  - 200, game.world.centerY + 200, 'buttons', function () { this.startState('credits'); }, this, 'bttAboutHover', 'bttAboutInactive', 'bttAboutActive');
+			this.bttLeader = game.add.button(game.world.centerX + 200, game.world.centerY + 200, 'buttons', function () { this.startState('leaderboards'); }, this, 'bttLeaderHover', 'bttLeaderInactive', 'bttLeaderActive');
 			
-			this.lightSprite = game.add.image(0, 0, this.shadowTexture);
-			this.lightSprite.blendMode = Phaser.blendModes.MULTIPLY;
-
-			if (!this.game.device.desktop){
-				this.titleTxt = game.add.text(game.world.centerX, 50, "Drop the light", {
-					font: "20px Source Code Pro",
-					fill: "#f0f0f0",
-					align: "center"
-				});
-				this.tutorialTxt = game.add.text(game.world.centerX, 150 , "Tap the screen to start", {
-					font: "18px Source Code Pro",
-					fill: "#0f0f0f",
-					align: "center"
-				});
-				this.scoreTxt = game.add.text(game.world.centerX, 200, " High Score: " + this.highScore + "\n Last Score: " + this.lastScore, {
-					font: "15px Source Code Pro",
-					fill: "#0f0f0f",
-					align: "left"
-				});
-
-				this.creditsTxt = game.add.text(game.world.centerX, this.world.height - 20, " Made with Phaser by Arlefreak ", {
-					font: "15px Source Code Pro",
-					fill: "#ffffff",
-					align: "left"
-				});
-			}else{
-				this.titleTxt = game.add.text(game.world.centerX, 150, "Drop the light", {
-					font: "30px Source Code Pro",
-					fill: "#0f0f0f",
-					align: "center"
-				});
-				this.tutorialTxt = game.add.text(game.world.centerX, 200 , "Use the arrow keys & press enter to start", {
-					font: "20px Source Code Pro",
-					fill: "#0f0f0f",
-					align: "center"
-				});
-				this.scoreTxt = game.add.text(game.world.centerX, 250, " High Score: " + this.highScore + "\n Last Score: " + this.lastScore, {
-					font: "20px Source Code Pro",
-					fill: "#0f0f0f",
-					align: "left"
-				});
-
-				this.creditsTxt = game.add.text(game.world.centerX, this.world.height - 20, " Made with Phaser by Arlefreak ", {
-					font: "14px Source Code Pro",
-					fill: "#ffffff",
-					align: "left"
-				});
-			}
-
+			/* Anchords */
+			this.bttPlay.anchor.setTo(0.5, 0.5);
+			this.bttAbout.anchor.setTo(0.5, 0.5);
+			this.bttLeader.anchor.setTo(0.5, 0.5);
 			this.titleTxt.anchor.setTo(0.5, 0.5);
-			this.tutorialTxt.anchor.setTo(0.5, 0.5);
-			this.scoreTxt.anchor.setTo(0.5, 0.5);
-			this.creditsTxt.anchor.setTo(0.5, 0.5);
+			
 		},
 
-		update: function() {
-			if (game.input.activePointer.isDown){
-				this.startGame();
-			}
-		},
-
-		startGame: function() {
-			game.state.start('play');
+		startState: function(_state) {
+			game.state.start(_state);
 		},
 
 		getScore: function(){
