@@ -72,6 +72,7 @@
 
 		quitGame: function (state) {
 			level++;
+			this.grid = {};
 			this.fx.play('',0,1,false);
 			localStorage.setItem('lastScore', this.score);
 			game.time.events.remove(this.timer);
@@ -97,7 +98,6 @@
 			matrix.push(0);
 		}
 
-		matrix[0] = 5;
 		for (var i = 6-1; i >= 0; i--) {
 			matrix[i+22] = 1;
 			matrix[i+72] = 1;
@@ -120,6 +120,7 @@
 		for (var i = elements.length - 1; i >= 0; i--) {
 			matrix[indexes[i]] = elements[i];
 		}
+		matrix[0] = 5;
 
 		return matrix;
 	};
