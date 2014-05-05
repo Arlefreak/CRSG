@@ -20,13 +20,27 @@
 			
 			/* Groups */
 			this.grid = new Grid(10, 10, gameWidth, gameHeight, 50, true, true);
+			var matrix = [
+			5,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,1,1,1,1,1,1,0,0,
+			0,0,1,0,0,0,0,3,0,0,
+			0,0,1,0,0,0,0,1,0,0,
+			0,0,1,0,0,0,0,1,0,0,
+			0,0,2,0,0,0,0,1,0,0,
+			0,0,1,1,1,1,4,1,0,0,
+			0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0
+			];
+			
+			this.grid.addLayer(matrix, 'walls', 'tiles',[null,'TileWall','TileEnemy','TileExit','TilePowerUp','TilePlayer'], 256, 256, 1,2,3,4,5);
 
 			/* Sprites */
-			this.player = game.add.sprite(game.world.centerX, game.world.centerY, 'tiles');
+			/*this.player = game.add.sprite(game.world.centerX, game.world.centerY, 'tiles');
 			this.player.frameName = 'TilePlayer';
 			var convertion = this.grid.cellWidth/256;
 			
-			this.player.scale.set(convertion);
+			this.player.scale.set(convertion);*/
 
 			/* Text */
 

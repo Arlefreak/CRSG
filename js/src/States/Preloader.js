@@ -19,6 +19,7 @@
 			this.load.image('particle', 'js/res/img/particle.png');
 			this.load.atlasJSONHash('buttons', 'js/res/spritesheets/buttons.png', 'js/res/spritesheets/buttons.json');
 			this.load.atlasJSONHash('tiles', 'js/res/spritesheets/tiles.png', 'js/res/spritesheets/tiles.json');
+			game.load.image('tiles2', 'js/res/spritesheets/tiles76x76.png');
 		},
 		create: function() {
 			this.preloadBar.cropEnabled = false;

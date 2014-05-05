@@ -18,6 +18,7 @@ module.exports = function(grunt) {
 	    dist: {
 		src: [
 		    'js/lib/Phaser.js',
+		    'js/src/Prefabs/Grid.js',
 		    'js/src/States/Boot.js',
 		    'js/src/States/Preloader.js',
 		    'js/src/States/MainMenu.js',
@@ -25,23 +26,23 @@ module.exports = function(grunt) {
 		    'js/src/States/LeaderBoards.js',
 		    'js/src/States/Play.js',
 		    'js/src/Main.js'],
-		    dest: 'build/crsg.js',
+		    dest: 'build/CRSG.js',
 	    },
 	},
 	replace: {
 	    example: {
-		src: ['build/crsg.js'],             // source files array (supports minimatch)
-		dest: 'build/crsg.js',             // destination directory or file
+		src: ['build/CRSG.js'],             // source files array (supports minimatch)
+		dest: 'build/CRSG.js',             // destination directory or file
 		replacements: [{
 		    from: 'js/res/',                   // string replacement
-		    to: '/static/Games/crsg/assets/'
+		    to: '/static/Games/CRSG/assets/'
 		}]
 	    }            
 	},  
 	uglify: {
 	    build: {
-		src: 'build/crsg.js',
-		dest: 'build/crsg.min.js'
+		src: 'build/CRSG.js',
+		dest: 'build/CRSG.min.js'
 	    }
 	},
 	imagemin: {
