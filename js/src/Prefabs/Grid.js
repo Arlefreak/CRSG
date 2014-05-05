@@ -172,7 +172,7 @@ Grid.prototype.updateMarker = function() {
 	}else{
 		this.changeMarkerColor(0xcc3333);
 	}
-	if (game.input.mousePointer.isDown)
+	if (game.input.mousePointer.isDown || game.input.pointer1.isDown)
 	{
 		if(game.input.activePointer.worldX <= sprite.x + (this.cellWidth * 3) && game.input.activePointer.worldY <= sprite.y + (this.cellWidth * 3)  ){
 			if (game.input.activePointer.worldX >= sprite.x){

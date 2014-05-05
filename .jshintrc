@@ -8,6 +8,7 @@
 "gameHeight": true,
 "isMoving": true,
 "BootS": true,
+"level": true,
 "PreloaderS": true,
 "MainMenuS": true,
 "PlayS": true,
