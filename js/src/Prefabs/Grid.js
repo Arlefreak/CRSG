@@ -165,13 +165,19 @@ Grid.prototype.changeMarkerColor = function (_color) {
 
 Grid.prototype.updateMarker = function() {
 	var sprite = this.getAt(1).getAt(this.moveTileIndex);
+	var markerLimitX = (sprite.x + this.cellWidth/2) + (this.cellWidth * 1.5);
+	var markerLimitY = (sprite.y + this.cellHeight/2) + (this.cellHeight * 1.5);
+
 	this.marker.x = game.input.activePointer.worldX - this.cellWidth/2;
 	this.marker.y = game.input.activePointer.worldY - this.cellHeight/2;
-	if(game.input.activePointer.worldX <= sprite.x + (this.cellWidth * 3) && game.input.activePointer.worldY <= sprite.y + (this.cellWidth * 3)  ){
+	if( game.input.activePointer.worldX > markerLimitX){
+		//game.input.activePointer.worldX < markerLimitX
+		//game.input.activePointer.worldX > (markerLimitX * -1) && 
 		this.changeMarkerColor(0x529024);
 	}else{
 		this.changeMarkerColor(0xcc3333);
 	}
+
 	if (game.input.mousePointer.isDown || game.input.pointer1.isDown)
 	{
 		if(game.input.activePointer.worldX <= sprite.x + (this.cellWidth * 3) && game.input.activePointer.worldY <= sprite.y + (this.cellWidth * 3)  ){
