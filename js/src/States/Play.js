@@ -120,8 +120,7 @@
 		for (var i = elements.length - 1; i >= 0; i--) {
 			matrix[indexes[i]] = elements[i];
 		}
-		//matrix[0] = 5;
-		matrix[55] = 5;
+		matrix[0] = 5;
 
 		return matrix;
 	};
