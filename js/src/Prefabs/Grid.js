@@ -26,6 +26,7 @@ var Grid = function (_rows, _columns, _width, _height, _margin, _square, _draw) 
 	this.map = game.add.tilemap();
 	this.moveTileIndex = 0;
 	this.movableSprite = {};
+	this.canMove = false;
 	
 	if(this.square){
 		if (gameWidth > gameHeight){
@@ -40,12 +41,15 @@ var Grid = function (_rows, _columns, _width, _height, _margin, _square, _draw) 
 	this.cellWidth = (this.width - this.margin * 2)/this.columns;
 	this.cellHeight = (this.height - this.margin * 2)/this.rows;
 
+	this.limitTop =  this.margin;
+	this.limitBottom = (this.cellHeight * this.rows);
+	this.limitRight = (this.cellWidth * this.columns );
+	this.limitLeft = this.margin;
 
 	if(this.draw){
 		this.drawGrid();
 	}
 
-	game.input.setMoveCallback(this.updateMarker, this);
 	this.createMarker();
 };
 
@@ -80,38 +84,70 @@ Grid.prototype.move = function (_sprite,_direction){
 	var e = game.add.tween(this.movableSprite);
 	e.onStart.add(function(){isMoving = true;});
 	e.onComplete.add(function(){isMoving = false;})
-	var limitLeft	= game.world.centerX - (this.cellWidth * (this.columns / 2));
-	var limitRight	= game.world.centerX + (this.cellWidth * (this.columns / 2));
-	var limitUp 	= game.world.centerY - (this.cellHeight * (this.rows / 2));
-	var limitDown	= game.world.centerY + (this.cellHeight * (this.rows / 2) - 1);
-
+	var mLeft = Math.round(((this.movableSprite.x - this.cellWidth)- (this.margin % this.cellWidth)) / this.cellWidth) * this.cellWidth + (this.margin % this.cellWidth) - 6;
+	var mRight = Math.round(((this.movableSprite.x + this.cellWidth)- (this.margin % this.cellWidth)) / this.cellWidth) * this.cellWidth + (this.margin % this.cellWidth) - 6;
+	var mUp = Math.round(((this.movableSprite.y - this.cellWidth)- (this.margin % this.cellWidth)) / this.cellWidth) * this.cellWidth + (this.margin % this.cellWidth) - 6;
+	var mDown = Math.round(((this.movableSprite.y + this.cellWidth)- (this.margin % this.cellWidth)) / this.cellWidth) * this.cellWidth + (this.margin % this.cellWidth) - 6;
+	/*var mTopLeft = Math.round(((this.movableSprite.y + this.cellWidth)- (this.margin % this.cellWidth)) / this.cellWidth) * this.cellWidth + (this.margin % this.cellWidth) - 6;
+	var mTopRight = Math.round(((this.movableSprite.y + this.cellWidth)- (this.margin % this.cellWidth)) / this.cellWidth) * this.cellWidth + (this.margin % this.cellWidth) - 6;
+	var mBottomLeft = Math.round(((this.movableSprite.y + this.cellWidth)- (this.margin % this.cellWidth)) / this.cellWidth) * this.cellWidth + (this.margin % this.cellWidth) - 6;
+	var mBottomRight = Math.round(((this.movableSprite.y + this.cellWidth)- (this.margin % this.cellWidth)) / this.cellWidth) * this.cellWidth + (this.margin % this.cellWidth) - 6;
+	*/
 	if(!isMoving){
 		switch(_direction){
 			case 'left':
-			console.log('Left: ' + limitLeft + ' Player: ' + (this.movableSprite.x - this.cellWidth));
-			if (this.movableSprite.x - this.cellWidth > limitLeft){
-				e.to({ x: this.movableSprite.x - this.cellWidth }, 250, Phaser.Easing.Linear.None, false, 0 , 0, false);
+			console.log('Left: ' + this.limitLeft + ' Player: ' + this.movableSprite.x + ' CellWidth: ' + this.cellWidth);
+			if (this.movableSprite.x - (this.cellWidth/2) >= this.limitLeft){
+				e.to({ x: mLeft }, 250, Phaser.Easing.Linear.None, false, 0 , 0, false);
 				e.start();
 			}
 			break;
 			case 'up':
-			console.log('Up: ' + limitUp + ' Player: ' + (this.movableSprite.y - this.cellHeight));
-			if (this.movableSprite.y - this.cellHeight > limitUp){
-				e.to({ y: this.movableSprite.y - this.cellHeight }, 250, Phaser.Easing.Linear.None, false, 0 , 0, false);
+			console.log('Up: ' + this.limitUp + ' Player: ' + (this.movableSprite.y - this.cellHeight));
+			if (this.movableSprite.y - (this.cellHeight/2) > this.limitTop){
+				e.to({ y: mUp }, 250, Phaser.Easing.Linear.None, false, 0 , 0, false);
 				e.start();
 			}
 			break;
 			case 'right':
-			console.log('Right: ' + limitRight + ' Player: ' + this.movableSprite.x + this.cellWidth);
-			if (this.movableSprite.x + this.cellWidth < limitRight){
-				e.to({ x: this.movableSprite.x + this.cellWidth }, 250, Phaser.Easing.Linear.None, false, 0 , 0, false);
+			console.log('Right: ' + this.limitRight + ' Player: ' + this.movableSprite.x + this.cellWidth);
+			if (this.movableSprite.x + (this.cellWidth/2) < this.limitRight){
+				e.to({ x: mRight }, 250, Phaser.Easing.Linear.None, false, 0 , 0, false);
 				e.start();
 			}
 			break;
 			case 'down':
-			console.log('Down: ' + limitDown + ' Player: ' + this.movableSprite.y + this.cellHeight);
-			if (this.movableSprite.y + this.cellHeight < limitDown){
-				e.to({ y: this.movableSprite.y + this.cellHeight }, 250, Phaser.Easing.Linear.None, false, 0 , 0, false);
+			console.log('Down: ' + this.limitDown + ' Player: ' + this.movableSprite.y + this.cellHeight);
+			if (this.movableSprite.y + (this.cellHeight/2) < this.limitBottom){
+				e.to({ y: mDown }, 250, Phaser.Easing.Linear.None, false, 0 , 0, false);
+				e.start();
+			}
+			break;
+			case 'topleft':
+			console.log('Down: ' + this.limitDown + ' Player: ' + this.movableSprite.y + this.cellHeight);
+			if (this.movableSprite.y + (this.cellHeight/2) < this.limitBottom){
+				e.to({ y: mDown }, 250, Phaser.Easing.Linear.None, false, 0 , 0, false);
+				e.start();
+			}
+			break;
+			case 'topright':
+			console.log('Down: ' + this.limitDown + ' Player: ' + this.movableSprite.y + this.cellHeight);
+			if (this.movableSprite.y + (this.cellHeight/2) < this.limitBottom){
+				e.to({ y: mDown }, 250, Phaser.Easing.Linear.None, false, 0 , 0, false);
+				e.start();
+			}
+			break;
+			case 'bottomleft':
+			console.log('Down: ' + this.limitDown + ' Player: ' + this.movableSprite.y + this.cellHeight);
+			if (this.movableSprite.y + (this.cellHeight/2) < this.limitBottom){
+				e.to({ y: mDown }, 250, Phaser.Easing.Linear.None, false, 0 , 0, false);
+				e.start();
+			}
+			break;
+			case 'bottomdown':
+			console.log('Down: ' + this.limitDown + ' Player: ' + this.movableSprite.y + this.cellHeight);
+			if (this.movableSprite.y + (this.cellHeight/2) < this.limitBottom){
+				e.to({ y: mDown }, 250, Phaser.Easing.Linear.None, false, 0 , 0, false);
 				e.start();
 			}
 			break;
@@ -172,56 +208,42 @@ Grid.prototype.changeMarkerColor = function (_color) {
 	this.marker.endFill();
 };
 
+Grid.prototype.update = function() {
+
+	this.updateMarker();
+};
+
+
 Grid.prototype.updateMarker = function() {
 	
-	var spriteCenter = this.movableSprite.x + this.movableSprite.width/2;
-
-	this.debugS = game.add.graphics();
+	//var spriteCenter = this.movableSprite.x + this.movableSprite.width/2;
+	this.canMove = false;
+	/*this.debugS = game.add.graphics();
 	this.debugS.beginFill(0xcc3333, 0.5);
 	this.debugS.drawRect(0, 0, 5, 5);
 	this.debugS.endFill();
 	this.debugS.x = this.movableSprite.x;
-	this.debugS.y = this.movableSprite.y;
+	this.debugS.y = this.movableSprite.y;*/
+	this.markerCenterX = this.marker.x - 6;
+	this.markerCenterY = this.marker.y - 6;
 
-	this.marker.x    = Math.round(( (game.input.activePointer.worldX - this.cellWidth/2) - (this.margin % this.cellWidth)) / this.cellWidth) * this.cellWidth + (this.margin % this.cellWidth);
-	this.marker.y    = Math.round(( (game.input.activePointer.worldY - this.cellHeight/2) - (this.margin % this.cellHeight)) / this.cellHeight) * this.cellHeight + (this.margin % this.cellHeight);
-	var markerCenterX = this.marker.x - 6;
-	var markerCenterY = this.marker.y - 6;
+	if ((game.input.activePointer.worldX > this.limitLeft && game.input.activePointer.worldX < this.limitRight + this.margin) && (game.input.activePointer.worldY > this.limitTop && game.input.activePointer.worldY <  this.limitBottom)){
+		this.marker.x    = Math.round(( (game.input.activePointer.worldX - this.cellWidth/2) - (this.margin % this.cellWidth)) / this.cellWidth) * this.cellWidth + (this.margin % this.cellWidth);
+		this.marker.y    = Math.round(( (game.input.activePointer.worldY - this.cellHeight/2) - (this.margin % this.cellHeight)) / this.cellHeight) * this.cellHeight + (this.margin % this.cellHeight);
+	}
+	
 
-	//console.log('Marker center: ' + markerCenterY + ' SpriteCenter: ' + this.movableSprite.y + ' CellWidth: ' + this.cellWidth + ' spriteCenter2: ' + spriteCenter);  
-	//console.log('Up: '		+ (markerCenterY > this.movableSprite.y - (this.cellWidth * 2)));
-	/*console.log('Down: '	+ markerCenterY < this.movableSprite.y + (this.cellWidth*2));
-	console.log('Left: '	+ markerCenterX > this.movableSprite.x - (this.cellWidth * 2));
-	console.log('Right: '	+ markerCenterX < this.movableSprite.x + (this.cellWidth *2));*/
+	//console.log('Marker center: ' + this.markerCenterY + ' SpriteCenter: ' + this.movableSprite.y + ' CellWidth: ' + this.cellWidth + ' spriteCenter2: ' + spriteCenter);  
+	//console.log('Up: '		+ (this.markerCenterY > this.movableSprite.y - (this.cellWidth * 2)));
+	/*console.log('Down: '	+ this.markerCenterY < this.movableSprite.y + (this.cellWidth*2));
+	console.log('Left: '	+ this.markerCenterX > this.movableSprite.x - (this.cellWidth * 2));
+	console.log('Right: '	+ this.markerCenterX < this.movableSprite.x + (this.cellWidth *2));*/
 
-	/*if (markerCenterX !== this.movableSprite.x && markerCenterX > this.movableSprite.x - (this.cellWidth * 2) && markerCenterX < this.movableSprite.x + (this.cellWidth *2)){
+	if ( !isMoving&& (this.markerCenterY !== this.movableSprite.y || this.markerCenterX !== this.movableSprite.x) && (this.markerCenterY > this.movableSprite.y - (this.cellWidth * 2) && this.markerCenterY < this.movableSprite.y + (this.cellWidth*2)) && (this.markerCenterX > this.movableSprite.x - (this.cellWidth * 2) && this.markerCenterX < this.movableSprite.x + (this.cellWidth *2))){
 		this.changeMarkerColor(0x529024);
+		this.canMove = true;
 	}else {
 		this.changeMarkerColor(0xcc3333);
+		this.canMove = false;
 	}
-
-	if (markerCenterY !== this.movableSprite.x && markerCenterY > this.movableSprite.y - (this.cellWidth * 2) && markerCenterY < this.movableSprite.y + (this.cellWidth*2)){
-		this.changeMarkerColor(0x529024);
-	}else {
-		this.changeMarkerColor(0xcc3333);
-	}*/
-
-	if ((markerCenterY !== this.movableSprite.y || markerCenterX !== this.movableSprite.x) && (markerCenterY > this.movableSprite.y - (this.cellWidth * 2) && markerCenterY < this.movableSprite.y + (this.cellWidth*2)) && (markerCenterX > this.movableSprite.x - (this.cellWidth * 2) && markerCenterX < this.movableSprite.x + (this.cellWidth *2))){
-		this.changeMarkerColor(0x529024);
-	}else {
-		this.changeMarkerColor(0xcc3333);
-	}
-
-
-	if (game.input.mousePointer.isDown || game.input.pointer1.isDown)
-	{
-		if(game.input.activePointer.worldX <= this.movableSprite.x + (this.cellWidth * 3) && game.input.activePointer.worldY <= this.movableSprite.y + (this.cellWidth * 3)  ){
-			if (game.input.activePointer.worldX >= this.movableSprite.x){
-				this.move(null, 'right');
-			}else{
-				this.move(null, 'left');
-			}
-		}
-	}
-
 }

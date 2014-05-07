@@ -51,16 +51,17 @@
 			/* Particles */
 
 			/* Keyboard */
-			this.upKey = game.input.keyboard.addKey(Phaser.Keyboard.UP);
+			/*this.upKey = game.input.keyboard.addKey(Phaser.Keyboard.UP);
 			this.downKey = game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
 			this.leftKey = game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
-			this.rightKey = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
+			this.rightKey = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);*/
 			this.escKey = game.input.keyboard.addKey(Phaser.Keyboard.ESC);
 
-			this.upKey.onDown.add(function () { this.grid.move(this.player,'up'); },this);
+			/*this.upKey.onDown.add(function () { this.grid.move(this.player,'up'); },this);
 			this.downKey.onDown.add(function () { this.grid.move(this.player,'down'); },this);
 			this.leftKey.onDown.add(function () { this.grid.move(this.player,'left'); },this);
-			this.rightKey.onDown.add(function () { this.grid.move(this.player,'right'); },this);
+			this.rightKey.onDown.add(function () { this.grid.move(this.player,'right'); },this);*/
+			game.input.onDown.add(this.move, this);
 			this.escKey.onDown.add(function () { this.quitGame('mainmenu'); }, this);
 		},
 
@@ -124,6 +125,24 @@
 
 		return matrix;
 	};
+
+	Play.prototype.move = function() {
+		if(this.grid.canMove){
+			if(Math.round(this.grid.movableSprite.x) === Math.round(this.grid.markerCenterX)){
+				if(Math.round(this.grid.movableSprite.y) < Math.round(this.grid.markerCenterY)){
+					this.grid.move(null, 'down');
+				}else{
+					this.grid.move(null, 'up');
+				}
+			}else if(Math.round(this.grid.movableSprite.y) === Math.round(this.grid.markerCenterY)){
+				if(Math.round(this.grid.movableSprite.x) < Math.round(this.grid.markerCenterX)){
+					this.grid.move(null, 'right');
+				}else{
+					this.grid.move(null, 'left');
+				}
+			}
+		}
+	}
 
 	PlayS = Play;
 }());
