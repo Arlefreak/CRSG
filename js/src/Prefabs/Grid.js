@@ -25,6 +25,7 @@ var Grid = function (_rows, _columns, _width, _height, _margin, _square, _draw) 
 	this.draw = _draw;
 	this.map = game.add.tilemap();
 	this.moveTileIndex = 0;
+	this.movableSprite = {};
 	
 	if(this.square){
 		if (gameWidth > gameHeight){
@@ -76,8 +77,7 @@ Grid.prototype.drawGrid = function (){
 }
 
 Grid.prototype.move = function (_sprite,_direction){
-	var sprite = this.getAt(1).getAt(this.moveTileIndex);
-	var e = game.add.tween(sprite);
+	var e = game.add.tween(this.movableSprite);
 	e.onStart.add(function(){isMoving = true;});
 	e.onComplete.add(function(){isMoving = false;})
 	var limitLeft	= game.world.centerX - (this.cellWidth * (this.columns / 2));
@@ -88,30 +88,30 @@ Grid.prototype.move = function (_sprite,_direction){
 	if(!isMoving){
 		switch(_direction){
 			case 'left':
-			console.log('Left: ' + limitLeft + ' Player: ' + (sprite.x - this.cellWidth));
-			if (sprite.x - this.cellWidth > limitLeft){
-				e.to({ x: sprite.x - this.cellWidth }, 250, Phaser.Easing.Linear.None, false, 0 , 0, false);
+			console.log('Left: ' + limitLeft + ' Player: ' + (this.movableSprite.x - this.cellWidth));
+			if (this.movableSprite.x - this.cellWidth > limitLeft){
+				e.to({ x: this.movableSprite.x - this.cellWidth }, 250, Phaser.Easing.Linear.None, false, 0 , 0, false);
 				e.start();
 			}
 			break;
 			case 'up':
-			console.log('Up: ' + limitUp + ' Player: ' + (sprite.y - this.cellHeight));
-			if (sprite.y - this.cellHeight > limitUp){
-				e.to({ y: sprite.y - this.cellHeight }, 250, Phaser.Easing.Linear.None, false, 0 , 0, false);
+			console.log('Up: ' + limitUp + ' Player: ' + (this.movableSprite.y - this.cellHeight));
+			if (this.movableSprite.y - this.cellHeight > limitUp){
+				e.to({ y: this.movableSprite.y - this.cellHeight }, 250, Phaser.Easing.Linear.None, false, 0 , 0, false);
 				e.start();
 			}
 			break;
 			case 'right':
-			console.log('Right: ' + limitRight + ' Player: ' + sprite.x + this.cellWidth);
-			if (sprite.x + this.cellWidth < limitRight){
-				e.to({ x: sprite.x + this.cellWidth }, 250, Phaser.Easing.Linear.None, false, 0 , 0, false);
+			console.log('Right: ' + limitRight + ' Player: ' + this.movableSprite.x + this.cellWidth);
+			if (this.movableSprite.x + this.cellWidth < limitRight){
+				e.to({ x: this.movableSprite.x + this.cellWidth }, 250, Phaser.Easing.Linear.None, false, 0 , 0, false);
 				e.start();
 			}
 			break;
 			case 'down':
-			console.log('Down: ' + limitDown + ' Player: ' + sprite.y + this.cellHeight);
-			if (sprite.y + this.cellHeight < limitDown){
-				e.to({ y: sprite.y + this.cellHeight }, 250, Phaser.Easing.Linear.None, false, 0 , 0, false);
+			console.log('Down: ' + limitDown + ' Player: ' + this.movableSprite.y + this.cellHeight);
+			if (this.movableSprite.y + this.cellHeight < limitDown){
+				e.to({ y: this.movableSprite.y + this.cellHeight }, 250, Phaser.Easing.Linear.None, false, 0 , 0, false);
 				e.start();
 			}
 			break;
@@ -139,7 +139,12 @@ Grid.prototype.addLayer = function (_matrix, _name,_tileset,_tilesetKeys,_tileWi
 			layer.x = this.margin;
 			layer.y = this.margin;
 			if (_matrix[i] === _movable){
-				this.moveTileIndex = layer.length-1;
+				tmpTile.anchor.setTo(0.5,0.5);
+				tmpTile.x = Math.round(( (tmpTile.x ) - (this.margin % this.cellWidth)) / this.cellWidth) * this.cellWidth + (this.margin % this.cellWidth);
+				tmpTile.y = Math.round(( (tmpTile.y ) - (this.margin % this.cellWidth)) / this.cellWidth) * this.cellWidth + (this.margin % this.cellWidth);
+				//tmpTile.x += this.cellWidth/2;
+				//tmpTile.y += this.cellWidth/2;
+				this.movableSprite = tmpTile;
 			}
 			//console.log( this.game.cache._images[_tileset].frameData._frameNames);
 			console.log('Width: ' + this.width + ' World: ' + game.world.centerX);
@@ -149,6 +154,7 @@ Grid.prototype.addLayer = function (_matrix, _name,_tileset,_tilesetKeys,_tileWi
 };
 
 Grid.prototype.createMarker = function () {
+	
 
 	this.marker = game.add.graphics();
 	this.changeMarkerColor(0xcc3333);
@@ -164,18 +170,33 @@ Grid.prototype.changeMarkerColor = function (_color) {
 };
 
 Grid.prototype.updateMarker = function() {
-	var sprite = this.getAt(1).getAt(this.moveTileIndex);
-	this.marker.x = game.input.activePointer.worldX - this.cellWidth/2;
-	this.marker.y = game.input.activePointer.worldY - this.cellHeight/2;
-	if(game.input.activePointer.worldX <= sprite.x + (this.cellWidth * 3) && game.input.activePointer.worldY <= sprite.y + (this.cellWidth * 3)  ){
+	
+	var spriteCenter = this.movableSprite.x + this.movableSprite.width/2;
+
+	//sprite.x =   Math.round(( (game.input.activePointer.worldX - this.cellWidth/2) - (this.margin % this.cellWidth)) / this.cellWidth) * this.cellWidth + (this.margin % this.cellWidth);
+	/*this.debugS = game.add.graphics();
+	this.debugS.beginFill(0xcc3333, 0.5);
+	this.debugS.drawRect(0, 0, sprite.width, sprite.width);
+	this.debugS.endFill();
+
+	this.debugS.x = sprite.x;
+	this.debugS.y = sprite.y;*/
+
+	this.marker.x    = Math.round(( (game.input.activePointer.worldX - this.cellWidth/2) - (this.margin % this.cellWidth)) / this.cellWidth) * this.cellWidth + (this.margin % this.cellWidth);
+	this.marker.y    = Math.round(( (game.input.activePointer.worldY - this.cellHeight/2) - (this.margin % this.cellHeight)) / this.cellHeight) * this.cellHeight + (this.margin % this.cellHeight);
+	var markerCenterX = this.marker.x + this.cellWidth/2;
+	console.log('Marker center: ' + markerCenterX + ' SpriteCenter: ' + this.movableSprite.x + ' CellWidth: ' + this.cellWidth + ' spriteCenter2: ' + spriteCenter);  
+	if((markerCenterX < this.movableSprite.x + (this.cellWidth/2) && markerCenterX > this.movableSprite.x - (this.cellWidth/2)) || (markerCenterX < this.movableSprite.x + (this.cellWidth) && markerCenterX > this.movableSprite.x + (this.cellWidth/2))){
 		this.changeMarkerColor(0x529024);
 	}else{
 		this.changeMarkerColor(0xcc3333);
 	}
+
+
 	if (game.input.mousePointer.isDown || game.input.pointer1.isDown)
 	{
-		if(game.input.activePointer.worldX <= sprite.x + (this.cellWidth * 3) && game.input.activePointer.worldY <= sprite.y + (this.cellWidth * 3)  ){
-			if (game.input.activePointer.worldX >= sprite.x){
+		if(game.input.activePointer.worldX <= this.movableSprite.x + (this.cellWidth * 3) && game.input.activePointer.worldY <= this.movableSprite.y + (this.cellWidth * 3)  ){
+			if (game.input.activePointer.worldX >= this.movableSprite.x){
 				this.move(null, 'right');
 			}else{
 				this.move(null, 'left');
