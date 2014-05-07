@@ -138,12 +138,13 @@ Grid.prototype.addLayer = function (_matrix, _name,_tileset,_tilesetKeys,_tileWi
 			layer.add(tmpTile);
 			layer.x = this.margin;
 			layer.y = this.margin;
+
+			tmpTile.anchor.setTo(0.5,0.5);
+			tmpTile.x = Math.round(((tmpTile.x + this.cellWidth/2)- (this.margin % this.cellWidth)) / this.cellWidth) * this.cellWidth + (this.margin % this.cellWidth);
+			tmpTile.y = Math.round(((tmpTile.y + this.cellWidth/2)-(this.margin % this.cellWidth)) / this.cellWidth) * this.cellWidth + (this.margin % this.cellWidth);
+			tmpTile.x -= 6;
+			tmpTile.y -= 6;
 			if (_matrix[i] === _movable){
-				tmpTile.anchor.setTo(0.5,0.5);
-				tmpTile.x = Math.round(( (tmpTile.x ) - (this.margin % this.cellWidth)) / this.cellWidth) * this.cellWidth + (this.margin % this.cellWidth);
-				tmpTile.y = Math.round(( (tmpTile.y ) - (this.margin % this.cellWidth)) / this.cellWidth) * this.cellWidth + (this.margin % this.cellWidth);
-				//tmpTile.x += this.cellWidth/2;
-				//tmpTile.y += this.cellWidth/2;
 				this.movableSprite = tmpTile;
 			}
 			//console.log( this.game.cache._images[_tileset].frameData._frameNames);
@@ -154,6 +155,8 @@ Grid.prototype.addLayer = function (_matrix, _name,_tileset,_tilesetKeys,_tileWi
 };
 
 Grid.prototype.createMarker = function () {
+	
+
 	
 
 	this.marker = game.add.graphics();
@@ -173,22 +176,39 @@ Grid.prototype.updateMarker = function() {
 	
 	var spriteCenter = this.movableSprite.x + this.movableSprite.width/2;
 
-	//sprite.x =   Math.round(( (game.input.activePointer.worldX - this.cellWidth/2) - (this.margin % this.cellWidth)) / this.cellWidth) * this.cellWidth + (this.margin % this.cellWidth);
-	/*this.debugS = game.add.graphics();
+	this.debugS = game.add.graphics();
 	this.debugS.beginFill(0xcc3333, 0.5);
-	this.debugS.drawRect(0, 0, sprite.width, sprite.width);
+	this.debugS.drawRect(0, 0, 5, 5);
 	this.debugS.endFill();
-
-	this.debugS.x = sprite.x;
-	this.debugS.y = sprite.y;*/
+	this.debugS.x = this.movableSprite.x;
+	this.debugS.y = this.movableSprite.y;
 
 	this.marker.x    = Math.round(( (game.input.activePointer.worldX - this.cellWidth/2) - (this.margin % this.cellWidth)) / this.cellWidth) * this.cellWidth + (this.margin % this.cellWidth);
 	this.marker.y    = Math.round(( (game.input.activePointer.worldY - this.cellHeight/2) - (this.margin % this.cellHeight)) / this.cellHeight) * this.cellHeight + (this.margin % this.cellHeight);
-	var markerCenterX = this.marker.x + this.cellWidth/2;
-	console.log('Marker center: ' + markerCenterX + ' SpriteCenter: ' + this.movableSprite.x + ' CellWidth: ' + this.cellWidth + ' spriteCenter2: ' + spriteCenter);  
-	if((markerCenterX < this.movableSprite.x + (this.cellWidth/2) && markerCenterX > this.movableSprite.x - (this.cellWidth/2)) || (markerCenterX < this.movableSprite.x + (this.cellWidth) && markerCenterX > this.movableSprite.x + (this.cellWidth/2))){
+	var markerCenterX = this.marker.x - 6;
+	var markerCenterY = this.marker.y - 6;
+
+	//console.log('Marker center: ' + markerCenterY + ' SpriteCenter: ' + this.movableSprite.y + ' CellWidth: ' + this.cellWidth + ' spriteCenter2: ' + spriteCenter);  
+	//console.log('Up: '		+ (markerCenterY > this.movableSprite.y - (this.cellWidth * 2)));
+	/*console.log('Down: '	+ markerCenterY < this.movableSprite.y + (this.cellWidth*2));
+	console.log('Left: '	+ markerCenterX > this.movableSprite.x - (this.cellWidth * 2));
+	console.log('Right: '	+ markerCenterX < this.movableSprite.x + (this.cellWidth *2));*/
+
+	/*if (markerCenterX !== this.movableSprite.x && markerCenterX > this.movableSprite.x - (this.cellWidth * 2) && markerCenterX < this.movableSprite.x + (this.cellWidth *2)){
 		this.changeMarkerColor(0x529024);
-	}else{
+	}else {
+		this.changeMarkerColor(0xcc3333);
+	}
+
+	if (markerCenterY !== this.movableSprite.x && markerCenterY > this.movableSprite.y - (this.cellWidth * 2) && markerCenterY < this.movableSprite.y + (this.cellWidth*2)){
+		this.changeMarkerColor(0x529024);
+	}else {
+		this.changeMarkerColor(0xcc3333);
+	}*/
+
+	if ((markerCenterY !== this.movableSprite.y || markerCenterX !== this.movableSprite.x) && (markerCenterY > this.movableSprite.y - (this.cellWidth * 2) && markerCenterY < this.movableSprite.y + (this.cellWidth*2)) && (markerCenterX > this.movableSprite.x - (this.cellWidth * 2) && markerCenterX < this.movableSprite.x + (this.cellWidth *2))){
+		this.changeMarkerColor(0x529024);
+	}else {
 		this.changeMarkerColor(0xcc3333);
 	}
 
