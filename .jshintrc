@@ -9,6 +9,7 @@
 "isMoving": true,
 "BootS": true,
 "level": true,
+"powerUps": true,
 "PreloaderS": true,
 "MainMenuS": true,
 "PlayS": true,

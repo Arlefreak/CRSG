@@ -1,5 +1,5 @@
 'use strict';
-var gameWidth, gameHeight, isMoving, level;
+var gameWidth, gameHeight, isMoving, level, powerUps;
 var BootS, PreloaderS, MainMenuS, PlayS, CreditsS, LeaderBoardsS, game;
 
 var WebFontConfig;
@@ -23,6 +23,7 @@ window.onload = function () {
 	gameHeight = window.innerHeight;
 	isMoving = false;
 	level = 1;
+	powerUps = 0;
 	game = new Phaser.Game(gameWidth, gameHeight, Phaser.AUTO, 'gameContainer');
 	
 	// Game States

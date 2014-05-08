@@ -26,7 +26,10 @@ var Grid = function (_rows, _columns, _width, _height, _margin, _square, _draw) 
 	this.map = game.add.tilemap();
 	this.moveTileIndex = 0;
 	this.movableSprite = {};
-	this.unMovable = [];
+	this.unMovableLayers = [];
+	this.finalLayers = [];
+	this.enemiesLayers = [];
+	this.collectableLayers = [];
 	this.canMove = false;
 	
 	if(this.square){
@@ -164,13 +167,16 @@ Grid.prototype.addLayer = function (_matrix, _type,_tileset,_tilesetKeys ){
 		this.movableSprite = layer.getFirstAlive();
 		break;
 		case 'unmovable':
-		this.unMovable.push(_matrix);
+		this.unMovableLayers.push(_matrix);
 		break;
 		case 'final':
+		this.finalLayers.push(_matrix);
 		break;
 		case 'enemy':
+		this.enemiesLayers.push(_matrix);
 		break;
 		case 'collectable':
+		this.collectableLayers.push(_matrix);
 		break;
 	}
 };
@@ -183,8 +189,8 @@ Grid.prototype.createMarker = function () {
 	this.debugS.beginFill(0xffffff, 1.0);
 	this.debugS.drawRect(0, 0, 5, 5);
 	this.debugS.endFill();*/
-
-	/*this.debugW = game.add.graphics();
+/*
+	this.debugW = game.add.graphics();
 	this.debugW.beginFill(0x964514, 0.5);
 	this.debugW.drawRect(0, 0, this.cellWidth, this.cellHeight);
 	this.debugW.endFill();*/
@@ -222,7 +228,7 @@ Grid.prototype.updateMarker = function() {
 	console.log('Left: '	+ this.marker.x > this.movableSprite.x - (this.cellWidth * 2));
 	console.log('Right: '	+ this.marker.x < this.movableSprite.x + (this.cellWidth *2));*/
 
-	if (!this.checkUnmovable(this.marker.x, this.marker.y) && !isMoving&& (this.marker.y !== this.movableSprite.y || this.marker.x !== this.movableSprite.x) && (this.marker.y > this.movableSprite.y - (this.cellWidth * 2) && this.marker.y < this.movableSprite.y + (this.cellWidth*2)) && (this.marker.x > this.movableSprite.x - (this.cellWidth * 2) && this.marker.x < this.movableSprite.x + (this.cellWidth *2))){
+	if (!this.checkLayer(this.marker.x, this.marker.y,1,this.unMovableLayers) && !isMoving&& (this.marker.y !== this.movableSprite.y || this.marker.x !== this.movableSprite.x) && (this.marker.y > this.movableSprite.y - (this.cellWidth * 2) && this.marker.y < this.movableSprite.y + (this.cellWidth*2)) && (this.marker.x > this.movableSprite.x - (this.cellWidth * 2) && this.marker.x < this.movableSprite.x + (this.cellWidth *2))){
 		this.changeMarkerColor(0x529024);
 		this.canMove = true;
 	}else {
@@ -230,17 +236,17 @@ Grid.prototype.updateMarker = function() {
 		this.canMove = false;
 	}
 
-	//!this.checkUnmovable(this.marker.x, this.marker.y);
+	//this.checkLayer(this.marker.x, this.marker.y,3,this.finalLayers);
 }
 
-Grid.prototype.checkUnmovable = function(_x,_y) {
+Grid.prototype.checkLayer = function(_x,_y,_tileID, _layers) {
 	var tmpX = 0;
 	var tmpY = 0;
 
-	for (var i = this.unMovable.length - 1; i >= 0; i--) {
-		for (var J= this.unMovable[i].length - 1; J>= 0; J--) {
-			var tmpMatrix = this.unMovable[i];
-			if(tmpMatrix[J] === 1){
+	for (var i = _layers.length - 1; i >= 0; i--) {
+		for (var J= _layers[i].length - 1; J>= 0; J--) {
+			var tmpMatrix = _layers[i];
+			if(tmpMatrix[J] === _tileID){
 				tmpX = Math.floor( J/ (Math.pow(10, 0)) % 10);
 				tmpY = Math.floor( J/ (Math.pow(10, 1)) % 10);
 				
@@ -249,12 +255,35 @@ Grid.prototype.checkUnmovable = function(_x,_y) {
 				if(_x === tmpX && _y === tmpY){
 					/*this.debugW.x = tmpX;
 					this.debugW.y = tmpY;*/
-					//console.log('wall');
+					console.log('Type: ' + _tileID);
 					return true;
 				}
 			}
 		}
 	}
 	return false;
+}
 
+
+Grid.prototype.collect = function(_x, _y,_layers) {
+	var tmpX = 0;
+	var tmpY = 0;
+	for (var i = _layers.length - 1; i >= 0; i--) {
+		for (var J= _layers[i].length - 1; J>= 0; J--) {
+			var tmpMatrix = _layers[i];
+			if(tmpMatrix[J] === 4){
+				tmpX = Math.floor( J/ (Math.pow(10, 0)) % 10);
+				tmpY = Math.floor( J/ (Math.pow(10, 1)) % 10);
+				
+				tmpX = Math.round((((tmpX+1) * this.cellWidth)- (this.margin % this.cellWidth)) / this.cellWidth) * this.cellWidth + (this.margin % this.cellWidth);
+				tmpY = Math.round((((tmpY+1) * this.cellHeight)- (this.margin % this.cellHeight)) / this.cellHeight) * this.cellHeight + (this.margin % this.cellHeight);
+				if(_x === tmpX && _y === tmpY){
+					/*this.debugW.x = tmpX;
+					this.debugW.y = tmpY;*/
+					_layers[i][J] = 0;
+				}
+			}
+		}
+	}
+	return this.getAt(4).getFirstAlive();
 }

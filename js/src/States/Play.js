@@ -21,11 +21,19 @@
 			/* Groups */
 			this.grid = new Grid(10, 10, gameWidth, gameHeight, 50, true, true);
 			var layers = this.genLayers();
+			this.TilePowerUpsG = game.add.group();
+			var powerup;
+
+			for (var i = 0; i < powerUps; i++)
+			{
+				powerup = this.TilePowerUpsG.create((160 + (50*i)), 0, 'tiles', 'TilePowerUp');
+				powerup.scale.set(0.2);
+			}
 			
 			this.grid.addLayer(layers[0], 'unmovable', 'tiles',[null,'TileWall','TileEnemy','TileExit','TilePowerUp','TilePlayer']);
 			this.grid.addLayer(layers[1], 'enemy', 'tiles',[null,'TileWall','TileEnemy','TileExit','TilePowerUp','TilePlayer']);
-			this.grid.addLayer(layers[2], 'collectable', 'tiles',[null,'TileWall','TileEnemy','TileExit','TilePowerUp','TilePlayer']);
-			this.grid.addLayer(layers[3], 'final', 'tiles',[null,'TileWall','TileEnemy','TileExit','TilePowerUp','TilePlayer']);
+			this.grid.addLayer(layers[2], 'final', 'tiles',[null,'TileWall','TileEnemy','TileExit','TilePowerUp','TilePlayer']);
+			this.grid.addLayer(layers[3], 'collectable', 'tiles',[null,'TileWall','TileEnemy','TileExit','TilePowerUp','TilePlayer']);
 			this.grid.addLayer(layers[4], 'movable', 'tiles',[null,'TileWall','TileEnemy','TileExit','TilePowerUp','TilePlayer']);
 
 			/* Sprites */
@@ -169,6 +177,26 @@
 
 	Play.prototype.move = function() {
 		if(this.grid.canMove){
+			if(this.grid.checkLayer(this.grid.marker.x, this.grid.marker.y,3,this.grid.finalLayers)){
+				this.quitGame('play');
+			}
+
+			if(this.grid.checkLayer(this.grid.marker.x, this.grid.marker.y,4,this.grid.collectableLayers)){
+				var tmp = this.grid.collect(this.grid.marker.x, this.grid.marker.y,this.grid.collectableLayers);
+				//tmp.kill();
+				var s = game.add.tween(tmp.scale);
+				s.to({x: 0.2, y: 0.2}, 250, Phaser.Easing.Linear.None);
+				s.start();
+				var e = game.add.tween(tmp);
+				e.onStart.add(function(){isMoving = true;});
+				e.onComplete.add(function(){isMoving = false;})
+				e.to({ x: (160 + (50*powerUps)) ,y: 0}, 250, Phaser.Easing.Linear.None, false, 0 , 0, false);
+				e.start();
+				powerUps ++;
+
+				console.log('Shield');
+			}
+
 			if(Math.round(this.grid.movableSprite.x) === Math.round(this.grid.marker.x)){
 				if(Math.round(this.grid.movableSprite.y) < Math.round(this.grid.marker.y)){
 					this.grid.move(null, 'down');
