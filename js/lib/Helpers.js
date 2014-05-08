@@ -21,5 +21,5 @@ Array.prototype.equals = function (array) {
 };
 
 var randomBoolean = function() {
-     return Math.random() < 0.5;
+ return Math.random() < 0.5;
 }

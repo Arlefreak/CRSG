@@ -15,7 +15,9 @@
 "CreditsS": true,
 "LeaderBoardsS": true,
 "game": true,
-"Grid": true
+"_": true,
+"Grid": true,
+"GridLayer": true
 
 },
 // Ignore Environment Globals

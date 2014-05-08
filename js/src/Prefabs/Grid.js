@@ -26,6 +26,7 @@ var Grid = function (_rows, _columns, _width, _height, _margin, _square, _draw) 
 	this.map = game.add.tilemap();
 	this.moveTileIndex = 0;
 	this.movableSprite = {};
+	this.unMovable = [];
 	this.canMove = false;
 	
 	if(this.square){
@@ -96,7 +97,7 @@ Grid.prototype.move = function (_sprite,_direction){
 	if(!isMoving){
 		switch(_direction){
 			case 'left':
-			console.log('Left: ' + this.limitLeft + ' Player: ' + this.movableSprite.x + ' CellWidth: ' + this.cellWidth);
+			console.log('Left: ' + this.limitLeft + ' Player: ' + this.movableSprite.x + ' cellWidth: ' + this.cellWidth);
 			if (this.movableSprite.x - (this.cellWidth/2) >= this.limitLeft){
 				e.to({ x: mLeft }, 250, Phaser.Easing.Linear.None, false, 0 , 0, false);
 				e.start();
@@ -155,52 +156,38 @@ Grid.prototype.move = function (_sprite,_direction){
 	}
 };
 
-Grid.prototype.addLayer = function (_matrix, _name,_tileset,_tilesetKeys, _unmovable, _enemy, __final, _collectable, _movable){
-	var layer = game.add.group();
-	var frameNames = this.game.cache._images[_tileset].frameData._frameNames;
-	var tmpTile = {};
-
-
-	for (var i = _matrix.length - 1; i >= 0; i--) {
-		tmpTile = {};
-		if(_matrix[i] !== 0){
-			var k = Math.floor( i/ (Math.pow(10, 0)) % 10);
-			var j = Math.floor( i/ (Math.pow(10, 1)) % 10);
-			k = Math.round((((k+1) * this.cellWidth)- (this.margin % this.cellWidth)) / this.cellWidth) * this.cellWidth + (this.margin % this.cellWidth);
-			j = Math.round((((j+ 1) * this.cellHeight)- (this.margin % this.cellWidth)) / this.cellWidth) * this.cellWidth + (this.margin % this.cellWidth);
-
-			tmpTile = game.add.sprite(k , j, _tileset);
-			tmpTile.frameName = _tilesetKeys[_matrix[i]];
-			var convertion = this.cellWidth/tmpTile.width ;
-
-			tmpTile.scale.set(convertion);
-			layer.add(tmpTile);
-
-			if (_matrix[i] === _movable){
-				this.movableSprite = tmpTile;
-			}
-
-			/*var debugS = game.add.graphics();
-			debugS.beginFill(0xcc3333, 0.5);
-			debugS.drawRect(0, 0, 5, 5);
-			debugS.endFill();
-			debugS.x = tmpTile.x;
-			debugS.y = tmpTile.y;*/
-
-			//console.log( this.game.cache._images[_tileset].frameData._frameNames);
-			console.log('Width: ' + this.width + ' World: ' + game.world.centerX);
-		}
-	}
+Grid.prototype.addLayer = function (_matrix, _type,_tileset,_tilesetKeys ){
+	var layer = new GridLayer(_matrix, _type,_tileset,_tilesetKeys, this.margin, this.cellWidth, this.cellHeight);
 	this.add(layer);
+	switch(_type){
+		case 'movable':
+		this.movableSprite = layer.getFirstAlive();
+		break;
+		case 'unmovable':
+		this.unMovable.push(_matrix);
+		break;
+		case 'final':
+		break;
+		case 'enemy':
+		break;
+		case 'collectable':
+		break;
+	}
 };
 
 Grid.prototype.createMarker = function () {
 	this.marker = game.add.graphics();
 	this.changeMarkerColor(0xcc3333);
-	this.debugS = game.add.graphics();
+
+	/*this.debugS = game.add.graphics();
 	this.debugS.beginFill(0xffffff, 1.0);
 	this.debugS.drawRect(0, 0, 5, 5);
-	this.debugS.endFill();
+	this.debugS.endFill();*/
+
+	/*this.debugW = game.add.graphics();
+	this.debugW.beginFill(0x964514, 0.5);
+	this.debugW.drawRect(0, 0, this.cellWidth, this.cellHeight);
+	this.debugW.endFill();*/
 };
 
 Grid.prototype.changeMarkerColor = function (_color) {
@@ -229,17 +216,45 @@ Grid.prototype.updateMarker = function() {
 		this.marker.y    = Math.round(( (game.input.activePointer.worldY - this.cellHeight/2) - (this.margin % this.cellHeight)) / this.cellHeight) * this.cellHeight + (this.margin % this.cellHeight);
 	}
 
-	//console.log('Marker center: ' + this.marker.y + ' SpriteCenter: ' + this.movableSprite.y + ' CellWidth: ' + this.cellWidth + ' spriteCenter2: ' + spriteCenter);  
+	//console.log('Marker center: ' + this.marker.y + ' SpriteCenter: ' + this.movableSprite.y + ' cellWidth: ' + this.cellWidth + ' spriteCenter2: ' + spriteCenter);  
 	//console.log('Up: '		+ (this.marker.y > this.movableSprite.y - (this.cellWidth * 2)));
 	/*console.log('Down: '	+ this.marker.y < this.movableSprite.y + (this.cellWidth*2));
 	console.log('Left: '	+ this.marker.x > this.movableSprite.x - (this.cellWidth * 2));
 	console.log('Right: '	+ this.marker.x < this.movableSprite.x + (this.cellWidth *2));*/
 
-	if ( !isMoving&& (this.marker.y !== this.movableSprite.y || this.marker.x !== this.movableSprite.x) && (this.marker.y > this.movableSprite.y - (this.cellWidth * 2) && this.marker.y < this.movableSprite.y + (this.cellWidth*2)) && (this.marker.x > this.movableSprite.x - (this.cellWidth * 2) && this.marker.x < this.movableSprite.x + (this.cellWidth *2))){
+	if (!this.checkUnmovable(this.marker.x, this.marker.y) && !isMoving&& (this.marker.y !== this.movableSprite.y || this.marker.x !== this.movableSprite.x) && (this.marker.y > this.movableSprite.y - (this.cellWidth * 2) && this.marker.y < this.movableSprite.y + (this.cellWidth*2)) && (this.marker.x > this.movableSprite.x - (this.cellWidth * 2) && this.marker.x < this.movableSprite.x + (this.cellWidth *2))){
 		this.changeMarkerColor(0x529024);
 		this.canMove = true;
 	}else {
 		this.changeMarkerColor(0xcc3333);
 		this.canMove = false;
 	}
+
+	//!this.checkUnmovable(this.marker.x, this.marker.y);
+}
+
+Grid.prototype.checkUnmovable = function(_x,_y) {
+	var tmpX = 0;
+	var tmpY = 0;
+
+	for (var i = this.unMovable.length - 1; i >= 0; i--) {
+		for (var J= this.unMovable[i].length - 1; J>= 0; J--) {
+			var tmpMatrix = this.unMovable[i];
+			if(tmpMatrix[J] === 1){
+				tmpX = Math.floor( J/ (Math.pow(10, 0)) % 10);
+				tmpY = Math.floor( J/ (Math.pow(10, 1)) % 10);
+				
+				tmpX = Math.round((((tmpX+1) * this.cellWidth)- (this.margin % this.cellWidth)) / this.cellWidth) * this.cellWidth + (this.margin % this.cellWidth);
+				tmpY = Math.round((((tmpY+1) * this.cellHeight)- (this.margin % this.cellHeight)) / this.cellHeight) * this.cellHeight + (this.margin % this.cellHeight);
+				if(_x === tmpX && _y === tmpY){
+					/*this.debugW.x = tmpX;
+					this.debugW.y = tmpY;*/
+					//console.log('wall');
+					return true;
+				}
+			}
+		}
+	}
+	return false;
+
 }

@@ -20,9 +20,13 @@
 
 			/* Groups */
 			this.grid = new Grid(10, 10, gameWidth, gameHeight, 50, true, true);
-			var matrix = this.genMatrix();
+			var layers = this.genLayers();
 			
-			this.grid.addLayer(matrix, 'walls', 'tiles',[null,'TileWall','TileEnemy','TileExit','TilePowerUp','TilePlayer'],1,2,3,4,5);
+			this.grid.addLayer(layers[0], 'unmovable', 'tiles',[null,'TileWall','TileEnemy','TileExit','TilePowerUp','TilePlayer']);
+			this.grid.addLayer(layers[1], 'enemy', 'tiles',[null,'TileWall','TileEnemy','TileExit','TilePowerUp','TilePlayer']);
+			this.grid.addLayer(layers[2], 'collectable', 'tiles',[null,'TileWall','TileEnemy','TileExit','TilePowerUp','TilePlayer']);
+			this.grid.addLayer(layers[3], 'final', 'tiles',[null,'TileWall','TileEnemy','TileExit','TilePowerUp','TilePlayer']);
+			this.grid.addLayer(layers[4], 'movable', 'tiles',[null,'TileWall','TileEnemy','TileExit','TilePowerUp','TilePlayer']);
 
 			/* Sprites */
 			/*this.player = game.add.sprite(game.world.centerX, game.world.centerY, 'tiles');
@@ -74,6 +78,7 @@
 			//game.debug.spriteInfo(this.grid.movableSprite, gameWidth - 500, 50);
 			//game.debug.spriteCoords(this.grid.movableSprite, gameWidth - 500, 150);
 			//game.debug.spriteCoords(this.grid.marker, gameWidth - 500, 250);
+			//game.debug.spriteCoords(this.grid.debugW, gameWidth - 500, 150);
 		},
 
 		quitGame: function (state) {
@@ -90,10 +95,15 @@
 		this.score--;
 	};
 
-	Play.prototype.genMatrix = function() {
+	Play.prototype.genLayers = function() {
+		var layers = [];
 		var enemies = [2];
 		var elements = [3,4];
-		var matrix = [];
+		var matrix1 = [];
+		var matrix2 = [];
+		var matrix3 = [];
+		var matrix4 = [];
+		var matrix5 = [];
 		var indexes = []; 
 
 		for (var i = level - 1; i > 0; i--) {
@@ -101,14 +111,18 @@
 		}
 
 		for (var i = 100; i >= 0; i--) {
-			matrix.push(0);
+			matrix1.push(0);
+			matrix2.push(0);
+			matrix3.push(0);
+			matrix4.push(0);
+			matrix5.push(0);
 		}
 
 		for (var i = 6-1; i >= 0; i--) {
-			matrix[i+22] = 1;
-			matrix[i+72] = 1;
-			matrix[22 + i*10] = 1;
-			matrix[27 + i*10] = 1;
+			matrix1[i+22] = 1;
+			matrix1[i+72] = 1;
+			matrix1[22 + i*10] = 1;
+			matrix1[27 + i*10] = 1;
 
 			indexes.push(i + 22);
 			indexes.push(i + 72);
@@ -124,11 +138,33 @@
 		Phaser.Utils.shuffle(indexes);
 		
 		for (var i = elements.length - 1; i >= 0; i--) {
-			matrix[indexes[i]] = elements[i];
+			switch(elements[i]){
+				case 2://Enemies
+				matrix2[indexes[i]] = elements[i];
+				matrix1[indexes[i]] = 0;
+				break;
+				case 3://Final
+				matrix3[indexes[i]] = elements[i];
+				matrix1[indexes[i]] = 0;
+				break;
+				case 4://Collectable
+				matrix4[indexes[i]] = elements[i];
+				matrix1[indexes[i]] = 0;
+				break;
+				case 5://Movable
+				matrix5[indexes[i]] = elements[i];
+				matrix1[indexes[i]] = 0;
+				break;
+			}
 		}
-		matrix[55] = 5;
+		matrix5[55] = 5;
+		layers.push(matrix1);
+		layers.push(matrix2);
+		layers.push(matrix3);
+		layers.push(matrix4);
+		layers.push(matrix5);
 
-		return matrix;
+		return layers;
 	};
 
 	Play.prototype.move = function() {
