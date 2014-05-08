@@ -84,10 +84,10 @@ Grid.prototype.move = function (_sprite,_direction){
 	var e = game.add.tween(this.movableSprite);
 	e.onStart.add(function(){isMoving = true;});
 	e.onComplete.add(function(){isMoving = false;})
-	var mLeft = Math.round(((this.movableSprite.x - this.cellWidth)- (this.margin % this.cellWidth)) / this.cellWidth) * this.cellWidth + (this.margin % this.cellWidth) - 6;
-	var mRight = Math.round(((this.movableSprite.x + this.cellWidth)- (this.margin % this.cellWidth)) / this.cellWidth) * this.cellWidth + (this.margin % this.cellWidth) - 6;
-	var mUp = Math.round(((this.movableSprite.y - this.cellWidth)- (this.margin % this.cellWidth)) / this.cellWidth) * this.cellWidth + (this.margin % this.cellWidth) - 6;
-	var mDown = Math.round(((this.movableSprite.y + this.cellWidth)- (this.margin % this.cellWidth)) / this.cellWidth) * this.cellWidth + (this.margin % this.cellWidth) - 6;
+	var mLeft = Math.round(((this.movableSprite.x - this.cellWidth)- (this.margin % this.cellWidth)) / this.cellWidth) * this.cellWidth + (this.margin % this.cellWidth);
+	var mRight = Math.round(((this.movableSprite.x + this.cellWidth)- (this.margin % this.cellWidth)) / this.cellWidth) * this.cellWidth + (this.margin % this.cellWidth);
+	var mUp = Math.round(((this.movableSprite.y - this.cellWidth)- (this.margin % this.cellWidth)) / this.cellWidth) * this.cellWidth + (this.margin % this.cellWidth);
+	var mDown = Math.round(((this.movableSprite.y + this.cellWidth)- (this.margin % this.cellWidth)) / this.cellWidth) * this.cellWidth + (this.margin % this.cellWidth);
 	/*var mTopLeft = Math.round(((this.movableSprite.y + this.cellWidth)- (this.margin % this.cellWidth)) / this.cellWidth) * this.cellWidth + (this.margin % this.cellWidth) - 6;
 	var mTopRight = Math.round(((this.movableSprite.y + this.cellWidth)- (this.margin % this.cellWidth)) / this.cellWidth) * this.cellWidth + (this.margin % this.cellWidth) - 6;
 	var mBottomLeft = Math.round(((this.movableSprite.y + this.cellWidth)- (this.margin % this.cellWidth)) / this.cellWidth) * this.cellWidth + (this.margin % this.cellWidth) - 6;
@@ -155,34 +155,38 @@ Grid.prototype.move = function (_sprite,_direction){
 	}
 };
 
-Grid.prototype.addLayer = function (_matrix, _name,_tileset,_tilesetKeys,_tileWidth, _tileHeight, _unmovable, _enemy, __final, _collectable, _movable){
+Grid.prototype.addLayer = function (_matrix, _name,_tileset,_tilesetKeys, _unmovable, _enemy, __final, _collectable, _movable){
 	var layer = game.add.group();
 	var frameNames = this.game.cache._images[_tileset].frameData._frameNames;
 	var tmpTile = {};
-	var convertion = this.cellWidth/_tileWidth ;
 
 
 	for (var i = _matrix.length - 1; i >= 0; i--) {
 		tmpTile = {};
 		if(_matrix[i] !== 0){
-			var j = Math.floor( i/ (Math.pow(10, 1)) % 10);
 			var k = Math.floor( i/ (Math.pow(10, 0)) % 10);
+			var j = Math.floor( i/ (Math.pow(10, 1)) % 10);
+			k = Math.round((((k+1) * this.cellWidth)- (this.margin % this.cellWidth)) / this.cellWidth) * this.cellWidth + (this.margin % this.cellWidth);
+			j = Math.round((((j+ 1) * this.cellHeight)- (this.margin % this.cellWidth)) / this.cellWidth) * this.cellWidth + (this.margin % this.cellWidth);
 
-			tmpTile = game.add.sprite(k * this.cellWidth, j * this.cellHeight, _tileset);
+			tmpTile = game.add.sprite(k , j, _tileset);
 			tmpTile.frameName = _tilesetKeys[_matrix[i]];
+			var convertion = this.cellWidth/tmpTile.width ;
+
 			tmpTile.scale.set(convertion);
 			layer.add(tmpTile);
-			layer.x = this.margin;
-			layer.y = this.margin;
 
-			tmpTile.anchor.setTo(0.5,0.5);
-			tmpTile.x = Math.round(((tmpTile.x + this.cellWidth/2)- (this.margin % this.cellWidth)) / this.cellWidth) * this.cellWidth + (this.margin % this.cellWidth);
-			tmpTile.y = Math.round(((tmpTile.y + this.cellWidth/2)-(this.margin % this.cellWidth)) / this.cellWidth) * this.cellWidth + (this.margin % this.cellWidth);
-			tmpTile.x -= 6;
-			tmpTile.y -= 6;
 			if (_matrix[i] === _movable){
 				this.movableSprite = tmpTile;
 			}
+
+			/*var debugS = game.add.graphics();
+			debugS.beginFill(0xcc3333, 0.5);
+			debugS.drawRect(0, 0, 5, 5);
+			debugS.endFill();
+			debugS.x = tmpTile.x;
+			debugS.y = tmpTile.y;*/
+
 			//console.log( this.game.cache._images[_tileset].frameData._frameNames);
 			console.log('Width: ' + this.width + ' World: ' + game.world.centerX);
 		}
@@ -191,12 +195,12 @@ Grid.prototype.addLayer = function (_matrix, _name,_tileset,_tilesetKeys,_tileWi
 };
 
 Grid.prototype.createMarker = function () {
-	
-
-	
-
 	this.marker = game.add.graphics();
 	this.changeMarkerColor(0xcc3333);
+	this.debugS = game.add.graphics();
+	this.debugS.beginFill(0xffffff, 1.0);
+	this.debugS.drawRect(0, 0, 5, 5);
+	this.debugS.endFill();
 };
 
 Grid.prototype.changeMarkerColor = function (_color) {
@@ -215,31 +219,23 @@ Grid.prototype.update = function() {
 
 
 Grid.prototype.updateMarker = function() {
-	
-	//var spriteCenter = this.movableSprite.x + this.movableSprite.width/2;
 	this.canMove = false;
-	/*this.debugS = game.add.graphics();
-	this.debugS.beginFill(0xcc3333, 0.5);
-	this.debugS.drawRect(0, 0, 5, 5);
-	this.debugS.endFill();
-	this.debugS.x = this.movableSprite.x;
-	this.debugS.y = this.movableSprite.y;*/
-	this.markerCenterX = this.marker.x - 6;
-	this.markerCenterY = this.marker.y - 6;
+
+	/*this.debugS.x = this.marker.x;
+	this.debugS.y = this.marker.y;*/
 
 	if ((game.input.activePointer.worldX > this.limitLeft && game.input.activePointer.worldX < this.limitRight + this.margin) && (game.input.activePointer.worldY > this.limitTop && game.input.activePointer.worldY <  this.limitBottom)){
 		this.marker.x    = Math.round(( (game.input.activePointer.worldX - this.cellWidth/2) - (this.margin % this.cellWidth)) / this.cellWidth) * this.cellWidth + (this.margin % this.cellWidth);
 		this.marker.y    = Math.round(( (game.input.activePointer.worldY - this.cellHeight/2) - (this.margin % this.cellHeight)) / this.cellHeight) * this.cellHeight + (this.margin % this.cellHeight);
 	}
-	
 
-	//console.log('Marker center: ' + this.markerCenterY + ' SpriteCenter: ' + this.movableSprite.y + ' CellWidth: ' + this.cellWidth + ' spriteCenter2: ' + spriteCenter);  
-	//console.log('Up: '		+ (this.markerCenterY > this.movableSprite.y - (this.cellWidth * 2)));
-	/*console.log('Down: '	+ this.markerCenterY < this.movableSprite.y + (this.cellWidth*2));
-	console.log('Left: '	+ this.markerCenterX > this.movableSprite.x - (this.cellWidth * 2));
-	console.log('Right: '	+ this.markerCenterX < this.movableSprite.x + (this.cellWidth *2));*/
+	//console.log('Marker center: ' + this.marker.y + ' SpriteCenter: ' + this.movableSprite.y + ' CellWidth: ' + this.cellWidth + ' spriteCenter2: ' + spriteCenter);  
+	//console.log('Up: '		+ (this.marker.y > this.movableSprite.y - (this.cellWidth * 2)));
+	/*console.log('Down: '	+ this.marker.y < this.movableSprite.y + (this.cellWidth*2));
+	console.log('Left: '	+ this.marker.x > this.movableSprite.x - (this.cellWidth * 2));
+	console.log('Right: '	+ this.marker.x < this.movableSprite.x + (this.cellWidth *2));*/
 
-	if ( !isMoving&& (this.markerCenterY !== this.movableSprite.y || this.markerCenterX !== this.movableSprite.x) && (this.markerCenterY > this.movableSprite.y - (this.cellWidth * 2) && this.markerCenterY < this.movableSprite.y + (this.cellWidth*2)) && (this.markerCenterX > this.movableSprite.x - (this.cellWidth * 2) && this.markerCenterX < this.movableSprite.x + (this.cellWidth *2))){
+	if ( !isMoving&& (this.marker.y !== this.movableSprite.y || this.marker.x !== this.movableSprite.x) && (this.marker.y > this.movableSprite.y - (this.cellWidth * 2) && this.marker.y < this.movableSprite.y + (this.cellWidth*2)) && (this.marker.x > this.movableSprite.x - (this.cellWidth * 2) && this.marker.x < this.movableSprite.x + (this.cellWidth *2))){
 		this.changeMarkerColor(0x529024);
 		this.canMove = true;
 	}else {

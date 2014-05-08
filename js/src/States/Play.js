@@ -22,7 +22,7 @@
 			this.grid = new Grid(10, 10, gameWidth, gameHeight, 50, true, true);
 			var matrix = this.genMatrix();
 			
-			this.grid.addLayer(matrix, 'walls', 'tiles',[null,'TileWall','TileEnemy','TileExit','TilePowerUp','TilePlayer'], 256, 256, 1,2,3,4,5);
+			this.grid.addLayer(matrix, 'walls', 'tiles',[null,'TileWall','TileEnemy','TileExit','TilePowerUp','TilePlayer'],1,2,3,4,5);
 
 			/* Sprites */
 			/*this.player = game.add.sprite(game.world.centerX, game.world.centerY, 'tiles');
@@ -69,6 +69,11 @@
 			if (this.game.time.fps !== 0) {
 				this.fpsText.setText(this.game.time.fps + ' FPS');
 			}
+		},
+		render: function() {
+			//game.debug.spriteInfo(this.grid.movableSprite, gameWidth - 500, 50);
+			//game.debug.spriteCoords(this.grid.movableSprite, gameWidth - 500, 150);
+			//game.debug.spriteCoords(this.grid.marker, gameWidth - 500, 250);
 		},
 
 		quitGame: function (state) {
@@ -128,14 +133,14 @@
 
 	Play.prototype.move = function() {
 		if(this.grid.canMove){
-			if(Math.round(this.grid.movableSprite.x) === Math.round(this.grid.markerCenterX)){
-				if(Math.round(this.grid.movableSprite.y) < Math.round(this.grid.markerCenterY)){
+			if(Math.round(this.grid.movableSprite.x) === Math.round(this.grid.marker.x)){
+				if(Math.round(this.grid.movableSprite.y) < Math.round(this.grid.marker.y)){
 					this.grid.move(null, 'down');
 				}else{
 					this.grid.move(null, 'up');
 				}
-			}else if(Math.round(this.grid.movableSprite.y) === Math.round(this.grid.markerCenterY)){
-				if(Math.round(this.grid.movableSprite.x) < Math.round(this.grid.markerCenterX)){
+			}else if(Math.round(this.grid.movableSprite.y) === Math.round(this.grid.marker.y)){
+				if(Math.round(this.grid.movableSprite.x) < Math.round(this.grid.marker.x)){
 					this.grid.move(null, 'right');
 				}else{
 					this.grid.move(null, 'left');
