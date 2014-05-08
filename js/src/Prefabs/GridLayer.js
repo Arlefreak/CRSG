@@ -9,7 +9,7 @@
 *
 * By Mario Carballo Zama http://www.arlefreak.com
 *
-*	FIX: OUT OF GRID CHECK
+*
 */
 
 'use strict';

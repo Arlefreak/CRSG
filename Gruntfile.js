@@ -18,7 +18,10 @@ module.exports = function(grunt) {
 	    dist: {
 		src: [
 		    'js/lib/Phaser.js',
+		    'js/lib/Helpers.js',
+		    'js/lib/Underscore.js',
 		    'js/src/Prefabs/Grid.js',
+		    'js/src/Prefabs/GridLayer.js',
 		    'js/src/States/Boot.js',
 		    'js/src/States/Preloader.js',
 		    'js/src/States/MainMenu.js',
