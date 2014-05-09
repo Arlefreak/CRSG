@@ -26,6 +26,7 @@ var Grid = function (_rows, _columns, _width, _height, _margin, _square, _draw) 
 	this.map = game.add.tilemap();
 	this.moveTileIndex = 0;
 	this.movableSprite = {};
+	this.movableLayers = [];
 	this.unMovableLayers = [];
 	this.finalLayers = [];
 	this.enemiesLayers = [];
@@ -97,61 +98,63 @@ Grid.prototype.move = function (_sprite,_direction){
 	var mBottomLeft = Math.round(((this.movableSprite.y + this.cellWidth)- (this.margin % this.cellWidth)) / this.cellWidth) * this.cellWidth + (this.margin % this.cellWidth) - 6;
 	var mBottomRight = Math.round(((this.movableSprite.y + this.cellWidth)- (this.margin % this.cellWidth)) / this.cellWidth) * this.cellWidth + (this.margin % this.cellWidth) - 6;
 	*/
+	this.moveMatrix(this.movableLayers[0],_direction);
+
 	if(!isMoving){
 		switch(_direction){
 			case 'left':
-			console.log('Left: ' + this.limitLeft + ' Player: ' + this.movableSprite.x + ' cellWidth: ' + this.cellWidth);
+			//console.log('Left: ' + this.limitLeft + ' Player: ' + this.movableSprite.x + ' cellWidth: ' + this.cellWidth);
 			if (this.movableSprite.x - (this.cellWidth/2) >= this.limitLeft){
 				e.to({ x: mLeft }, 250, Phaser.Easing.Linear.None, false, 0 , 0, false);
 				e.start();
 			}
 			break;
 			case 'up':
-			console.log('Up: ' + this.limitUp + ' Player: ' + (this.movableSprite.y - this.cellHeight));
+			//console.log('Up: ' + this.limitUp + ' Player: ' + (this.movableSprite.y - this.cellHeight));
 			if (this.movableSprite.y - (this.cellHeight/2) > this.limitTop){
 				e.to({ y: mUp }, 250, Phaser.Easing.Linear.None, false, 0 , 0, false);
 				e.start();
 			}
 			break;
 			case 'right':
-			console.log('Right: ' + this.limitRight + ' Player: ' + this.movableSprite.x + this.cellWidth);
+			//console.log('Right: ' + this.limitRight + ' Player: ' + this.movableSprite.x + this.cellWidth);
 			if (this.movableSprite.x + (this.cellWidth/2) < this.limitRight){
 				e.to({ x: mRight }, 250, Phaser.Easing.Linear.None, false, 0 , 0, false);
 				e.start();
 			}
 			break;
 			case 'down':
-			console.log('Down: ' + this.limitDown + ' Player: ' + this.movableSprite.y + this.cellHeight);
+			//console.log('Down: ' + this.limitDown + ' Player: ' + this.movableSprite.y + this.cellHeight);
 			if (this.movableSprite.y + (this.cellHeight/2) < this.limitBottom){
 				e.to({ y: mDown }, 250, Phaser.Easing.Linear.None, false, 0 , 0, false);
 				e.start();
 			}
 			break;
 			case 'topleft':
-			console.log('Down: ' + this.limitDown + ' Player: ' + this.movableSprite.y + this.cellHeight);
+			//console.log('Down: ' + this.limitDown + ' Player: ' + this.movableSprite.y + this.cellHeight);
 			if (this.movableSprite.y + (this.cellHeight/2) < this.limitBottom){
-				e.to({ y: mDown }, 250, Phaser.Easing.Linear.None, false, 0 , 0, false);
+				e.to({ x: mLeft, y: mUp }, 250, Phaser.Easing.Linear.None, false, 0 , 0, false);
 				e.start();
 			}
 			break;
 			case 'topright':
-			console.log('Down: ' + this.limitDown + ' Player: ' + this.movableSprite.y + this.cellHeight);
+			//console.log('Down: ' + this.limitDown + ' Player: ' + this.movableSprite.y + this.cellHeight);
 			if (this.movableSprite.y + (this.cellHeight/2) < this.limitBottom){
-				e.to({ y: mDown }, 250, Phaser.Easing.Linear.None, false, 0 , 0, false);
+				e.to({ x: mRight ,y: mUp }, 250, Phaser.Easing.Linear.None, false, 0 , 0, false);
 				e.start();
 			}
 			break;
 			case 'bottomleft':
-			console.log('Down: ' + this.limitDown + ' Player: ' + this.movableSprite.y + this.cellHeight);
+			//console.log('Down: ' + this.limitDown + ' Player: ' + this.movableSprite.y + this.cellHeight);
 			if (this.movableSprite.y + (this.cellHeight/2) < this.limitBottom){
-				e.to({ y: mDown }, 250, Phaser.Easing.Linear.None, false, 0 , 0, false);
+				e.to({ x: mLeft,y: mDown }, 250, Phaser.Easing.Linear.None, false, 0 , 0, false);
 				e.start();
 			}
 			break;
-			case 'bottomdown':
-			console.log('Down: ' + this.limitDown + ' Player: ' + this.movableSprite.y + this.cellHeight);
+			case 'bottomright':
+			//console.log('Down: ' + this.limitDown + ' Player: ' + this.movableSprite.y + this.cellHeight);
 			if (this.movableSprite.y + (this.cellHeight/2) < this.limitBottom){
-				e.to({ y: mDown }, 250, Phaser.Easing.Linear.None, false, 0 , 0, false);
+				e.to({ x:mRight, y: mDown }, 250, Phaser.Easing.Linear.None, false, 0 , 0, false);
 				e.start();
 			}
 			break;
@@ -165,6 +168,7 @@ Grid.prototype.addLayer = function (_matrix, _type,_tileset,_tilesetKeys ){
 	switch(_type){
 		case 'movable':
 		this.movableSprite = layer.getFirstAlive();
+		this.movableLayers.push(_matrix);
 		break;
 		case 'unmovable':
 		this.unMovableLayers.push(_matrix);
@@ -228,7 +232,15 @@ Grid.prototype.updateMarker = function() {
 	console.log('Left: '	+ this.marker.x > this.movableSprite.x - (this.cellWidth * 2));
 	console.log('Right: '	+ this.marker.x < this.movableSprite.x + (this.cellWidth *2));*/
 
-	if (!this.checkLayer(this.marker.x, this.marker.y,1,this.unMovableLayers) && !isMoving&& (this.marker.y !== this.movableSprite.y || this.marker.x !== this.movableSprite.x) && (this.marker.y > this.movableSprite.y - (this.cellWidth * 2) && this.marker.y < this.movableSprite.y + (this.cellWidth*2)) && (this.marker.x > this.movableSprite.x - (this.cellWidth * 2) && this.marker.x < this.movableSprite.x + (this.cellWidth *2))){
+	/*if (!this.checkLayer(this.marker.x, this.marker.y,1,this.unMovableLayers) && !isMoving&& (this.marker.y !== this.movableSprite.y || this.marker.x !== this.movableSprite.x) && (this.marker.y > this.movableSprite.y - (this.cellWidth * 2) && this.marker.y < this.movableSprite.y + (this.cellWidth*2)) && (this.marker.x > this.movableSprite.x - (this.cellWidth * 2) && this.marker.x < this.movableSprite.x + (this.cellWidth *2))){
+		this.changeMarkerColor(0x529024);
+		this.canMove = true;
+	}else {
+		this.changeMarkerColor(0xcc3333);
+		this.canMove = false;
+	}*/
+
+	if(!this.checkLayer(this.marker.x, this.marker.y,1,this.unMovableLayers) && this.checkLayer(this.marker.x, this.marker.y,9,this.movableLayers)){
 		this.changeMarkerColor(0x529024);
 		this.canMove = true;
 	}else {
@@ -255,7 +267,7 @@ Grid.prototype.checkLayer = function(_x,_y,_tileID, _layers) {
 				if(_x === tmpX && _y === tmpY){
 					/*this.debugW.x = tmpX;
 					this.debugW.y = tmpY;*/
-					console.log('Type: ' + _tileID);
+					//console.log('Type: ' + _tileID);
 					return true;
 				}
 			}
@@ -286,4 +298,147 @@ Grid.prototype.collect = function(_x, _y,_layers) {
 		}
 	}
 	return this.getAt(4).getFirstAlive();
+}
+
+Grid.prototype.moveMatrix = function(_matrix, _direction) {
+	var movable = 0;
+	for (var i = _matrix.length - 1; i >= 0; i--) {
+		if (_matrix[i] !== 0 && _matrix !== 9){
+			movable = i;
+		}
+		_matrix[i] = 0;
+	};
+	var left = false;
+	var right = false;
+	var up = false;
+	var down = false;
+
+	/*if(movable % 10 == 0){
+		left = true;
+		console.log('left');
+	}
+	if(movable % 9 == 0){
+		left = true;
+		console.log('left');
+	}
+	if(movable < 10){
+		up = true;
+		console.log('up');
+	}*/
+	
+	console.log('Movable: ' + movable);
+
+	switch(_direction){
+		case 'left':
+		_matrix[movable + 21] = 9;
+		_matrix[movable + 20] = 9;
+		_matrix[movable + 19] = 9;
+
+		_matrix[movable + 9] = 9;
+		_matrix[movable + 10] = 5;
+		_matrix[movable + 11] = 9;
+
+		_matrix[movable] = 9;
+		_matrix[movable + 1] = 9;
+		_matrix[movable - 1] = 9;
+		break;
+
+		case 'up':
+		_matrix[movable - 10] = 9;
+		_matrix[movable - 9] = 9;
+		_matrix[movable - 8] = 9;
+
+		_matrix[movable + 2] = 9;
+		_matrix[movable + 1] = 5;
+		_matrix[movable] = 9;
+
+		_matrix[movable + 12] = 9;
+		_matrix[movable + 11] = 9;
+		_matrix[movable + 10] = 9;
+		break;
+
+		case 'right':
+		_matrix[movable + 3] = 9;
+		_matrix[movable + 2] = 9;
+		_matrix[movable + 1] = 9;
+
+		_matrix[movable + 13] = 9;
+		_matrix[movable + 12] = 5;
+		_matrix[movable + 11] = 9;
+
+		_matrix[movable + 23] = 9;
+		_matrix[movable + 22] = 9;
+		_matrix[movable + 21] = 9;
+		break;
+
+		case 'down':
+		_matrix[movable + 12] = 9;
+		_matrix[movable + 11] = 9;
+		_matrix[movable + 10] = 9;
+
+		_matrix[movable + 22] = 9;
+		_matrix[movable + 21] = 5;
+		_matrix[movable + 20] = 9;
+
+		_matrix[movable + 32] = 9;
+		_matrix[movable + 31] = 9;
+		_matrix[movable + 30] = 9;
+		break;
+
+		case 'topleft':
+		_matrix[movable - 11] = 9;
+		_matrix[movable - 10] = 9;
+		_matrix[movable - 9] = 9;
+
+		_matrix[movable + 1] = 9;
+		_matrix[movable] = 5;
+		_matrix[movable - 1] = 9;
+
+		_matrix[movable + 11] = 9;
+		_matrix[movable + 10] = 9;
+		_matrix[movable + 9] = 9;
+		break;
+
+		case 'topright':
+		_matrix[movable - 9] = 9;
+		_matrix[movable - 8] = 9;
+		_matrix[movable - 7] = 9;
+
+		_matrix[movable + 3] = 9;
+		_matrix[movable + 2] = 5;
+		_matrix[movable + 1] = 9;
+
+		_matrix[movable + 13] = 9;
+		_matrix[movable + 12] = 9;
+		_matrix[movable + 11] = 9;
+		break;
+
+		case 'bottomleft':
+		_matrix[movable + 11] = 9;
+		_matrix[movable + 10] = 9;
+		_matrix[movable + 9] = 9;
+
+		_matrix[movable + 21] = 9;
+		_matrix[movable + 20] = 5;
+		_matrix[movable + 19] = 9;
+
+		_matrix[movable + 31] = 9;
+		_matrix[movable + 30] = 9;
+		_matrix[movable + 29] = 9;
+		break;
+
+		case 'bottomright':
+		_matrix[movable + 13] = 9;
+		_matrix[movable + 12] = 9;
+		_matrix[movable + 11] = 9;
+
+		_matrix[movable + 23] = 9;
+		_matrix[movable + 22] = 5;
+		_matrix[movable + 21] = 9;
+
+		_matrix[movable + 33] = 9;
+		_matrix[movable + 32] = 9;
+		_matrix[movable + 31] = 9;
+		break;
+	}
 }

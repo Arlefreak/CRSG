@@ -166,6 +166,18 @@
 			}
 		}
 		matrix5[55] = 5;
+		matrix5[54] = 9;
+		matrix5[56] = 9;
+		
+		matrix5[44] = 9;
+		matrix5[45] = 9;
+		matrix5[46] = 9;
+
+		matrix5[64] = 9;
+		matrix5[65] = 9;
+		matrix5[66] = 9;
+		
+
 		layers.push(matrix1);
 		layers.push(matrix2);
 		layers.push(matrix3);
@@ -177,26 +189,6 @@
 
 	Play.prototype.move = function() {
 		if(this.grid.canMove){
-			if(this.grid.checkLayer(this.grid.marker.x, this.grid.marker.y,3,this.grid.finalLayers)){
-				this.quitGame('play');
-			}
-
-			if(this.grid.checkLayer(this.grid.marker.x, this.grid.marker.y,4,this.grid.collectableLayers)){
-				var tmp = this.grid.collect(this.grid.marker.x, this.grid.marker.y,this.grid.collectableLayers);
-				//tmp.kill();
-				var s = game.add.tween(tmp.scale);
-				s.to({x: 0.2, y: 0.2}, 250, Phaser.Easing.Linear.None);
-				s.start();
-				var e = game.add.tween(tmp);
-				e.onStart.add(function(){isMoving = true;});
-				e.onComplete.add(function(){isMoving = false;})
-				e.to({ x: (160 + (50*powerUps)) ,y: 0}, 250, Phaser.Easing.Linear.None, false, 0 , 0, false);
-				e.start();
-				powerUps ++;
-
-				console.log('Shield');
-			}
-
 			if(Math.round(this.grid.movableSprite.x) === Math.round(this.grid.marker.x)){
 				if(Math.round(this.grid.movableSprite.y) < Math.round(this.grid.marker.y)){
 					this.grid.move(null, 'down');
@@ -209,6 +201,32 @@
 				}else{
 					this.grid.move(null, 'left');
 				}
+			}else if(Math.round(this.grid.movableSprite.y) < Math.round(this.grid.marker.y) && Math.round(this.grid.movableSprite.x) > Math.round(this.grid.marker.x)){
+				this.grid.move(null,'bottomleft');
+			}else if(Math.round(this.grid.movableSprite.y) > Math.round(this.grid.marker.y) && Math.round(this.grid.movableSprite.x) > Math.round(this.grid.marker.x)){
+				this.grid.move(null,'topleft');
+			}else if(Math.round(this.grid.movableSprite.y) > Math.round(this.grid.marker.y) && Math.round(this.grid.movableSprite.x) < Math.round(this.grid.marker.x)){
+				this.grid.move(null,'topright');
+			}else if(Math.round(this.grid.movableSprite.y) < Math.round(this.grid.marker.y) && Math.round(this.grid.movableSprite.x) < Math.round(this.grid.marker.x)){
+				this.grid.move(null,'bottomright');
+			}
+
+			if(this.grid.checkLayer(this.grid.marker.x, this.grid.marker.y,3,this.grid.finalLayers)){
+				this.quitGame('play');
+			}
+
+			if(this.grid.checkLayer(this.grid.marker.x, this.grid.marker.y,4,this.grid.collectableLayers)){
+				var tmp = this.grid.collect(this.grid.marker.x, this.grid.marker.y,this.grid.collectableLayers);
+				var s = game.add.tween(tmp.scale);
+				s.to({x: 0.2, y: 0.2}, 250, Phaser.Easing.Linear.None);
+				s.start();
+				var e = game.add.tween(tmp);
+				e.onStart.add(function(){isMoving = true;});
+				e.onComplete.add(function(){isMoving = false;})
+				e.to({ x: (160 + (50*powerUps)) ,y: 0}, 250, Phaser.Easing.Linear.None, false, 0 , 0, false);
+				e.start();
+				powerUps ++;
+				console.log('Shield');
 			}
 		}
 	}

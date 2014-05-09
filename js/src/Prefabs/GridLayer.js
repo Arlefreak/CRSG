@@ -29,7 +29,7 @@ var GridLayer = function (_matrix, _type,_tileset,_tilesetKeys, _margin,_cellWid
 	var tmpTile = {};
 	for (var i = _matrix.length - 1; i >= 0; i--) {
 		tmpTile = {};
-		if(_matrix[i] !== 0){
+		if(_matrix[i] !== 0 && _matrix[i] !== 9){
 			var k = Math.floor( i/ (Math.pow(10, 0)) % 10);
 			var j = Math.floor( i/ (Math.pow(10, 1)) % 10);
 			k = Math.round((((k+1) * this.cellWidth)- (this.margin % this.cellWidth)) / this.cellWidth) * this.cellWidth + (this.margin % this.cellWidth);

@@ -3,7 +3,7 @@ var gameWidth, gameHeight, isMoving, level, powerUps;
 var BootS, PreloaderS, MainMenuS, PlayS, CreditsS, LeaderBoardsS, game;
 
 var WebFontConfig;
-WebFontConfig = {
+/*WebFontConfig = {
 	google: { families: [ 'Source+Code+Pro::latin' ] }
 };
 
@@ -16,7 +16,7 @@ WebFontConfig = {
 	var s = document.getElementsByTagName('script')[0];
 	s.parentNode.insertBefore(wf, s);
 })();
-
+*/
 
 window.onload = function () {
 	gameWidth = window.innerWidth;
