@@ -154,17 +154,19 @@
 			matrix5.push(0);
 		}
 
-		for (var i = 6-1; i >= 0; i--) {
+		for (var i = 5; i >= 0; i--) {
 			matrix1[i+22] = 1;
 			matrix1[i+72] = 1;
+
 			matrix1[22 + i*10] = 1;
 			matrix1[27 + i*10] = 1;
-
-			indexes.push(i + 22);
-			indexes.push(i + 72);
-			indexes.push(22 + i*10);
-			indexes.push(27 + i*10);
 		}
+
+		for (var i = matrix1.length - 1; i >= 0; i--) {
+			if(matrix1[i] === 1){
+				indexes.push(i);
+			}
+		};
 
 		for (var i = enemies.length - 1; i >= 0; i--) {
 			elements.push(enemies.pop());
