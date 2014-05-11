@@ -23,8 +23,15 @@
 				align: "center"
 			});
 
+			this.creditsTxt = game.add.text(game.world.centerX, this.world.height - 20, " Made with Phaser", {
+				font: "15px Source Code Pro",
+				fill: "#ffffff",
+				align: "left"
+			});
+
 			/* Anchords */
 			this.text.anchor.setTo(0.5, 0.5);
+			this.creditsTxt.anchor.setTo(0.5, 0.5);
 			this.bttBack.anchor.setTo(0.5, 0.5);
 
 			/* Transition */
