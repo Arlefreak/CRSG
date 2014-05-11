@@ -27,6 +27,17 @@
 			this.bttLeader = game.add.button(game.world.centerX + 200, game.world.centerY + 200, 'buttons', function () { this.startState('leaderboards'); }, this, 'bttLeaderHover', 'bttLeaderInactive', 'bttLeaderActive');
 			
 			/* Anchords */
+			this.bttPlay.scale.set((gameWidth/8)/this.bttPlay.width);
+			this.bttAbout.scale.set((gameWidth/12)/this.bttAbout.width);
+			this.bttLeader.scale.set((gameWidth/12)/this.bttLeader.width);
+
+			this.bttPlay.x = game.world.centerX;
+			this.bttPlay.y = game.world.centerY;
+			this.bttAbout.x = game.world.centerX - (this.bttAbout.width*1.5);
+			this.bttAbout.y = game.world.centerY + (this.bttAbout.height*3);
+			this.bttLeader.x = game.world.centerX + (this.bttLeader.width*1.5);
+			this.bttLeader.y = game.world.centerY + (this.bttLeader.height*3);
+
 			this.bttPlay.anchor.setTo(0.5, 0.5);
 			this.bttAbout.anchor.setTo(0.5, 0.5);
 			this.bttLeader.anchor.setTo(0.5, 0.5);

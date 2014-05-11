@@ -11,7 +11,7 @@
 			this.enterKey.onDown.add(function () { this.startState('play'); }, this);
 
 			/* Text */
-			this.text = game.add.text(game.world.centerX, game.world.centerY - 20, "CRSG\n A one man job\n by Arlefreak \n", {
+			this.text = game.add.text(game.world.centerX, game.world.centerY - 100, "CRSG\n A one man job\n by Arlefreak \n", {
 				font: "40px Source Code Pro",
 				fill: "#f0f0f0",
 				align: "center"

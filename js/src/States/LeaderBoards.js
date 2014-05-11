@@ -14,8 +14,8 @@
 			this.enterKey.onDown.add(function () { this.startState('play'); }, this);
 
 			/* Text */
-			this.text = game.add.text(game.world.centerX, game.world.centerY - 20, "You Won!! \n High Score\n " + this.highScore + "\n Last Score\n " + this.lastScore, {
-				font: "17px Source Code Pro",
+			this.text = game.add.text(game.world.centerX, game.world.centerY - 100, "High Score\n " + this.highScore + "\n Last Score\n " + this.lastScore, {
+				font: "40px Source Code Pro",
 				fill: "#f0f0f0",
 				align: "center"
 			});
