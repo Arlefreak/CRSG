@@ -235,7 +235,7 @@ Grid.prototype.updateMarker = function() {
 		this.canMove = false;
 	}*/
 
-	if(this.checkLayer(this.marker.x, this.marker.y,9,this.movableLayers)){
+	if(!this.checkLayer(this.marker.x, this.marker.y,1,this.unMovableLayers) && this.checkLayer(this.marker.x, this.marker.y,9,this.movableLayers)){
 		this.changeMarkerColor(0x529024);
 		this.canMove = true;
 	}else {

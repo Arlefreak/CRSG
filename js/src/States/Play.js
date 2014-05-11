@@ -193,18 +193,37 @@
 				break;
 			}
 		}
-		matrix5[55] = 5;
-		matrix5[54] = 9;
-		matrix5[56] = 9;
-		
-		matrix5[44] = 9;
-		matrix5[45] = 9;
-		matrix5[46] = 9;
+		var playerIndex = 0;
 
-		matrix5[64] = 9;
-		matrix5[65] = 9;
-		matrix5[66] = 9;
-		
+		matrix5[playerIndex] = 5;
+
+		if(playerIndex >= 10){
+			if(playerIndex % 10 !== 9){
+				console.log(playerIndex % 10 );
+				matrix5[playerIndex - 9] = 9;
+			}
+			if(playerIndex % 10 !== 0){
+				matrix5[playerIndex - 11] = 9;
+			}
+			matrix5[playerIndex - 10] = 9;
+		}
+
+		if(playerIndex % 10 !== 9){
+			matrix5[playerIndex + 1] = 9;
+		}
+		if(playerIndex % 10 !== 0){
+			matrix5[playerIndex - 1] = 9; 
+		}
+
+		if(playerIndex < 90){
+			if(playerIndex % 10 !== 0){
+				matrix5[playerIndex + 9] = 9;
+			}
+			if(playerIndex % 10 !== 9){
+				matrix5[playerIndex + 11] = 9; 
+			}
+			matrix5[playerIndex + 10] = 9; 
+		}
 
 		layers.push(matrix1);
 		layers.push(matrix2);
