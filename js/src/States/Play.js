@@ -6,6 +6,8 @@
 			game.stage.backgroundColor = '#333333';
 			this.score = 0;
 
+			/* Transition */
+
 			/* Audio */
 			this.fx = game.add.audio('sfx');
 			this.soundtrack = game.add.audio('soundtrack');
@@ -75,6 +77,16 @@
 			this.rightKey.onDown.add(function () { this.grid.move(this.player,'right'); },this);*/
 			game.input.onDown.add(this.move, this);
 			this.escKey.onDown.add(function () { this.quitGame('mainmenu'); }, this);
+
+			var bdmTransition =  game.add.bitmapData(gameWidth, gameHeight);
+			bdmTransition.context.fillStyle = 'rgba(50, 50, 50, 1.0)';
+			bdmTransition.context.fillRect(0,0, gameWidth, gameHeight);
+			var transition = game.add.sprite(0,0,bdmTransition);
+			var e = game.add.tween(transition);
+			e.onStart.add(function(){isMoving = true;});
+			e.onComplete.add(function(){isMoving = false;})
+			e.to({ alpha: 0 }, 500, Phaser.Easing.Linear.None, false, 0 , 0, false);
+			e.start();
 		},
 
 		update: function() {
@@ -89,13 +101,22 @@
 			//game.debug.spriteCoords(this.grid.debugW, gameWidth - 500, 150);
 		},
 
-		quitGame: function (state) {
+		quitGame: function (_state) {
 			level++;
 			this.grid = {};
 			this.fx.play('',0,1,false);
 			localStorage.setItem('lastScore', this.score);
 			game.time.events.remove(this.timer);
-			game.state.start(state);
+
+			var bdmTransition =  game.add.bitmapData(gameWidth, gameHeight);
+			bdmTransition.context.fillStyle = 'rgba(50, 50, 50, 1.0)';
+			bdmTransition.context.fillRect(0,0, gameWidth, gameHeight);
+			var transition = game.add.sprite(0,0,bdmTransition);
+			transition.alpha = 0;
+			var e = game.add.tween(transition);
+			e.to({ alpha: 1 }, 500, Phaser.Easing.Linear.None, false, 0 , 0, false);
+			e.start();
+			e.onComplete.add(function(){game.state.start(_state);});
 		}
 	};
 
