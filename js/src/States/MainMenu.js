@@ -20,9 +20,9 @@
 			this.bttLeader = game.add.button(game.world.centerX + 200, game.world.centerY + 200, 'buttons', function () { this.startState('leaderboards'); }, this, 'bttLeaderHover', 'bttLeaderInactive', 'bttLeaderActive');
 			
 			/* Scales */
-			this.bttPlay.scale.set((gameWidth/8)/this.bttPlay.width);
-			this.bttAbout.scale.set((gameWidth/12)/this.bttAbout.width);
-			this.bttLeader.scale.set((gameWidth/12)/this.bttLeader.width);
+			this.bttPlay.scale.set((gameWidth/6)/this.bttPlay.width);
+			this.bttAbout.scale.set((gameWidth/10)/this.bttAbout.width);
+			this.bttLeader.scale.set((gameWidth/10)/this.bttLeader.width);
 
 			this.bttPlay.x = game.world.centerX;
 			this.bttPlay.y = game.world.centerY;
