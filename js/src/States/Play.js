@@ -21,7 +21,14 @@
 			/* Grid */
 
 			/* Groups */
-			this.grid = new Grid(10, 10, gameWidth, gameHeight, 50, true, true);
+			var margin = 0;
+			if (gameWidth > gameHeight){
+				margin = gameHeight * .10;
+			}else{
+				margin = gameWidth * .10;
+			}
+
+			this.grid = new Grid(10, 10, gameWidth, gameHeight, margin, true, true);
 			var layers = this.genLayers();
 			this.TilePowerUpsG = game.add.group();
 			var powerup;

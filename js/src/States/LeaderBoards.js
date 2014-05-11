@@ -15,7 +15,14 @@
 
 			/* Buttons */
 			this.bttBack = game.add.button(game.world.centerX  - 200, game.world.centerY + 200, 'buttons', function () { this.startState('mainmenu'); }, this, 'bttBackHover', 'bttBackInactive', 'bttBackActive');
-			this.bttBack.scale.set((gameWidth/10)/this.bttBack.width);
+			var convertion = 0;
+			if (gameWidth > gameHeight){
+				convertion = gameHeight;
+			}else{
+				convertion = gameWidth;
+			}
+			
+			this.bttBack.scale.set((convertion/10)/this.bttBack.width);
 
 			this.bttBack.x = game.world.centerX - (this.bttBack.width*1.5);
 			this.bttBack.y = game.world.centerY + (this.bttBack.height*3);

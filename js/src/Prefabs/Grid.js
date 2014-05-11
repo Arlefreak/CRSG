@@ -93,14 +93,9 @@ Grid.prototype.move = function (_sprite,_direction){
 	var mRight = Math.round(((this.movableSprite.x + this.cellWidth)- (this.margin % this.cellWidth)) / this.cellWidth) * this.cellWidth + (this.margin % this.cellWidth);
 	var mUp = Math.round(((this.movableSprite.y - this.cellWidth)- (this.margin % this.cellWidth)) / this.cellWidth) * this.cellWidth + (this.margin % this.cellWidth);
 	var mDown = Math.round(((this.movableSprite.y + this.cellWidth)- (this.margin % this.cellWidth)) / this.cellWidth) * this.cellWidth + (this.margin % this.cellWidth);
-	/*var mTopLeft = Math.round(((this.movableSprite.y + this.cellWidth)- (this.margin % this.cellWidth)) / this.cellWidth) * this.cellWidth + (this.margin % this.cellWidth) - 6;
-	var mTopRight = Math.round(((this.movableSprite.y + this.cellWidth)- (this.margin % this.cellWidth)) / this.cellWidth) * this.cellWidth + (this.margin % this.cellWidth) - 6;
-	var mBottomLeft = Math.round(((this.movableSprite.y + this.cellWidth)- (this.margin % this.cellWidth)) / this.cellWidth) * this.cellWidth + (this.margin % this.cellWidth) - 6;
-	var mBottomRight = Math.round(((this.movableSprite.y + this.cellWidth)- (this.margin % this.cellWidth)) / this.cellWidth) * this.cellWidth + (this.margin % this.cellWidth) - 6;
-	*/
-	this.moveMatrix(this.movableLayers[0],_direction);
 
 	if(!isMoving){
+		this.moveMatrix(this.movableLayers[0],_direction);
 		switch(_direction){
 			case 'left':
 			//console.log('Left: ' + this.limitLeft + ' Player: ' + this.movableSprite.x + ' cellWidth: ' + this.cellWidth);
@@ -240,7 +235,7 @@ Grid.prototype.updateMarker = function() {
 		this.canMove = false;
 	}*/
 
-	if(!this.checkLayer(this.marker.x, this.marker.y,1,this.unMovableLayers) && this.checkLayer(this.marker.x, this.marker.y,9,this.movableLayers)){
+	if(this.checkLayer(this.marker.x, this.marker.y,9,this.movableLayers)){
 		this.changeMarkerColor(0x529024);
 		this.canMove = true;
 	}else {
@@ -303,142 +298,75 @@ Grid.prototype.collect = function(_x, _y,_layers) {
 Grid.prototype.moveMatrix = function(_matrix, _direction) {
 	var movable = 0;
 	for (var i = _matrix.length - 1; i >= 0; i--) {
-		if (_matrix[i] !== 0 && _matrix !== 9){
+		if (_matrix[i] === 5){
 			movable = i;
 		}
 		_matrix[i] = 0;
 	};
-	var left = false;
-	var right = false;
-	var up = false;
-	var down = false;
-
-	/*if(movable % 10 == 0){
-		left = true;
-		console.log('left');
-	}
-	if(movable % 9 == 0){
-		left = true;
-		console.log('left');
-	}
-	if(movable < 10){
-		up = true;
-		console.log('up');
-	}*/
-	
-	console.log('Movable: ' + movable);
+	console.log('Movable1: ' + movable);
 
 	switch(_direction){
 		case 'left':
-		_matrix[movable + 21] = 9;
-		_matrix[movable + 20] = 9;
-		_matrix[movable + 19] = 9;
-
-		_matrix[movable + 9] = 9;
-		_matrix[movable + 10] = 5;
-		_matrix[movable + 11] = 9;
-
-		_matrix[movable] = 9;
-		_matrix[movable + 1] = 9;
-		_matrix[movable - 1] = 9;
+		movable --;
 		break;
 
 		case 'up':
-		_matrix[movable - 10] = 9;
-		_matrix[movable - 9] = 9;
-		_matrix[movable - 8] = 9;
-
-		_matrix[movable + 2] = 9;
-		_matrix[movable + 1] = 5;
-		_matrix[movable] = 9;
-
-		_matrix[movable + 12] = 9;
-		_matrix[movable + 11] = 9;
-		_matrix[movable + 10] = 9;
+		movable -= 10;
 		break;
 
 		case 'right':
-		_matrix[movable + 3] = 9;
-		_matrix[movable + 2] = 9;
-		_matrix[movable + 1] = 9;
-
-		_matrix[movable + 13] = 9;
-		_matrix[movable + 12] = 5;
-		_matrix[movable + 11] = 9;
-
-		_matrix[movable + 23] = 9;
-		_matrix[movable + 22] = 9;
-		_matrix[movable + 21] = 9;
+		movable ++;
 		break;
 
 		case 'down':
-		_matrix[movable + 12] = 9;
-		_matrix[movable + 11] = 9;
-		_matrix[movable + 10] = 9;
-
-		_matrix[movable + 22] = 9;
-		_matrix[movable + 21] = 5;
-		_matrix[movable + 20] = 9;
-
-		_matrix[movable + 32] = 9;
-		_matrix[movable + 31] = 9;
-		_matrix[movable + 30] = 9;
+		movable += 10;
 		break;
 
 		case 'topleft':
-		_matrix[movable - 11] = 9;
-		_matrix[movable - 10] = 9;
-		_matrix[movable - 9] = 9;
-
-		_matrix[movable + 1] = 9;
-		_matrix[movable] = 5;
-		_matrix[movable - 1] = 9;
-
-		_matrix[movable + 11] = 9;
-		_matrix[movable + 10] = 9;
-		_matrix[movable + 9] = 9;
+		movable -= 11;
 		break;
 
 		case 'topright':
-		_matrix[movable - 9] = 9;
-		_matrix[movable - 8] = 9;
-		_matrix[movable - 7] = 9;
-
-		_matrix[movable + 3] = 9;
-		_matrix[movable + 2] = 5;
-		_matrix[movable + 1] = 9;
-
-		_matrix[movable + 13] = 9;
-		_matrix[movable + 12] = 9;
-		_matrix[movable + 11] = 9;
+		movable -= 9;
 		break;
 
 		case 'bottomleft':
-		_matrix[movable + 11] = 9;
-		_matrix[movable + 10] = 9;
-		_matrix[movable + 9] = 9;
-
-		_matrix[movable + 21] = 9;
-		_matrix[movable + 20] = 5;
-		_matrix[movable + 19] = 9;
-
-		_matrix[movable + 31] = 9;
-		_matrix[movable + 30] = 9;
-		_matrix[movable + 29] = 9;
+		movable += 9;
 		break;
 
 		case 'bottomright':
-		_matrix[movable + 13] = 9;
-		_matrix[movable + 12] = 9;
-		_matrix[movable + 11] = 9;
-
-		_matrix[movable + 23] = 9;
-		_matrix[movable + 22] = 5;
-		_matrix[movable + 21] = 9;
-
-		_matrix[movable + 33] = 9;
-		_matrix[movable + 32] = 9;
-		_matrix[movable + 31] = 9;
+		movable += 11;
 		break;
+	}
+	console.log('Movable2: ' + movable);
+
+	_matrix[movable] = 5;
+
+	if(movable >= 10){
+		if(movable % 10 !== 9){
+			console.log(movable % 10 );
+			_matrix[movable - 9] = 9;
+		}
+		if(movable % 10 !== 0){
+			_matrix[movable - 11] = 9;
+		}
+		_matrix[movable - 10] = 9;
+	}
+
+	if(movable % 10 !== 9){
+		_matrix[movable + 1] = 9;
+	}
+	if(movable % 10 !== 0){
+		_matrix[movable - 1] = 9; 
+	}
+	
+	if(movable < 90){
+		if(movable % 10 !== 0){
+			_matrix[movable + 9] = 9;
+		}
+		if(movable % 10 !== 9){
+			_matrix[movable + 11] = 9; 
+		}
+		_matrix[movable + 10] = 9; 
 	}
 }

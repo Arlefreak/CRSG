@@ -32,8 +32,8 @@ var GridLayer = function (_matrix, _type,_tileset,_tilesetKeys, _margin,_cellWid
 		if(_matrix[i] !== 0 && _matrix[i] !== 9){
 			var k = Math.floor( i/ (Math.pow(10, 0)) % 10);
 			var j = Math.floor( i/ (Math.pow(10, 1)) % 10);
-			k = Math.round((((k+1) * this.cellWidth)- (this.margin % this.cellWidth)) / this.cellWidth) * this.cellWidth + (this.margin % this.cellWidth);
-			j = Math.round((((j+ 1) * this.cellHeight)- (this.margin % this.cellHeight)) / this.cellHeight) * this.cellHeight + (this.margin % this.cellHeight);
+			k = Math.round((((k+1) * this.cellWidth + 10 )- (this.margin % this.cellWidth)) / this.cellWidth) * this.cellWidth + (this.margin % this.cellWidth);
+			j = Math.round((((j+ 1) * this.cellHeight + 10)- (this.margin % this.cellHeight)) / this.cellHeight) * this.cellHeight + (this.margin % this.cellHeight);
 
 			tmpTile = game.add.sprite(k , j, _tileset);
 			tmpTile.frameName = this.frameNames[_matrix[i]];
