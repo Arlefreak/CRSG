@@ -17,12 +17,12 @@
 			this.bttBack.y = game.world.centerY + (this.bttBack.height*3);
 
 			/* Text */
-			this.text = game.add.text(game.world.centerX, game.world.centerY - 100, "CRSG\n A one man job\n by Arlefreak \n", {
+			this.text = game.add.text(game.world.centerX, game.world.centerY, "CRSG\n A one man job\n by Arlefreak \n", {
 				font: (this.bttBack.height) + "px Source Code Pro",
 				fill: "#f0f0f0",
 				align: "center"
 			});
-			
+
 			/* Anchords */
 			this.text.anchor.setTo(0.5, 0.5);
 			this.bttBack.anchor.setTo(0.5, 0.5);

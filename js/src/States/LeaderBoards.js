@@ -21,7 +21,7 @@
 			this.bttBack.y = game.world.centerY + (this.bttBack.height*3);
 
 			/* Text */
-			this.text = game.add.text(game.world.centerX, game.world.centerY - 100, "High Score\n " + this.highScore + "\n Last Score\n " + this.lastScore, {
+			this.text = game.add.text(game.world.centerX, game.world.centerY, "High Score\n " + this.highScore + "\n Last Score\n " + this.lastScore, {
 				font: (this.bttBack.height) + "px Source Code Pro",
 				fill: "#f0f0f0",
 				align: "center"
