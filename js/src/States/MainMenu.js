@@ -34,7 +34,7 @@
 
 			/* Text */
 			this.titleTxt = game.add.text(game.world.centerX, game.world.centerY - this.bttPlay.height + 10, "CRSG", {
-				font: "100px Source Code Pro",
+				font: (this.bttPlay.height / 2) + "px Source Code Pro",
 				fill: "#f0f0f0",
 				align: "center"
 			});
