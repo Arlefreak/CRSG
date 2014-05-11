@@ -14,19 +14,12 @@
 			this.enterKey = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
 			this.enterKey.onDown.add( function () { this.startState('play'); }, this);
 
-			/* Text */
-			this.titleTxt = game.add.text(game.world.centerX, game.world.centerY - 250, "CRSG", {
-				font: "100px Source Code Pro",
-				fill: "#f0f0f0",
-				align: "center"
-			});
-
 			/* Buttons */
 			this.bttPlay = game.add.button(game.world.centerX , game.world.centerY , 'buttons', function () { this.startState('play'); }, this, 'bttStartHover', 'bttStartInactive', 'bttStartActive');
 			this.bttAbout = game.add.button(game.world.centerX  - 200, game.world.centerY + 200, 'buttons', function () { this.startState('credits'); }, this, 'bttAboutHover', 'bttAboutInactive', 'bttAboutActive');
 			this.bttLeader = game.add.button(game.world.centerX + 200, game.world.centerY + 200, 'buttons', function () { this.startState('leaderboards'); }, this, 'bttLeaderHover', 'bttLeaderInactive', 'bttLeaderActive');
 			
-			/* Anchords */
+			/* Scales */
 			this.bttPlay.scale.set((gameWidth/8)/this.bttPlay.width);
 			this.bttAbout.scale.set((gameWidth/12)/this.bttAbout.width);
 			this.bttLeader.scale.set((gameWidth/12)/this.bttLeader.width);
@@ -38,6 +31,15 @@
 			this.bttLeader.x = game.world.centerX + (this.bttLeader.width*1.5);
 			this.bttLeader.y = game.world.centerY + (this.bttLeader.height*3);
 
+
+			/* Text */
+			this.titleTxt = game.add.text(game.world.centerX, game.world.centerY - this.bttPlay.height + 10, "CRSG", {
+				font: "100px Source Code Pro",
+				fill: "#f0f0f0",
+				align: "center"
+			});
+
+			/* Anchords */
 			this.bttPlay.anchor.setTo(0.5, 0.5);
 			this.bttAbout.anchor.setTo(0.5, 0.5);
 			this.bttLeader.anchor.setTo(0.5, 0.5);
