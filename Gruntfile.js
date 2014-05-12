@@ -22,6 +22,7 @@ module.exports = function(grunt) {
 		    'js/lib/Underscore.js',
 		    'js/src/Prefabs/Grid.js',
 		    'js/src/Prefabs/GridLayer.js',
+		    'js/src/Prefabs/Enemy.js',
 		    'js/src/States/Boot.js',
 		    'js/src/States/Preloader.js',
 		    'js/src/States/MainMenu.js',
