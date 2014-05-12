@@ -237,7 +237,8 @@
 	};
 
 	Play.prototype.move = function() {
-		if(this.grid.canMove){
+		var shield = false;
+		if(this.grid.canMove && playerTurn){
 			if(Math.round(this.grid.movableSprite.x) === Math.round(this.grid.marker.x)){
 				if(Math.round(this.grid.movableSprite.y) < Math.round(this.grid.marker.y)){
 					this.grid.move(null, 'down');
@@ -262,6 +263,8 @@
 
 			if(this.grid.checkLayer(this.grid.marker.x, this.grid.marker.y,3,this.grid.finalLayers)){
 				this.quitGame('play');
+			}else{
+
 			}
 
 			if(this.grid.checkLayer(this.grid.marker.x, this.grid.marker.y,4,this.grid.collectableLayers)){
@@ -275,8 +278,10 @@
 				e.to({ x: (160 + (50*powerUps)) ,y: 0}, 250, Phaser.Easing.Linear.None, false, 0 , 0, false);
 				e.start();
 				powerUps ++;
+				shield = true;
 				console.log('Shield');
 			}
+			this.grid.enemiesLayers[0].callAll('turn');
 		}
 	}
 

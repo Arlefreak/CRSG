@@ -35,10 +35,17 @@ var GridLayer = function (_matrix, _type,_tileset,_tilesetKeys, _margin,_cellWid
 			k = Math.round((((k+1) * this.cellWidth + 10 )- (this.margin % this.cellWidth)) / this.cellWidth) * this.cellWidth + (this.margin % this.cellWidth);
 			j = Math.round((((j+ 1) * this.cellHeight + 10)- (this.margin % this.cellHeight)) / this.cellHeight) * this.cellHeight + (this.margin % this.cellHeight);
 
-			tmpTile = game.add.sprite(k , j, _tileset);
+			switch(_matrix[i]){
+				case 2:
+				tmpTile = new Enemy(game,k,j,this.cellWidth,this.cellHeight,_tileset,this.parent);
+				break;
+				default:
+				tmpTile = game.add.sprite(k , j, _tileset);
+				break;
+			}
+
 			tmpTile.frameName = this.frameNames[_matrix[i]];
 			var convertion = this.cellWidth/tmpTile.width ;
-
 			tmpTile.scale.set(convertion);
 			this.add(tmpTile);
 

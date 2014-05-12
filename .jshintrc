@@ -18,8 +18,8 @@
 "game": true,
 "_": true,
 "Grid": true,
-"GridLayer": true
-
+"GridLayer": true,
+"playerTurn": true
 },
 // Ignore Environment Globals
 "browser"       : true,   // Standard browser globals e.g. `window`, `document`.
