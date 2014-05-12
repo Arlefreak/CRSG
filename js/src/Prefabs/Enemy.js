@@ -15,25 +15,25 @@
 'use strict';
 
 var Enemy = function (_game,_x,_y,_cellWidth,_cellHeight,_tileset,_grid) {
+	Phaser.Sprite.call(this, _game, _x + (_cellWidth/2), _y + (_cellHeight/2), 'tiles');
+	this.game = _game;
 	this.grid =_grid;
 	this.direction = 'down';
 	var rotate = Math.floor(Math.random()*4)+1;
-	Phaser.Sprite.call(this, _game, _x + (_cellWidth/2), _y + (_cellHeight/2), 'tiles');
+
 	for (var i = rotate; i >= 0; i--) {
 		this.angle += 90;
-		console.log('For Angle: ' + this.angle);
 	};
 
-	if(this.angle === 0 || this.angle === 360){
+	if(this.angle === 0){
 		this.direction = 'down';
 	}else if(this.angle === 90){
-		this.direction = 'right';
-	}else if(this.angle === 180){
-		this.direction = 'up';
-	}else if(this.angle === 270){
 		this.direction = 'left';
+	}else if(this.angle === -90){
+		this.direction = 'right';
+	}else if(this.angle === -180){
+		this.direction = 'up';
 	}
-	console.log('Direction: ' + this.direction + ' Angle: ' + this.angle);
 
 	this.anchor.set(0.5,0.5);
 };
@@ -44,7 +44,6 @@ Enemy.prototype.constructor = Enemy;
 Enemy.prototype.turn = function (){
 	var randomDirection = Math.random() >= 0.5;
 	var randomAction = Math.random() >= 0.5;
-	randomAction = false;
 
 	if(randomAction){
 		this.rotate(randomDirection,false);
@@ -70,7 +69,6 @@ Enemy.prototype.rotate = function (_direction,_shield){
 			tmpAngle -= 90;
 		}
 	}
-	console.log(this.parent);
 	e.onStart.add(function(){playerTurn = false;});
 	e.to({ angle: tmpAngle}, 500, Phaser.Easing.Linear.None, false, 0 , 0, false);
 	e.start();
@@ -78,5 +76,16 @@ Enemy.prototype.rotate = function (_direction,_shield){
 }
 
 Enemy.prototype.move = function (_direction){
-	this.parent.parent.move(this,_direction,true);
+	console.log('Direction: ' + this.direction + ' Angle: ' + this.angle);
+	if(this.angle === 0){
+		this.direction = 'down';
+	}else if(this.angle === 90){
+		this.direction = 'left';
+	}else if(this.angle === -90){
+		this.direction = 'right';
+	}else if(this.angle === -180){
+		this.direction = 'up';
+	}
+	console.log('Direction: ' + this.direction + ' Angle: ' + this.angle);
+	this.parent.parent.move(this,this.direction,true);
 }

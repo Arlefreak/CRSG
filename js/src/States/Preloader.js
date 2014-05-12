@@ -16,7 +16,6 @@
 			game.load.audio('sfx', [ 'js/res/sound/die.mp3', 'js/res/sound/die.ogg' ]);
 			game.load.audio('soundtrack', [ 'js/res/sound/soundtrack.mp3', 'js/res/sound/soundtrack.ogg' ]);
 			this.load.setPreloadSprite(this.preloadBar);
-			this.load.image('particle', 'js/res/img/particle.png');
 			this.load.atlasJSONHash('buttons', 'js/res/spritesheets/buttons.png', 'js/res/spritesheets/buttons.json');
 			this.load.atlasJSONHash('tiles', 'js/res/spritesheets/tiles.png', 'js/res/spritesheets/tiles.json');
 		},
