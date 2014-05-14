@@ -51,12 +51,13 @@ var Enemy = function (_game,_x,_y,_cellWidth,_cellHeight,_tileset,_grid) {
 		this.direction = 'up';
 	}
 
-	this.debugW = this.game.add.graphics();
-	this.debugW.beginFill(0x964514, 0.5);
-	this.debugW.drawRect(0, 0, 10, 10);
-	this.debugW.endFill();
 	this.anchor.set(0.5,0.5);
 	this.game.add.existing(this);
+
+	/*this.debugW = this.game.add.graphics();
+	this.debugW.beginFill(0x964514, 0.5);
+	this.debugW.drawRect(0, 0, 10, 10);
+	this.debugW.endFill();*/
 };
 
 Enemy.prototype = Object.create(Phaser.Sprite.prototype);
@@ -66,8 +67,8 @@ Enemy.prototype.update = function() {
 	Phaser.Group.prototype.update.apply(this);
 	this.cornerX = this.x - (this.cellWidth/2);
 	this.cornerY = this.y - (this.cellHeight/2);
-	this.debugW.x = this.cornerX;
-	this.debugW.y = this.cornerY - this.cellHeight;
+	/*this.debugW.x = this.cornerX;
+	this.debugW.y = this.cornerY - this.cellHeight;*/
 };
 
 Enemy.prototype.turn = function (){
