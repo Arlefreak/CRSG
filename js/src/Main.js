@@ -24,7 +24,7 @@ window.onload = function () {
 	gameHeight = window.innerHeight;
 	isMoving = false;
 	playerTurn = true;
-	level = 1;
+	level = 10;
 	powerUps = 0;
 	game = new Phaser.Game(gameWidth, gameHeight, Phaser.AUTO, 'gameContainer');
 	

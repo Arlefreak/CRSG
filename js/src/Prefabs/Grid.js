@@ -47,7 +47,7 @@ var Grid = function (_rows, _columns, _width, _height, _margin, _square, _draw) 
 
 	this.limitTop =  this.margin;
 	this.limitBottom = (this.cellHeight * this.rows)+this.margin;
-	this.limitRight = (this.cellWidth * this.columns );
+	this.limitRight = (this.cellWidth * this.columns) + this.margin;
 	this.limitLeft = this.margin;
 
 	if(this.draw){
@@ -60,7 +60,10 @@ var Grid = function (_rows, _columns, _width, _height, _margin, _square, _draw) 
 /* Functions to extend Phaser Group*/
 Grid.prototype = Object.create(Phaser.Group.prototype);
 Grid.prototype.constructor = Grid;
-
+Grid.prototype.update = function(){
+	Phaser.Group.prototype.update.apply(this);
+	this.updateMarker();
+}
 
 Grid.prototype.drawGrid = function (){
 	var x;
@@ -71,7 +74,7 @@ Grid.prototype.drawGrid = function (){
 	for (x = 0; x <= this.columns; x++) {
 		this.bdmGrid.context.moveTo(x * this.cellWidth + this.margin, this.margin);
 		this.bdmGrid.context.lineTo(x * this.cellWidth + this.margin, this.height - this.margin);
-		console.log('Limit: ' + x * this.cellWidth + this.margin);
+		//console.log('Limit: ' + x * this.cellWidth + this.margin);
 	}
 
 	/* Draw horizontal Lines */
@@ -105,23 +108,17 @@ Grid.prototype.move = function (_sprite,_direction,_anchorInCenter){
 	var mRight = 0;
 	var mUp = 0;
 	var mDown = 0;
-
-	mLeft = Math.round(((tmpSprite.x - this.cellWidth)- (this.margin % this.cellWidth)) / this.cellWidth) * this.cellWidth + (this.margin % this.cellWidth);
-	mRight = Math.round(((tmpSprite.x + this.cellWidth)- (this.margin % this.cellWidth)) / this.cellWidth) * this.cellWidth + (this.margin % this.cellWidth);
-	mUp = Math.round(((tmpSprite.y - this.cellWidth)- (this.margin % this.cellWidth)) / this.cellWidth) * this.cellWidth + (this.margin % this.cellWidth);
-	mDown = Math.round(((tmpSprite.y + this.cellWidth)- (this.margin % this.cellWidth)) / this.cellWidth) * this.cellWidth + (this.margin % this.cellWidth);
-
-	if (_anchorInCenter){
-		mLeft -= this.cellWidth/2;
-		mRight +=this.cellWidth/2;
-		mUp += this.cellHeight/2;
-		mDown -= this.cellHeight/2;
-	}
+	
+	mLeft = tmpSprite.x - this.cellWidth;
+	mRight = tmpSprite.x + this.cellWidth;
+	mUp = tmpSprite.y - this.cellHeight;
+	mDown = tmpSprite.y + this.cellHeight;
 
 	if(!isMoving){
 		if(_sprite === null){
 			this.moveMatrix(this.movableLayers[0],_direction);
 		}
+		
 		switch(_direction){
 			case 'left':
 			if (tmpSprite.x - (this.cellWidth/2) >= this.limitLeft){
@@ -206,8 +203,8 @@ Grid.prototype.createMarker = function () {
 	this.debugS.beginFill(0xffffff, 1.0);
 	this.debugS.drawRect(0, 0, 5, 5);
 	this.debugS.endFill();*/
-/*
-	this.debugW = game.add.graphics();
+
+	/*this.debugW = game.add.graphics();
 	this.debugW.beginFill(0x964514, 0.5);
 	this.debugW.drawRect(0, 0, this.cellWidth, this.cellHeight);
 	this.debugW.endFill();*/
@@ -225,18 +222,13 @@ Grid.prototype.changeMarkerColor = function (_color) {
 	this.marker.endFill();
 };
 
-Grid.prototype.update = function() {
-	this.updateMarker();
-};
-
-
 Grid.prototype.updateMarker = function() {
 	this.canMove = false;
 
 	/*this.debugS.x = this.marker.x;
 	this.debugS.y = this.marker.y;*/
 
-	if ((game.input.activePointer.worldX > this.limitLeft && game.input.activePointer.worldX < this.limitRight + this.margin) && (game.input.activePointer.worldY > this.limitTop && game.input.activePointer.worldY <  this.limitBottom)){
+	if ((game.input.activePointer.worldX > this.limitLeft && game.input.activePointer.worldX < this.limitRight) && (game.input.activePointer.worldY > this.limitTop && game.input.activePointer.worldY <  this.limitBottom)){
 		this.marker.x = Math.round(( (game.input.activePointer.worldX - this.cellWidth/2) - (this.margin % this.cellWidth)) / this.cellWidth) * this.cellWidth + (this.margin % this.cellWidth);
 		this.marker.y = Math.round(( (game.input.activePointer.worldY - this.cellHeight/2) - (this.margin % this.cellHeight)) / this.cellHeight) * this.cellHeight + (this.margin % this.cellHeight);
 	}
@@ -260,7 +252,6 @@ Grid.prototype.updateMarker = function() {
 Grid.prototype.checkLayer = function(_x,_y,_tileID, _layers) {
 	var tmpX = 0;
 	var tmpY = 0;
-
 	for (var i = _layers.length - 1; i >= 0; i--) {
 		for (var J= _layers[i].length - 1; J>= 0; J--) {
 			var tmpMatrix = _layers[i];
