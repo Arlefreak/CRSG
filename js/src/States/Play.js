@@ -28,7 +28,7 @@
 				margin = gameWidth * .10;
 			}
 
-			this.grid = new Grid(10, 10, gameWidth, gameHeight, margin, true, true);
+			this.grid = new Grid(game,10, 10, gameWidth, gameHeight, margin, true, true);
 			var layers = this.genLayers();
 			this.TilePowerUpsG = game.add.group();
 			var powerup;
@@ -201,7 +201,6 @@
 
 		if(playerIndex >= 10){
 			if(playerIndex % 10 !== 9){
-				console.log(playerIndex % 10 );
 				matrix5[playerIndex - 9] = 9;
 			}
 			if(playerIndex % 10 !== 0){
@@ -279,7 +278,6 @@
 				e.start();
 				powerUps ++;
 				shield = true;
-				console.log('Shield');
 			}
 			this.grid.enemiesLayers[0].callAll('turn');
 		}

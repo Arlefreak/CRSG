@@ -14,14 +14,13 @@
 
 'use strict';
 
-var Enemy = function (_game,_x,_y,_cellWidth,_cellHeight,_tileset,_grid) {
+var Enemy = function (_game,_x,_y,_cellWidth,_cellHeight,_tileset,_i) {
+	Phaser.Sprite.call(this, _game, _x + (_cellWidth/2), _y + (_cellHeight/2), 'tiles');
 	this.game = _game;
-	Phaser.Sprite.call(this, this.game, _x + (_cellWidth/2), _y + (_cellHeight/2), 'tiles');
-	this.grid =_grid;
 	this.direction = 'down';
 	this.cellWidth = _cellWidth;
 	this.cellHeight = _cellHeight;
-
+	this.name = 'Enemy-' + _i;
 	this.canMove = false;
 	this.obstacleUp = false;
 	this.obstacleDown = false; 
@@ -65,8 +64,7 @@ Enemy.prototype.constructor = Enemy;
 
 Enemy.prototype.update = function() {
 	Phaser.Group.prototype.update.apply(this);
-	this.cornerX = this.x - (this.cellWidth/2);
-	this.cornerY = this.y - (this.cellHeight/2);
+	
 	/*this.debugW.x = this.cornerX;
 	this.debugW.y = this.cornerY - this.cellHeight;*/
 };
@@ -75,22 +73,28 @@ Enemy.prototype.turn = function (){
 	var randomDirection = Math.random() >= 0.5;
 	var randomAction = Math.random() >= 0.5;
 	
+	this.cornerX = this.x - (this.cellWidth/2);
+	this.cornerY = this.y - (this.cellHeight/2);
 
 	this.obstacleUp = (this.parent.parent.checkLayer(this.cornerX,this.cornerY - this.cellHeight ,1, this.parent.parent.unMovableLayers)
+		|| this.parent.parent.checkLayer(this.cornerX,this.cornerY - this.cellHeight,2, this.parent.parent.enemiesLayers)
 		|| this.parent.parent.checkLayer(this.cornerX,this.cornerY - this.cellHeight,3, this.parent.parent.finalLayers)
 		|| this.parent.parent.checkLayer(this.cornerX,this.cornerY - this.cellHeight,4, this.parent.parent.collectableLayers));
 	
 	this.obstacleDown = (this.parent.parent.checkLayer(this.cornerX,this.cornerY + this.cellHeight,1, this.parent.parent.unMovableLayers)
+		|| this.parent.parent.checkLayer(this.cornerX,this.cornerY - this.cellHeight,2, this.parent.parent.enemiesLayers)
 		|| this.parent.parent.checkLayer(this.cornerX,this.cornerY + this.cellHeight,3, this.parent.parent.finalLayers)
-		|| this.parent.parent.checkLayer(this.cornerX,this.cornerY + this.cellHeight,4, this.parent.parent.collectableLayers)
-		);
+		|| this.parent.parent.checkLayer(this.cornerX,this.cornerY + this.cellHeight,4, this.parent.parent.collectableLayers));
 	
 	this.obstacleLeft = (this.parent.parent.checkLayer(this.cornerX - this.cellWidth,this.cornerY,1, this.parent.parent.unMovableLayers)
+		|| this.parent.parent.checkLayer(this.cornerX,this.cornerY - this.cellHeight,2, this.parent.parent.enemiesLayers)
 		|| this.parent.parent.checkLayer(this.cornerX - this.cellWidth,this.cornerY,3, this.parent.parent.finalLayers)
-		|| this.parent.parent.checkLayer(this.cornerX - this.cellWidth,this.cornerY,4, this.parent.parent.collectableLayers)
-	);
+		|| this.parent.parent.checkLayer(this.cornerX - this.cellWidth,this.cornerY,4, this.parent.parent.collectableLayers));
 	
-	this.obstacleRight = this.parent.parent.checkLayer(this.cornerX + this.cellWidth,this.cornerY,1, this.parent.parent.unMovableLayers);
+	this.obstacleRight = (this.parent.parent.checkLayer(this.cornerX + this.cellWidth,this.cornerY,1, this.parent.parent.unMovableLayers)
+		|| this.parent.parent.checkLayer(this.cornerX,this.cornerY - this.cellHeight,2, this.parent.parent.enemiesLayers)
+		|| this.parent.parent.checkLayer(this.cornerX + this.cellWidth,this.cornerY,3, this.parent.parent.finalLayers)
+		|| this.parent.parent.checkLayer(this.cornerX + this.cellWidth,this.cornerY,4, this.parent.parent.collectableLayers));
 
 	if (this.cornerX >= this.parent.parent.limitLeft + (this.cellWidth)){
 		this.limitLeft = false;
@@ -113,9 +117,9 @@ Enemy.prototype.turn = function (){
 	}else{
 		this.limitBottom = true;
 	}
-	
-	console.log('wallTop: ' + this.obstacleUp + ' obstacleDown: ' + this.obstacleDown + ' obstacleLeft: ' + this.obstacleLeft + ' obstacleRight: ' + this.obstacleRight);
-	console.log('wallTop: ' + this.limitTop + ' obstacleDown: ' + this.obstacleDown + ' obstacleLeft: ' + this.obstacleLeft + ' obstacleRight: ' + this.obstacleRight);
+
+	console.log('Name: ' + this.name + ' wallTop: ' + this.obstacleUp + ' obstacleDown: ' + this.obstacleDown + ' obstacleLeft: ' + this.obstacleLeft + ' obstacleRight: ' + this.obstacleRight);
+	console.log('Name: ' + this.name + ' wallTop: ' + this.limitTop + ' obstacleDown: ' + this.obstacleDown + ' obstacleLeft: ' + this.obstacleLeft + ' obstacleRight: ' + this.obstacleRight);
 
 	if(this.angle === 0){
 		if(this.obstacleDown || this.limitBottom){
@@ -170,7 +174,6 @@ Enemy.prototype.rotate = function (_direction,_shield){
 }
 
 Enemy.prototype.move = function (_direction){
-	console.log('Direction: ' + this.direction + ' Angle: ' + this.angle);
 	if(this.angle === 0){
 		this.direction = 'down';
 	}else if(this.angle === 90){
@@ -180,6 +183,5 @@ Enemy.prototype.move = function (_direction){
 	}else if(this.angle === -180){
 		this.direction = 'up';
 	}
-	console.log('Direction: ' + this.direction + ' Angle: ' + this.angle);
 	this.parent.parent.move(this,this.direction,true);
 }

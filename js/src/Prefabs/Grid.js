@@ -14,8 +14,9 @@
 
 'use strict';
 
-var Grid = function (_rows, _columns, _width, _height, _margin, _square, _draw) {
-	Phaser.Group.call(this, game);
+var Grid = function (_game,_rows, _columns, _width, _height, _margin, _square, _draw) {
+	Phaser.Group.call(this, _game);
+	this.game = _game;
 	this.rows = _rows;
 	this.columns = _columns;
 	this.width = _width;
@@ -173,7 +174,7 @@ Grid.prototype.move = function (_sprite,_direction,_anchorInCenter){
 };
 
 Grid.prototype.addLayer = function (_matrix, _type,_tileset,_tilesetKeys ){
-	var layer = new GridLayer(_matrix, _type,_tileset,_tilesetKeys, this.margin, this.cellWidth, this.cellHeight);
+	var layer = new GridLayer(this.game,_matrix, _type,_tileset,_tilesetKeys, this.margin, this.cellWidth, this.cellHeight);
 	this.add(layer);
 	switch(_type){
 		case 'movable':
@@ -305,8 +306,6 @@ Grid.prototype.moveMatrix = function(_matrix, _direction) {
 		}
 		_matrix[i] = 0;
 	};
-	console.log('Movable1: ' + movable);
-
 	switch(_direction){
 		case 'left':
 		movable --;
@@ -340,13 +339,11 @@ Grid.prototype.moveMatrix = function(_matrix, _direction) {
 		movable += 11;
 		break;
 	}
-	console.log('Movable2: ' + movable);
 
 	_matrix[movable] = 5;
 
 	if(movable >= 10){
 		if(movable % 10 !== 9){
-			console.log(movable % 10 );
 			_matrix[movable - 9] = 9;
 		}
 		if(movable % 10 !== 0){

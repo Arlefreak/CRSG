@@ -14,14 +14,15 @@
 
 'use strict';
 
-var GridLayer = function (_matrix, _type,_tileset,_tilesetKeys, _margin,_cellWidth, _cellHeight) {
-	Phaser.Group.call(this, game);
+var GridLayer = function (_game,_matrix, _type,_tileset,_tilesetKeys, _margin,_cellWidth, _cellHeight) {
+	Phaser.Group.call(this, _game);
+	this.game = _game;
 	this.frameNames = [];
 	this.margin = _margin;
 	this.cellWidth = _cellWidth;
 	this.cellHeight = _cellHeight;
 	if(_tilesetKeys === null){
-		this.frameNames =  _.keys(this.game.cache._images[_tileset].frameData._frameNames);
+		this.frameNames =  _.keys(this.this.game.cache._images[_tileset].frameData._frameNames);
 	}else{
 		this.frameNames =  _tilesetKeys;
 	}
@@ -37,10 +38,10 @@ var GridLayer = function (_matrix, _type,_tileset,_tilesetKeys, _margin,_cellWid
 
 			switch(_matrix[i]){
 				case 2:
-				tmpTile = new Enemy(game,k,j,this.cellWidth,this.cellHeight,_tileset,this.parent);
+				tmpTile = new Enemy(this.game,k,j,this.cellWidth,this.cellHeight,_tileset,i);
 				break;
 				default:
-				tmpTile = game.add.sprite(k , j, _tileset);
+				tmpTile = this.game.add.sprite(k , j, _tileset);
 				break;
 			}
 
@@ -49,15 +50,15 @@ var GridLayer = function (_matrix, _type,_tileset,_tilesetKeys, _margin,_cellWid
 			tmpTile.scale.set(convertion);
 			this.add(tmpTile);
 
-			/*var debugS = game.add.graphics();
+			/*var debugS = this.game.add.graphics();
 			debugS.beginFill(0xcc3333, 0.5);
 			debugS.drawRect(0, 0, 5, 5);
 			debugS.endFill();
 			debugS.x = tmpTile.x;
 			debugS.y = tmpTile.y;*/
 
-			//console.log( this.game.cache._images[_tileset].frameData._frameNames);
-			//console.log('Width: ' + this.width + ' World: ' + game.world.centerX);
+			//console.log( this.this.game.cache._images[_tileset].frameData._frameNames);
+			//console.log('Width: ' + this.width + ' World: ' + this.game.world.centerX);
 		}
 	}
 };
