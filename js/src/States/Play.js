@@ -166,7 +166,7 @@
 			if(matrix1[i] === 1){
 				indexes.push(i);
 			}
-		};
+		}
 
 		for (var i = enemies.length - 1; i >= 0; i--) {
 			elements.push(enemies.pop());

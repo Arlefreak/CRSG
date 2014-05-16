@@ -38,7 +38,7 @@ var Enemy = function (_game,_x,_y,_cellWidth,_cellHeight,_tileset,_i) {
 	//rotate = 3;
 	for (var i = rotate; i > 0; i--) {
 		this.angle += 90;
-	};
+	}
 
 	if(this.angle === 0){
 		this.direction = 'down';
