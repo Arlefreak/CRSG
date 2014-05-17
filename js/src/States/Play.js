@@ -23,9 +23,9 @@
 			/* Groups */
 			var margin = 0;
 			if (gameWidth > gameHeight){
-				margin = gameHeight * .10;
+				margin = gameHeight * 0.10;
 			}else{
-				margin = gameWidth * .10;
+				margin = gameWidth * 0.10;
 			}
 
 			this.grid = new Grid(game,10, 10, gameWidth, gameHeight, margin, true, true);

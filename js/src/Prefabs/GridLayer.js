@@ -50,12 +50,12 @@ var GridLayer = function (_game,_matrix, _type,_tileset,_tilesetKeys, _margin,_c
 			tmpTile.scale.set(convertion);
 			this.add(tmpTile);
 
-			/*var debugS = this.game.add.graphics();
-			debugS.beginFill(0xcc3333, 0.5);
-			debugS.drawRect(0, 0, 5, 5);
+			var debugS = this.game.add.graphics();
+			debugS.beginFill(0x529024, 1.0);
+			debugS.drawRect(0, 0, 10,10);
 			debugS.endFill();
 			debugS.x = tmpTile.x;
-			debugS.y = tmpTile.y;*/
+			debugS.y = tmpTile.y;
 
 			//console.log( this.this.game.cache._images[_tileset].frameData._frameNames);
 			//console.log('Width: ' + this.width + ' World: ' + this.game.world.centerX);

@@ -33,7 +33,15 @@ var Enemy = function (_game,_x,_y,_cellWidth,_cellHeight,_tileset,_i) {
 
 	this.cornerX = this.x - (this.cellWidth/2);
 	this.cornerY = this.y - (this.cellHeight/2);
-	
+	this.topX = this.cornerX;
+	this.topY = this.cornerY - this.cellHeight;
+	this.downX = this.cornerX;
+	this.downY = this.cornerY + this.cellHeight;
+	this.leftX = this.cornerX - this.cellWidth;
+	this.leftY = this.cornerY;
+        this.rightX = this.cornerX + this.cellWidth;
+	this.rightY = this.cornerY; 
+
 	var rotate = Math.floor(Math.random()*5)+1;
 	//rotate = 3;
 	for (var i = rotate; i > 0; i--) {
@@ -57,6 +65,26 @@ var Enemy = function (_game,_x,_y,_cellWidth,_cellHeight,_tileset,_i) {
 	this.debugW.beginFill(0x964514, 0.5);
 	this.debugW.drawRect(0, 0, 10, 10);
 	this.debugW.endFill();*/
+
+       this.debugTop = this.game.add.graphics();
+       this.debugDown = this.game.add.graphics();
+       this.debugRight = this.game.add.graphics();
+       this.debugLeft = this.game.add.graphics();
+
+       this.debugTop.beginFill(0x964514,0.5);
+       this.debugDown .beginFill(0x964514,0.5);
+       this.debugRight.beginFill(0x964514,0.5);
+       this.debugLeft.beginFill(0x964514,0.5);
+
+       this.debugTop.drawRect(0,0,10,10);
+       this.debugDown.drawRect(0,0,10,10);
+       this.debugRight.drawRect(0,0,10,10);
+       this.debugLeft.drawRect(0,0,10,10);
+ 
+       this.debugTop.endFill();
+       this.debugDown.endFill();
+       this.debugRight.endFill();
+       this.debugLeft.endFill();
 };
 
 Enemy.prototype = Object.create(Phaser.Sprite.prototype);
@@ -67,6 +95,15 @@ Enemy.prototype.update = function() {
 	
 	/*this.debugW.x = this.cornerX;
 	this.debugW.y = this.cornerY - this.cellHeight;*/
+
+       this.debugTop.x = this.topX;
+       this.debugTop.y = this.topY;
+       this.debugDown.x = this.downX;
+       this.debugDown.y = this.downY;
+       this.debugRight.x = this.rightX;
+       this.debugRight.y = this.rightY;
+       this.debugLeft.x = this.leftX;
+       this.debugLeft.y = this.leftY;
 };
 
 Enemy.prototype.turn = function (){
@@ -76,25 +113,44 @@ Enemy.prototype.turn = function (){
 	this.cornerX = this.x - (this.cellWidth/2);
 	this.cornerY = this.y - (this.cellHeight/2);
 
-	this.obstacleUp = (this.parent.parent.checkLayer(this.cornerX,this.cornerY - this.cellHeight ,1, this.parent.parent.unMovableLayers)
-		|| this.parent.parent.checkLayer(this.cornerX,this.cornerY - this.cellHeight,2, this.parent.parent.enemiesLayers)
-		|| this.parent.parent.checkLayer(this.cornerX,this.cornerY - this.cellHeight,3, this.parent.parent.finalLayers)
-		|| this.parent.parent.checkLayer(this.cornerX,this.cornerY - this.cellHeight,4, this.parent.parent.collectableLayers));
+	this.topX = this.cornerX;
+	this.topY = this.cornerY - this.cellHeight;
+	this.downX = this.cornerX;
+	this.downY = this.cornerY + this.cellHeight;
+	this.leftX = this.cornerX - this.cellWidth;
+	this.leftY = this.cornerY;
+        this.rightX = this.cornerX + this.cellWidth;
+	this.rightY = this.cornerY; 
+
+	var wallUp = this.parent.parent.checkLayer 	 (this.topX,this.topY,1, this.parent.parent.unMovableLayers);
+	var enemyUp = this.parent.parent.checkLayer 	 (this.topX,this.topY,2, this.parent.parent.enemiesLayers);
+	var finalUp = this.parent.parent.checkLayer 	 (this.topX,this.topY,3, this.parent.parent.finalLayers)
+	var collectableUp = this.parent.parent.checkLayer(this.topX,this.topY,4, this.parent.parent.collectableLayers);
 	
-	this.obstacleDown = (this.parent.parent.checkLayer(this.cornerX,this.cornerY + this.cellHeight,1, this.parent.parent.unMovableLayers)
-		|| this.parent.parent.checkLayer(this.cornerX,this.cornerY - this.cellHeight,2, this.parent.parent.enemiesLayers)
-		|| this.parent.parent.checkLayer(this.cornerX,this.cornerY + this.cellHeight,3, this.parent.parent.finalLayers)
-		|| this.parent.parent.checkLayer(this.cornerX,this.cornerY + this.cellHeight,4, this.parent.parent.collectableLayers));
+	var wallDown = this.parent.parent.checkLayer 		(this.downX,this.downY,1, this.parent.parent.unMovableLayers);
+	var enemyDown = this.parent.parent.checkLayer 		(this.downX,this.downY,2, this.parent.parent.enemiesLayers);
+	var finalDown = this.parent.parent.checkLayer  		(this.downX,this.downY,3, this.parent.parent.finalLayers);
+	var collectableDown = this.parent.parent.checkLayer 	(this.downX,this.downY,4, this.parent.parent.collectableLayers);
+
+	var wallLeft = this.parent.parent.checkLayer 		(this.leftX,this.leftY,1, this.parent.parent.unMovableLayers);
+	var enemyLeft = this.parent.parent.checkLayer 		(this.leftX,this.leftY,2, this.parent.parent.enemiesLayers);
+	var finalLeft = this.parent.parent.checkLayer 		(this.leftX,this.leftY,3, this.parent.parent.finalLayers);
+	var collecatableLeft = this.parent.parent.checkLayer 	(this.leftX,this.leftY,4, this.parent.parent.collectableLayers);
+
+	var wallRight = this.parent.parent.checkLayer 		(this.rightX,this.rightY,1, this.parent.parent.unMovableLayers);
+	var enemyRight = this.parent.parent.checkLayer 		(this.rightX,this.rightY,2, this.parent.parent.enemiesLayers);
+	var finalRight = this.parent.parent.checkLayer 		(this.rightX,this.rightY,3, this.parent.parent.finalLayers);
+	var collectableRight = this.parent.parent.checkLayer 	(this.rightX,this.rightY,4, this.parent.parent.collectableLayers);
+
 	
-	this.obstacleLeft = (this.parent.parent.checkLayer(this.cornerX - this.cellWidth,this.cornerY,1, this.parent.parent.unMovableLayers)
-		|| this.parent.parent.checkLayer(this.cornerX,this.cornerY - this.cellHeight,2, this.parent.parent.enemiesLayers)
-		|| this.parent.parent.checkLayer(this.cornerX - this.cellWidth,this.cornerY,3, this.parent.parent.finalLayers)
-		|| this.parent.parent.checkLayer(this.cornerX - this.cellWidth,this.cornerY,4, this.parent.parent.collectableLayers));
 	
-	this.obstacleRight = (this.parent.parent.checkLayer(this.cornerX + this.cellWidth,this.cornerY,1, this.parent.parent.unMovableLayers)
-		|| this.parent.parent.checkLayer(this.cornerX,this.cornerY - this.cellHeight,2, this.parent.parent.enemiesLayers)
-		|| this.parent.parent.checkLayer(this.cornerX + this.cellWidth,this.cornerY,3, this.parent.parent.finalLayers)
-		|| this.parent.parent.checkLayer(this.cornerX + this.cellWidth,this.cornerY,4, this.parent.parent.collectableLayers));
+	this.obstacleUp = (wallUp || enemyUp || finalUp || collectableUp);
+	
+	this.obstacleDown = (wallDown || enemyDown || finalDown	|| collectableDown);
+	
+	this.obstacleLeft = (wallLeft || enemyLeft || finalLeft || collecatableLeft);
+	
+	this.obstacleRight = ( wallRight || enemyRight || finalRight || collectableRight);
 
 	if (this.cornerX >= this.parent.parent.limitLeft + (this.cellWidth)){
 		this.limitLeft = false;
@@ -118,9 +174,6 @@ Enemy.prototype.turn = function (){
 		this.limitBottom = true;
 	}
 
-	console.log('Name: ' + this.name + ' wallTop: ' + this.obstacleUp + ' obstacleDown: ' + this.obstacleDown + ' obstacleLeft: ' + this.obstacleLeft + ' obstacleRight: ' + this.obstacleRight);
-	console.log('Name: ' + this.name + ' wallTop: ' + this.limitTop + ' obstacleDown: ' + this.obstacleDown + ' obstacleLeft: ' + this.obstacleLeft + ' obstacleRight: ' + this.obstacleRight);
-
 	if(this.angle === 0){
 		if(this.obstacleDown || this.limitBottom){
 			this.canMove = false;
@@ -138,10 +191,36 @@ Enemy.prototype.turn = function (){
 			this.canMove = false;
 		}else{this.canMove = true;}
 	}
-
-	if(this.parent.parent.checkLayer(this.cornerX,this.cornerY - this.cellHeight ,5, this.parent.parent.movableLayers)){
-		this.canMove = false;
-	}
+	
+	var logVariables = [
+		{name:'wallUp', value: wallUp},
+		{name:'wallDown', value: wallDown},
+		{name:'wallRight', value: wallRight},
+		{name:'wallLeft', value: wallLeft},
+		{name:'enemyUp', value: enemyUp},
+		{name:'enemyDown', value: enemyDown},
+		{name:'enemyRight', value: enemyRight},
+		{name:'enemyLeft', value: enemyLeft},
+		{name:'finalUp', value: finalUp},
+		{name:'finalDown', value: finalDown},
+		{name:'finalRight', value: finalRight},
+		{name:'finalLeft', value: finalLeft},
+		{name:'collectableUp', value: collectableUp},
+		{name:'collectableDown', value: collectableDown},
+		{name:'collectableRight', value: collectableRight},
+		{name:'collecatableLeft', value: collecatableLeft},
+		{name:'obstacleUp', value: this.obstacleUp},
+		{name:'obstacleDown', value: this.obstacleDown},
+		{name:'obstacleRight', value: this.obstacleRight},
+		{name:'obstacleLeft', value: this.obstacleLeft},
+		{name:'limitTop', value: this.limitTop},
+		{name:'limitBottom', value: this.limitBottom},
+		{name:'limitRight', value: this.limitRight},
+		{name:'limitLeft', value: this.limitLeft},
+		{name:'CanMove', value: this.canMove}
+	]
+	
+	console.table(logVariables);
 
 	if(this.canMove){
 		this.move(this.direction);

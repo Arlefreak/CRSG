@@ -253,16 +253,17 @@ Grid.prototype.updateMarker = function() {
 Grid.prototype.checkLayer = function(_x,_y,_tileID, _layers) {
 	var tmpX = 0;
 	var tmpY = 0;
+	var x = this.snapToGrid(_x,true);
+	var y = this.snapToGrid(_y,false);
 	for (var i = _layers.length - 1; i >= 0; i--) {
 		for (var J= _layers[i].length - 1; J>= 0; J--) {
 			var tmpMatrix = _layers[i];
 			if(tmpMatrix[J] === _tileID){
 				tmpX = Math.floor( J/ (Math.pow(10, 0)) % 10);
 				tmpY = Math.floor( J/ (Math.pow(10, 1)) % 10);
-				
-				tmpX = Math.round((((tmpX+1) * this.cellWidth)- (this.margin % this.cellWidth)) / this.cellWidth) * this.cellWidth + (this.margin % this.cellWidth);
-				tmpY = Math.round((((tmpY+1) * this.cellHeight)- (this.margin % this.cellHeight)) / this.cellHeight) * this.cellHeight + (this.margin % this.cellHeight);
-				if(_x === tmpX && _y === tmpY){
+				tmpX = this.snapToGrid(((tmpX+1)*this.cellWidth),true);			
+				tmpY = this.snapToGrid(((tmpY+1)*this.cellHeight),false);			
+				if(x === tmpX && y === tmpY){
 					/*this.debugW.x = tmpX;
 					this.debugW.y = tmpY;*/
 					//console.log('Type: ' + _tileID);
@@ -278,16 +279,18 @@ Grid.prototype.checkLayer = function(_x,_y,_tileID, _layers) {
 Grid.prototype.collect = function(_x, _y,_layers) {
 	var tmpX = 0;
 	var tmpY = 0;
+	var x = this.snapToGrid(_x,true);
+	var y = this.snapToGrid(_y,false);
+
 	for (var i = _layers.length - 1; i >= 0; i--) {
 		for (var J= _layers[i].length - 1; J>= 0; J--) {
 			var tmpMatrix = _layers[i];
 			if(tmpMatrix[J] === 4){
 				tmpX = Math.floor( J/ (Math.pow(10, 0)) % 10);
 				tmpY = Math.floor( J/ (Math.pow(10, 1)) % 10);
-				
-				tmpX = Math.round((((tmpX+1) * this.cellWidth)- (this.margin % this.cellWidth)) / this.cellWidth) * this.cellWidth + (this.margin % this.cellWidth);
-				tmpY = Math.round((((tmpY+1) * this.cellHeight)- (this.margin % this.cellHeight)) / this.cellHeight) * this.cellHeight + (this.margin % this.cellHeight);
-				if(_x === tmpX && _y === tmpY){
+				tmpX = this.snapToGrid(((tmpX+1)*this.cellWidth),true);			
+				tmpY = this.snapToGrid(((tmpY+1)*this.cellHeight),false);			
+				if(x === tmpX && y === tmpY){
 					/*this.debugW.x = tmpX;
 					this.debugW.y = tmpY;*/
 					_layers[i][J] = 0;
@@ -368,4 +371,15 @@ Grid.prototype.moveMatrix = function(_matrix, _direction) {
 		}
 		_matrix[movable + 10] = 9; 
 	}
+}
+
+Grid.prototype.snapToGrid = function (_value,_X){
+	if(_X){
+
+	         //Math.round((_value - (this.margin % this.cellWidth)) / this.cellWidth) * this.cellWidth + (this.margin % this.cellWidth);
+	    return Math.round((_value - (this.margin % this.cellWidth)) / this.cellWidth) * this.cellWidth + (this.margin % this.cellWidth);
+	}else {
+	    return Math.round((_value - (this.margin % this.cellHeight)) / this.cellHeight) * this.cellHeight + (this.margin % this.cellHeight);
+	}
+
 }
