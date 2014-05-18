@@ -9,7 +9,7 @@ Array.prototype.equals = function (array) {
 
     for (var i = 0, l=this.length; i < l; i++) {
         if (this[i] instanceof Array && array[i] instanceof Array) {
-            if (!this[i].compare(array[i])){
+            if (!this[i].equals(array[i])){
                 return false;
             }
         }

@@ -112,14 +112,17 @@ Enemy.prototype.update = function() {
 
 Enemy.prototype.turn = function (){
 
-	var masterMatrix = Phaser.Utils.extend(true,{},this.parent.parent.masterMatrix);
+	var masterMatrix = Phaser.Utils.extend(true,[],this.parent.parent.masterMatrix);
 
 	masterMatrix[this.indexX][this.indexY] = 0;
 
 	for (var i = masterMatrix.length - 1; i >= 0; i--) {
-		if(masterMatrix[i] === 5){
-			masterMatrix[i] = 2;
+		for (var j = masterMatrix[i].length - 1; j >= 0; j--) {
+			if(masterMatrix[i][j] === 5){
+				masterMatrix[i][j] = 2;
+			}
 		}
+		
 	};
 
 	this.solver = new Solver(this.parent.parent.masterMatrix, masterMatrix, this.indexX, this.indexY);

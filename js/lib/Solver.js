@@ -5,28 +5,6 @@
 
 'use strict';
 
-Array.prototype.equals = function (array) {
-	if (!array){
-		return false;
-	}
-
-	if (this.length != array.length){
-		return false;
-	}
-
-	for (var i = 0, l=this.length; i < l; i++) {
-		if (this[i] instanceof Array && array[i] instanceof Array) {
-			if (!this[i].compare(array[i])){
-				return false;
-			}
-		}
-		else if (this[i] != array[i]) {
-			return false;
-		}
-	}
-	return true;
-};
-
 var Solver = function (_matrixI, _matrixF, _movableX, _movableY) {
 	this.open = [];
 	this.close = [];
@@ -35,17 +13,23 @@ var Solver = function (_matrixI, _matrixF, _movableX, _movableY) {
 	this.movableY = _movableY;
 	this.matrixI = _matrixI;
 	this.matrixF = _matrixF;
-	this.open.push(Phaser.Utils.extend(true,{},_matrixI));
+	console.log('--- Initial ---');
+	console.table(_matrixI);
+
+	console.log('--- Final ---');
+	console.table(_matrixF);
+
+	this.open.push(Phaser.Utils.extend(true,[],_matrixI));
 };
 
 Solver.prototype.calcHueristic = function(_matrix){
 	var h = 0;
 	var i = 0;
-	var tmpArray;
+	var tmpArray = [];
 
 	for(var i = 0; i < _matrix.length; i++)
 	{
-		tmpArray = newArr.concat(_matrix[i]);
+		tmpArray = tmpArray.concat(_matrix[i]);
 	}
 
 	for (i = tmpArray.length - 1; i >= 0; i--) {
@@ -58,7 +42,7 @@ Solver.prototype.calcHueristic = function(_matrix){
 };
 
 Solver.prototype.calcTotalCost = function(_matrix){
-	return (this.moves + calcHueristic(_matrix));
+	return (this.moves + this.calcHueristic(_matrix));
 };
 
 Solver.prototype.checkClosed = function(_matrix){
@@ -71,11 +55,11 @@ Solver.prototype.checkClosed = function(_matrix){
 	return false;
 };
 
-Solver.prototype.compare = function(a,b) {
-	if (calcTotalCost(a) > calcTotalCost(b)){
+Solver.prototype.ORDER = function(a,b) {
+	if (this.calcTotalCost(a) > this.calcTotalCost(b)){
 		return -1;
 	}
-	if (calcTotalCost(a) < calcTotalCost(b)){
+	if (this.calcTotalCost(a) < this.calcTotalCost(b)){
 		return 1;
 	}
 	return 0;
@@ -90,29 +74,43 @@ Solver.prototype.solve = function(){
 		var position = 0;
 		this.moves++;
 
-		this.close.push(Phaser.Utils.extend(true,{},matrixC));
+		this.close.push(Phaser.Utils.extend(true,[],matrixC));
 
 		//position = matrixC.checkPosition(0);
+
+
 		this.swap(matrixC,'left');
 		this.swap(matrixC,'up');
 		this.swap(matrixC,'right');
 		this.swap(matrixC,'down');
 
-		this.open.sort(this.compare);
+		//this.open.sort(this.ORDER);
+		var self = this;
+
+		this.open.sort(function(a,b){
+			if (self.calcTotalCost(a) > self.calcTotalCost(b)){
+				return -1;
+			}
+			if (self.calcTotalCost(a) < self.calcTotalCost(b)){
+				return 1;
+			}
+			return 0;
+		});
 
 		if(this.open.length !== 0){
 			this.matrixI = this.open[this.open.length - 1];
 			count++;
-			console.log('solving - ' + 'count: ' + count + ' - board: ' + this.open[0] + ' - closed-size: ' + this.close.length + ' - position: ' + this.movable);
+			console.log('solving - ' + 'count: ' + count + ' - closed-size: ' + this.close.length + ' - position: ' + this.movable);
+			console.table(this.open[0]);
 		}
 	}
 	//this.matrixI.draw();
 	console.log('Solved!!');
-	console.table(this.open[this.open.length - 1]);
+	//console.table(this.open[this.open.length - 1]);
 };
 
 Solver.prototype.swap = function(_matrixC,_direction){
-	var tmpMatrix = Phaser.Utils.extend(true,{},_matrixC);
+	var tmpMatrix = Phaser.Utils.extend(true,[],_matrixC);
 	var arrTemp = [];
 	var valueA = _matrixC[this.movableX][this.movableY];
 	var valueB = 0;
@@ -122,6 +120,8 @@ Solver.prototype.swap = function(_matrixC,_direction){
 		if(valueB === 0 || valueB === 9){
 			_matrixC[this.movableX][this.movableY] = valueB;
 			_matrixC[this.movableX - 1][this.movableY] = valueA;
+		}else{
+			return;
 		}
 		break;
 
@@ -130,6 +130,8 @@ Solver.prototype.swap = function(_matrixC,_direction){
 		if(valueB === 0 || valueB === 9){
 			_matrixC[this.movableX][this.movableY] = valueB;
 			_matrixC[this.movableX + 1][this.movableY] = valueA;
+		}else{
+			return;
 		}
 		break;
 
@@ -138,6 +140,8 @@ Solver.prototype.swap = function(_matrixC,_direction){
 		if(valueB === 0 || valueB === 9){
 			_matrixC[this.movableX][this.movableY] = valueB;
 			_matrixC[this.movableX][this.movableY - 1] = valueA;
+		}else{
+			return;
 		}
 		break;
 
@@ -146,6 +150,8 @@ Solver.prototype.swap = function(_matrixC,_direction){
 		if(valueB === 0 || valueB === 9){
 			_matrixC[this.movableX][this.movableY] = valueB;
 			_matrixC[this.movableX][this.movableY + 1] = valueA;
+		}else{
+			return;
 		}
 		break;
 	}
@@ -155,7 +161,7 @@ Solver.prototype.swap = function(_matrixC,_direction){
 	tmpMatrix.moves = _matrixC.moves + 1;
 	tmpMatrix.calcHueristic();
 	tmpMatrix.calcTotalCost();*/
-
+	//console.table(tmpMatrix);
 
 	if(!this.checkClosed(tmpMatrix)){
 		this.open.push(tmpMatrix);
