@@ -38,7 +38,7 @@ var GridLayer = function (_game,_matrix, _type,_tileset,_tilesetKeys, _margin,_c
 			var y = Math.round((((j+ 1) * this.cellHeight + 10)- (this.margin % this.cellHeight)) / this.cellHeight) * this.cellHeight + (this.margin % this.cellHeight);
 			switch(_matrix[i]){
 				case 2:
-				console.log('k: ' + k + ' j: ' + j);
+				console.log('x: ' + k + ' y: ' + j);
 				tmpTile = new Enemy(this.game,x,y,this.cellWidth,this.cellHeight,_tileset,i,k,j);
 				break;
 				default:
