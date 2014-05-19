@@ -129,8 +129,20 @@ Enemy.prototype.turn = function (){
     
     console.log('New Solver x: ' + this.indexX + ' y: ' + this.indexY);
     this.solver = new Solver(this.parent.parent.masterMatrix, masterMatrix, this.indexX, this.indexY);
-    this.solver.solve();
-
+    var nodeSolved = this.solver.solve();
+    var nodes = [];
+    nodes.push(nodeSolved);
+    var count = 0;
+    while(nodeSolved.parent !== null){
+    	nodes.push(nodeSolved.parent);
+	nodeSolved = nodeSolved.parent;
+	count++;
+	console.log('nodeSolver: ' + count);
+    }
+    var desireDirection = nodes[nodes.length-2].direction;
+    console.log('DesireDirection: ' + desireDirection);
+    
+    /*
     var randomDirection = Math.random() >= 0.5;
     var randomAction = Math.random() >= 0.5;
 
@@ -242,15 +254,15 @@ Enemy.prototype.turn = function (){
 	    {name:'limitRight', value: this.limitRight},
 	    {name:'limitLeft', value: this.limitLeft},
 	    {name:'CanMove', value: this.canMove}
-	]
+	]*/
 
 	//console.table(logVariables);
-
-	if(this.canMove){
+        this.move(desireDirection);
+	/*if(this.canMove){
 	    this.move(this.direction);
 	}else{
 	    this.rotate(randomDirection,false);
-	}
+	}*/
 }
 
 Enemy.prototype.rotate = function (_direction,_shield){
@@ -276,7 +288,7 @@ Enemy.prototype.rotate = function (_direction,_shield){
     e.onComplete.add(function(){playerTurn = true;});
 }
 
-Enemy.prototype.move = function (){
+Enemy.prototype.move = function (_direction){
     if(this.angle === 0){
 	this.direction = 'down';
     }else if(this.angle === 90){
@@ -286,5 +298,5 @@ Enemy.prototype.move = function (){
     }else if(this.angle === -180){
 	this.direction = 'up';
     }
-    this.parent.parent.move(this.parent,this.direction);
+    this.parent.parent.move(this.parent,_direction);
 }

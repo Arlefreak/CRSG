@@ -61,6 +61,12 @@ Solver.prototype.solve = function(){
 	    }
 	    return 0;
 	});
+	for(var i = this.open.length -1; i >= 0; i--){
+		if(this.open[i].isFinal){
+			console.log('IsFinal !!!');
+			return this.open[i];
+		}
+	}
 
     }
     //this.nodeI.draw();
@@ -78,35 +84,64 @@ Solver.prototype.swap = function(_nodeC,_direction){
     switch(_direction){
 	case 'left':
 	    limit = (tmpNode.movableY - 1 >= 0);
-	if(valueB === 0 || valueB === 9 && limit){
+	if(limit){
 	    valueB = tmpNode.matrix[tmpNode.movableY - 1][tmpNode.movableX];
-	    tmpNode.matrix[tmpNode.movableY][tmpNode.movableX] = valueB;
-	    tmpNode.matrix[tmpNode.movableY - 1][tmpNode.movableX] = valueA;
-	    tmpNode.movableY --;
-	}else{
+	    if(valueB === 0 || valueB === 9 || valueB === 5){
+		if(valueB === 5){
+		    tmpNode.matrix[tmpNode.movableY][tmpNode.movableX] = 0;
+		    tmpNode.isFinal = true;
+		}else{
+		    tmpNode.matrix[tmpNode.movableY][tmpNode.movableX] = valueB;
+		}
+		tmpNode.matrix[tmpNode.movableY - 1][tmpNode.movableX] = valueA;
+		tmpNode.movableY --;
+	    }else{
+		return;
+	    }
+	}
+	else{
 	    return;
 	}
 	break;
 
 	case 'right':
 	    limit = (tmpNode.movableY + 1 <= 9);
-	if(valueB === 0 || valueB === 9 && limit){
+	if(limit){
 	    valueB = tmpNode.matrix[tmpNode.movableY + 1][tmpNode.movableX];
-	    tmpNode.matrix[tmpNode.movableY][tmpNode.movableX] = valueB;
-	    tmpNode.matrix[tmpNode.movableY + 1][tmpNode.movableX] = valueA;
-	    tmpNode.movableY ++;
+	    if(valueB === 0 || valueB === 9 || valueB === 5){
+		if(valueB === 5){
+		    tmpNode.matrix[tmpNode.movableY][tmpNode.movableX] = 0;
+		    tmpNode.isFinal = true;
+		}else{
+		    tmpNode.matrix[tmpNode.movableY][tmpNode.movableX] = valueB;
+		}
+		tmpNode.matrix[tmpNode.movableY + 1][tmpNode.movableX] = valueA;
+		tmpNode.movableY ++;
+	    }else{
+		return;
+	    }
 	}else{
 	    return;
 	}
+
 	break;
 
 	case 'up':
 	    limit = (tmpNode.movableX - 1 >= 0);
-	if(valueB === 0 || valueB === 9 && limit){
+	if(limit){
 	    valueB = tmpNode.matrix[tmpNode.movableY][tmpNode.movableX - 1];
-	    tmpNode.matrix[tmpNode.movableY][tmpNode.movableX] = valueB;
-	    tmpNode.matrix[tmpNode.movableY][tmpNode.movableX - 1] = valueA;
-	    tmpNode.movableX --;
+	    if(valueB === 0 || valueB === 9 || valueB === 5){
+		if(valueB === 5){
+		    tmpNode.matrix[tmpNode.movableY][tmpNode.movableX] = 0;
+		    tmpNode.isFinal = true;
+		}else{
+		    tmpNode.matrix[tmpNode.movableY][tmpNode.movableX] = valueB;
+		}		
+		tmpNode.matrix[tmpNode.movableY][tmpNode.movableX - 1] = valueA;
+		tmpNode.movableX --;
+	    }else{
+		return;
+	    }
 	}else{
 	    return;
 	}
@@ -114,11 +149,20 @@ Solver.prototype.swap = function(_nodeC,_direction){
 
 	case 'down':
 	    limit = (tmpNode.movableX + 1 <= 9);
-	if(valueB === 0 || valueB === 9 && limit){
+	if(limit){
 	    valueB = tmpNode.matrix[tmpNode.movableY][tmpNode.movableX + 1];
-	    tmpNode.matrix[tmpNode.movableY][tmpNode.movableX] = valueB;
-	    tmpNode.matrix[tmpNode.movableY][tmpNode.movableX + 1] = valueA;
-	    tmpNode.movableX ++;
+	    if(valueB === 0 || valueB === 9 || valueB === 5){
+		if(valueB === 5){
+		    tmpNode.matrix[tmpNode.movableY][tmpNode.movableX] = 0;
+		    tmpNode.isFinal = true;
+		}else{
+		    tmpNode.matrix[tmpNode.movableY][tmpNode.movableX] = valueB;
+		}		
+		tmpNode.matrix[tmpNode.movableY][tmpNode.movableX + 1] = valueA;
+		tmpNode.movableX ++;
+	    }else{
+		return;
+	    }
 	}else{
 	    return;
 	}
@@ -130,6 +174,7 @@ Solver.prototype.swap = function(_nodeC,_direction){
     tmpNode.calcHueristic();
     tmpNode.calcTotalCost();
     var finalNode = new SolverNode(tmpNode.matrix,_nodeC,tmpNode.movableX,tmpNode.movableY,_direction,tmpNode.totalCost,tmpNode.moves);
+    finalNode.isFinal = tmpNode.isFinal;
     /*arrTemp = tmpMatrix.arrNumbs;
       tmpMatrix= new Board(arrTemp,_nodeC);
       tmpMatrix.moves = _nodeC.moves + 1;
