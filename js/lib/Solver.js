@@ -53,48 +53,51 @@ Solver.prototype.solve = function(){
 	//this.open.sort(this.ORDER);
 
 	this.open.sort(function(a,b){
-	    if (a.calcTotalCost() > b.calcTotalCost()){
+	    if (a.totalCost > b.totalCost){
 		return -1;
 	    }
-	    if (b.calcTotalCost(a) < b.calcTotalCost()){
+	    if (a.totalCost < b.totalCost){
 		return 1;
 	    }
 	    return 0;
 	});
 	for(var i = this.open.length -1; i >= 0; i--){
 		if(this.open[i].isFinal){
-			console.log('IsFinal !!!');
-			return this.open[i];
+			console.log('IsFinal !!!' + i + ' totalCost: ' + this.open[i].totalCost );
+			//return this.open[i];
 		}
 	}
 
     }
     //this.nodeI.draw();
     console.log('Solved!!');
+    return this.open.pop();
     //console.table(this.open[this.open.length - 1]);
 };
 
 Solver.prototype.swap = function(_nodeC,_direction){
     var tmpNode = Phaser.Utils.extend(true,{},_nodeC);
-    console.log('ValueA: ' + _nodeC.matrix[_nodeC.movableY][_nodeC.movableX] + ' x: ' + _nodeC.movableX + ' y: ' + _nodeC.movableY);
+    console.log('ValueA: ' + _nodeC.matrix[_nodeC.movableX][_nodeC.movableY] + ' x: ' + _nodeC.movableX + ' y: ' + _nodeC.movableY);
+    console.log('Direction: ' + _direction);
+    //console.table(_nodeC.matrix);
 
-    var valueA = _nodeC.matrix[_nodeC.movableY][_nodeC.movableX];
+    var valueA = _nodeC.matrix[_nodeC.movableX][_nodeC.movableY];
     var valueB = 0;
     var limit = false;
     switch(_direction){
-	case 'left':
-	    limit = (tmpNode.movableY - 1 >= 0);
+	case 'up':
+	    limit = (tmpNode.movableX - 1 >= 0);
 	if(limit){
-	    valueB = tmpNode.matrix[tmpNode.movableY - 1][tmpNode.movableX];
+	    valueB = tmpNode.matrix[tmpNode.movableX - 1][tmpNode.movableY];
 	    if(valueB === 0 || valueB === 9 || valueB === 5){
 		if(valueB === 5){
-		    tmpNode.matrix[tmpNode.movableY][tmpNode.movableX] = 0;
+		    tmpNode.matrix[tmpNode.movableX][tmpNode.movableY] = 0;
 		    tmpNode.isFinal = true;
 		}else{
-		    tmpNode.matrix[tmpNode.movableY][tmpNode.movableX] = valueB;
+		    tmpNode.matrix[tmpNode.movableX][tmpNode.movableY] = valueB;
 		}
-		tmpNode.matrix[tmpNode.movableY - 1][tmpNode.movableX] = valueA;
-		tmpNode.movableY --;
+		tmpNode.matrix[tmpNode.movableX - 1][tmpNode.movableY] = valueA;
+		tmpNode.movableX --;
 	    }else{
 		return;
 	    }
@@ -104,62 +107,62 @@ Solver.prototype.swap = function(_nodeC,_direction){
 	}
 	break;
 
-	case 'right':
-	    limit = (tmpNode.movableY + 1 <= 9);
-	if(limit){
-	    valueB = tmpNode.matrix[tmpNode.movableY + 1][tmpNode.movableX];
-	    if(valueB === 0 || valueB === 9 || valueB === 5){
-		if(valueB === 5){
-		    tmpNode.matrix[tmpNode.movableY][tmpNode.movableX] = 0;
-		    tmpNode.isFinal = true;
-		}else{
-		    tmpNode.matrix[tmpNode.movableY][tmpNode.movableX] = valueB;
-		}
-		tmpNode.matrix[tmpNode.movableY + 1][tmpNode.movableX] = valueA;
-		tmpNode.movableY ++;
-	    }else{
-		return;
-	    }
-	}else{
-	    return;
-	}
-
-	break;
-
-	case 'up':
-	    limit = (tmpNode.movableX - 1 >= 0);
-	if(limit){
-	    valueB = tmpNode.matrix[tmpNode.movableY][tmpNode.movableX - 1];
-	    if(valueB === 0 || valueB === 9 || valueB === 5){
-		if(valueB === 5){
-		    tmpNode.matrix[tmpNode.movableY][tmpNode.movableX] = 0;
-		    tmpNode.isFinal = true;
-		}else{
-		    tmpNode.matrix[tmpNode.movableY][tmpNode.movableX] = valueB;
-		}		
-		tmpNode.matrix[tmpNode.movableY][tmpNode.movableX - 1] = valueA;
-		tmpNode.movableX --;
-	    }else{
-		return;
-	    }
-	}else{
-	    return;
-	}
-	break;
-
 	case 'down':
 	    limit = (tmpNode.movableX + 1 <= 9);
 	if(limit){
-	    valueB = tmpNode.matrix[tmpNode.movableY][tmpNode.movableX + 1];
+	    valueB = tmpNode.matrix[tmpNode.movableX + 1][tmpNode.movableY];
 	    if(valueB === 0 || valueB === 9 || valueB === 5){
 		if(valueB === 5){
-		    tmpNode.matrix[tmpNode.movableY][tmpNode.movableX] = 0;
+		    tmpNode.matrix[tmpNode.movableX][tmpNode.movableY] = 0;
 		    tmpNode.isFinal = true;
 		}else{
-		    tmpNode.matrix[tmpNode.movableY][tmpNode.movableX] = valueB;
-		}		
-		tmpNode.matrix[tmpNode.movableY][tmpNode.movableX + 1] = valueA;
+		    tmpNode.matrix[tmpNode.movableX][tmpNode.movableY] = valueB;
+		}
+		tmpNode.matrix[tmpNode.movableX + 1][tmpNode.movableY] = valueA;
 		tmpNode.movableX ++;
+	    }else{
+		return;
+	    }
+	}else{
+	    return;
+	}
+
+	break;
+
+	case 'left':
+	    limit = (tmpNode.movableY - 1 >= 0);
+	if(limit){
+	    valueB = tmpNode.matrix[tmpNode.movableX][tmpNode.movableY - 1];
+	    if(valueB === 0 || valueB === 9 || valueB === 5){
+		if(valueB === 5){
+		    tmpNode.matrix[tmpNode.movableX][tmpNode.movableY] = 0;
+		    tmpNode.isFinal = true;
+		}else{
+		    tmpNode.matrix[tmpNode.movableX][tmpNode.movableY] = valueB;
+		}
+		tmpNode.matrix[tmpNode.movableX][tmpNode.movableY - 1] = valueA;
+		tmpNode.movableY --;
+	    }else{
+		return;
+	    }
+	}else{
+	    return;
+	}
+	break;
+
+	case 'right':
+	    limit = (tmpNode.movableY + 1 <= 9);
+	if(limit){
+	    valueB = tmpNode.matrix[tmpNode.movableX][tmpNode.movableY + 1];
+	    if(valueB === 0 || valueB === 9 || valueB === 5){
+		if(valueB === 5){
+		    tmpNode.matrix[tmpNode.movableX][tmpNode.movableY] = 0;
+		    tmpNode.isFinal = true;
+		}else{
+		    tmpNode.matrix[tmpNode.movableX][tmpNode.movableY] = valueB;
+		}
+		tmpNode.matrix[tmpNode.movableX][tmpNode.movableY + 1] = valueA;
+		tmpNode.movableY ++;
 	    }else{
 		return;
 	    }
@@ -169,19 +172,18 @@ Solver.prototype.swap = function(_nodeC,_direction){
 	break;
     }
 
-    //var SolverNode = function (_matrix, _parent, _movableY, _movableY, _direction,_totalCost,_moves) {
     tmpNode.moves ++;
-    tmpNode.calcHueristic();
-    tmpNode.calcTotalCost();
     var finalNode = new SolverNode(tmpNode.matrix,_nodeC,tmpNode.movableX,tmpNode.movableY,_direction,tmpNode.totalCost,tmpNode.moves);
     finalNode.isFinal = tmpNode.isFinal;
+    finalNode.calcHueristic();
+    finalNode.calcTotalCost();
     /*arrTemp = tmpMatrix.arrNumbs;
       tmpMatrix= new Board(arrTemp,_nodeC);
       tmpMatrix.moves = _nodeC.moves + 1;
       tmpMatrix.calcHueristic();
       tmpMatrix.calcTotalCost();*/
     //console.table(tmpMatrix);
-
+    //console.table(finalNode.matrix);
     if(!this.checkClosed(finalNode.matrix)){
 	this.open.push(finalNode);
     }

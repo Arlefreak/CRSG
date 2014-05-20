@@ -113,6 +113,15 @@ Enemy.prototype.update = function() {
 };
 
 Enemy.prototype.turn = function (){
+    if(this.angle === 0){
+	this.direction = 'down';
+    }else if(this.angle === 90){
+	this.direction = 'left';
+    }else if(this.angle === -90){
+	this.direction = 'right';
+    }else if(this.angle === -180){
+	this.direction = 'up';
+    }
 
     var masterMatrix = Phaser.Utils.extend(true,[],this.parent.parent.masterMatrix);
 
@@ -126,7 +135,7 @@ Enemy.prototype.turn = function (){
 	}
 
     }
-    
+
     console.log('New Solver x: ' + this.indexX + ' y: ' + this.indexY);
     this.solver = new Solver(this.parent.parent.masterMatrix, masterMatrix, this.indexX, this.indexY);
     var nodeSolved = this.solver.solve();
@@ -134,135 +143,58 @@ Enemy.prototype.turn = function (){
     nodes.push(nodeSolved);
     var count = 0;
     while(nodeSolved.parent !== null){
-    	nodes.push(nodeSolved.parent);
+	nodes.push(nodeSolved.parent);
 	nodeSolved = nodeSolved.parent;
 	count++;
-	console.log('nodeSolver: ' + count);
+	//console.log('nodeSolver: ' + count);
     }
+
     var desireDirection = nodes[nodes.length-2].direction;
-    console.log('DesireDirection: ' + desireDirection);
-    
-    /*
-    var randomDirection = Math.random() >= 0.5;
-    var randomAction = Math.random() >= 0.5;
+    console.log('Direction: ' + this.direction + ' DesireDirection: ' + desireDirection);
+    if(this.direction === desireDirection){
+	this.indexX = nodes[nodes.length-2].movableX; 
+	this.indexY = nodes[nodes.length-2].movableY; 
 
-    this.cornerX = this.x - (this.cellWidth/2);
-    this.cornerY = this.y - (this.cellHeight/2);
-
-    this.topX = this.cornerX;
-    this.topY = this.cornerY - this.cellHeight;
-    this.downX = this.cornerX;
-    this.downY = this.cornerY + this.cellHeight;
-    this.leftX = this.cornerX - this.cellWidth;
-    this.leftY = this.cornerY;
-    this.rightX = this.cornerX + this.cellWidth;
-    this.rightY = this.cornerY; 
-
-    var wallUp = this.parent.parent.checkLayer 	 (this.topX,this.topY,1, this.parent.parent.unMovableLayers);
-    var enemyUp = this.parent.parent.checkLayer 	 (this.topX,this.topY,2, this.parent.parent.enemiesLayers);
-    var finalUp = this.parent.parent.checkLayer 	 (this.topX,this.topY,3, this.parent.parent.finalLayers)
-    var collectableUp = this.parent.parent.checkLayer(this.topX,this.topY,4, this.parent.parent.collectableLayers);
-
-    var wallDown = this.parent.parent.checkLayer 		(this.downX,this.downY,1, this.parent.parent.unMovableLayers);
-    var enemyDown = this.parent.parent.checkLayer 		(this.downX,this.downY,2, this.parent.parent.enemiesLayers);
-    var finalDown = this.parent.parent.checkLayer  		(this.downX,this.downY,3, this.parent.parent.finalLayers);
-    var collectableDown = this.parent.parent.checkLayer 	(this.downX,this.downY,4, this.parent.parent.collectableLayers);
-
-    var wallLeft = this.parent.parent.checkLayer 		(this.leftX,this.leftY,1, this.parent.parent.unMovableLayers);
-    var enemyLeft = this.parent.parent.checkLayer 		(this.leftX,this.leftY,2, this.parent.parent.enemiesLayers);
-    var finalLeft = this.parent.parent.checkLayer 		(this.leftX,this.leftY,3, this.parent.parent.finalLayers);
-    var collecatableLeft = this.parent.parent.checkLayer 	(this.leftX,this.leftY,4, this.parent.parent.collectableLayers);
-
-    var wallRight = this.parent.parent.checkLayer 		(this.rightX,this.rightY,1, this.parent.parent.unMovableLayers);
-    var enemyRight = this.parent.parent.checkLayer 		(this.rightX,this.rightY,2, this.parent.parent.enemiesLayers);
-    var finalRight = this.parent.parent.checkLayer 		(this.rightX,this.rightY,3, this.parent.parent.finalLayers);
-    var collectableRight = this.parent.parent.checkLayer 	(this.rightX,this.rightY,4, this.parent.parent.collectableLayers);
-
-
-
-    this.obstacleUp = (wallUp || enemyUp || finalUp || collectableUp);
-
-    this.obstacleDown = (wallDown || enemyDown || finalDown	|| collectableDown);
-
-    this.obstacleLeft = (wallLeft || enemyLeft || finalLeft || collecatableLeft);
-
-    this.obstacleRight = ( wallRight || enemyRight || finalRight || collectableRight);
-
-    if (this.cornerX >= this.parent.parent.limitLeft + (this.cellWidth)){
-	this.limitLeft = false;
-    }else {
-	this.limitLeft = true;
-    }
-    if(this.cornerX <= this.parent.parent.limitRight - (this.cellWidth*2)){
-	this.limitRight = false;
+	this.move(desireDirection);
     }else{
-	this.limitRight = true;
-    }
-    if(this.cornerY >= this.parent.parent.limitTop + (this.cellWidth)){
-	this.limitTop = false;
-    }else{
-	this.limitTop = true;
-    }
-    if(this.cornerY <=  this.parent.parent.limitBottom-(this.cellHeight*2))
-	{
-	    this.limitBottom = false;
-	}else{
-	    this.limitBottom = true;
+	switch(desireDirection){
+	    case 'up':
+		if(this.direction === 'right'){
+		this.rotate(false,false);
+	    }else{
+		this.rotate(true,false);
+	    }
+	    break;
+	    case 'down':
+		if(this.direction === 'left'){
+		this.rotate(false,false);			
+	    }else{
+		this.rotate(false,false);
+	    }
+	    break;
+	    case 'left':
+		if(this.direction === 'down'){
+		this.rotate(true,false);
+	    }else{
+		this.rotate(false,false);
+	    }
+	    break;
+	    case 'right':
+		if(this.direction === 'up'){
+		this.rotate(true,false);
+	    }else{
+		this.rotate(false,false);
+	    }
+	    break;
+
 	}
-
-	if(this.angle === 0){
-	    if(this.obstacleDown || this.limitBottom){
-		this.canMove = false;
-	    }else{this.canMove = true;}
-	}else if(this.angle === 90){
-	    if(this.obstacleLeft || this.limitLeft){
-		this.canMove = false;
-	    }else{this.canMove = true;}
-	}else if(this.angle === -90){
-	    if(this.obstacleRight || this.limitRight){
-		this.canMove = false;
-	    }else{this.canMove = true;}
-	}else if(this.angle === -180){
-	    if(this.obstacleUp || this.limitTop){
-		this.canMove = false;
-	    }else{this.canMove = true;}
-	}
-
-	var logVariables = [
-	    {name:'wallUp', value: wallUp},
-	    {name:'wallDown', value: wallDown},
-	    {name:'wallRight', value: wallRight},
-	    {name:'wallLeft', value: wallLeft},
-	    {name:'enemyUp', value: enemyUp},
-	    {name:'enemyDown', value: enemyDown},
-	    {name:'enemyRight', value: enemyRight},
-	    {name:'enemyLeft', value: enemyLeft},
-	    {name:'finalUp', value: finalUp},
-	    {name:'finalDown', value: finalDown},
-	    {name:'finalRight', value: finalRight},
-	    {name:'finalLeft', value: finalLeft},
-	    {name:'collectableUp', value: collectableUp},
-	    {name:'collectableDown', value: collectableDown},
-	    {name:'collectableRight', value: collectableRight},
-	    {name:'collecatableLeft', value: collecatableLeft},
-	    {name:'obstacleUp', value: this.obstacleUp},
-	    {name:'obstacleDown', value: this.obstacleDown},
-	    {name:'obstacleRight', value: this.obstacleRight},
-	    {name:'obstacleLeft', value: this.obstacleLeft},
-	    {name:'limitTop', value: this.limitTop},
-	    {name:'limitBottom', value: this.limitBottom},
-	    {name:'limitRight', value: this.limitRight},
-	    {name:'limitLeft', value: this.limitLeft},
-	    {name:'CanMove', value: this.canMove}
-	]*/
-
-	//console.table(logVariables);
-        this.move(desireDirection);
-	/*if(this.canMove){
-	    this.move(this.direction);
-	}else{
-	    this.rotate(randomDirection,false);
-	}*/
+	//this.rotate(true,false);	
+    }
+    /*if(this.canMove){
+      this.move(this.direction);
+      }else{
+      this.rotate(randomDirection,false);
+      }*/
 }
 
 Enemy.prototype.rotate = function (_direction,_shield){
@@ -289,14 +221,5 @@ Enemy.prototype.rotate = function (_direction,_shield){
 }
 
 Enemy.prototype.move = function (_direction){
-    if(this.angle === 0){
-	this.direction = 'down';
-    }else if(this.angle === 90){
-	this.direction = 'left';
-    }else if(this.angle === -90){
-	this.direction = 'right';
-    }else if(this.angle === -180){
-	this.direction = 'up';
-    }
     this.parent.parent.move(this.parent,_direction);
 }

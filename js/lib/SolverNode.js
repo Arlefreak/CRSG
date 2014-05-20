@@ -23,6 +23,8 @@ SolverNode.prototype.calcHueristic = function(){
     var j = 0;
     var playerIndexX = 0;
     var playerIndexY = 0;
+    var initialIndex = 0;
+    var finalIndex = 0;
 
     for (i = this.matrix.length - 1; i >= 0; i--){
 	for (j = this.matrix[i].length - 1; j >= 0; j--){
@@ -32,7 +34,37 @@ SolverNode.prototype.calcHueristic = function(){
 	    }
 	}
     }
-    h  = Math.abs(this.movableX - playerIndexX);
+
+    if(this.movableX > playerIndexX){
+	initialIndex = playerIndexX;
+	finalIndex = this.movableX;
+    }else{
+	initialIndex = this.movableX;
+	finalIndex = playerIndexX;
+    }
+
+    for(i = finalIndex; i>= initialIndex; i--){
+	if(this.matrix[i][this.movableY] !== 0 || this.matrix[i][this.movableY] !== 9){
+	    h++;
+	}    
+    }
+
+    if(this.movableiY > playerIndexY){
+	initialIndex = playerIndexY;
+	finalIndex = this.movableY;
+    }else{
+	initialIndex = this.movableY;
+	finalIndex = playerIndexY;
+    }
+
+    for(i = finalIndex; i>= initialIndex; i--){
+	if(this.matrix[this.movableX][i] !== 0 || this.matrix[this.movableX][i] !== 9){
+	    h++;
+	}    
+    }
+
+
+    h += Math.abs(this.movableX - playerIndexX);
     h += Math.abs(this.movableY - playerIndexY);
     this.heuristic =  h;
 };

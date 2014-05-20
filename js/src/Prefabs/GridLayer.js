@@ -39,7 +39,7 @@ var GridLayer = function (_game,_matrix, _type,_tileset,_tilesetKeys, _margin,_c
 			switch(_matrix[i]){
 				case 2:
 				console.log('x: ' + k + ' y: ' + j);
-				tmpTile = new Enemy(this.game,x,y,this.cellWidth,this.cellHeight,_tileset,i,k,j);
+				tmpTile = new Enemy(this.game,x,y,this.cellWidth,this.cellHeight,_tileset,i,j,k);
 				break;
 				default:
 				tmpTile = this.game.add.sprite(x ,y, _tileset);
