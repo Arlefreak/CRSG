@@ -1,5 +1,5 @@
 'use strict';
-var gameWidth, gameHeight, isMoving, level, powerUps, playerTurn;
+var gameWidth, gameHeight, isMoving, level, powerUps, playerTurn, BUSTED;
 
 var BootS, PreloaderS, MainMenuS, PlayS, CreditsS, LeaderBoardsS, game;
 
@@ -24,6 +24,7 @@ window.onload = function () {
     gameWidth = window.innerWidth;
     gameHeight = window.innerHeight;
     isMoving = false;
+    BUSTED = false;
     playerTurn = true;
     level = 1;
     powerUps = 0;

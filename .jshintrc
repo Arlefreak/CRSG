@@ -21,7 +21,8 @@
         "GridLayer": true,
         "playerTurn": true,
         "Solver": true,
-        "SolverNode": true
+        "SolverNode": true,
+        "BUSTED": true
     },
     // Ignore Environment Globals
     "browser": true, // Standard browser globals e.g. `window`, `document`.
