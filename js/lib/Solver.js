@@ -158,12 +158,11 @@ Solver.prototype.swap = function (_nodeC, _direction) {
     }
 
     /* Gen the node that is going to be saved*/
-    tmpNode.moves++;
+    tmpNode.moves++;    
+    var finalNode = new SolverNode(tmpNode.matrix, _nodeC, tmpNode.movableX, tmpNode.movableY, _direction, tmpNode.totalCost, tmpNode.moves);
     finalNode.isFinal = tmpNode.isFinal;
     finalNode.calcHueristic();
     finalNode.calcTotalCost();
-    var finalNode = new SolverNode(tmpNode.matrix, _nodeC, tmpNode.movableX, tmpNode.movableY, _direction, tmpNode.totalCost, tmpNode.moves);
-
     /* Add the node to the open list */
     if (!this.checkClosed(finalNode.matrix)) {
         this.open.push(finalNode);
