@@ -31,7 +31,7 @@ var Enemy = function (_game, _x, _y, _cellWidth, _cellHeight, _tileset, _i, _ind
     /* Random Rotation */
     var rotate = Math.floor(Math.random() * 5) + 1;
     for (var i = rotate; i > 0; i--) {
-	this.angle += 90;
+        this.angle += 90;
     }
 
     //console.log('Enemy created at x: ' + _indexX + ' y: ' + _indexY);
@@ -43,13 +43,13 @@ Enemy.prototype.constructor = Enemy;
 Enemy.prototype.turn = function () {
     /* Get current direction of the enemy*/
     if (this.angle === 0) {
-	this.direction = 'down';
+        this.direction = 'down';
     } else if (this.angle === 90) {
-	this.direction = 'left';
+        this.direction = 'left';
     } else if (this.angle === -90) {
-	this.direction = 'right';
+        this.direction = 'right';
     } else if (this.angle === -180) {
-	this.direction = 'up';
+        this.direction = 'up';
     }
 
     /* Final Matrix */
@@ -57,11 +57,11 @@ Enemy.prototype.turn = function () {
     masterMatrix[this.indexX][this.indexY] = 0;
 
     for (var i = masterMatrix.length - 1; i >= 0; i--) {
-	for (var j = masterMatrix[i].length - 1; j >= 0; j--) {
-	    if (masterMatrix[i][j] === 5) {
-		masterMatrix[i][j] = 2;
-	    }
-	}
+        for (var j = masterMatrix[i].length - 1; j >= 0; j--) {
+            if (masterMatrix[i][j] === 5) {
+                masterMatrix[i][j] = 2;
+            }
+        }
 
     }
 
@@ -72,8 +72,8 @@ Enemy.prototype.turn = function () {
     var nodes = [];
     nodes.push(nodeSolved);
     while (nodeSolved.parent !== null) {
-	nodes.push(nodeSolved.parent);
-	nodeSolved = nodeSolved.parent;
+        nodes.push(nodeSolved.parent);
+        nodeSolved = nodeSolved.parent;
     }
 
     var desireDirection = nodes[nodes.length - 2].direction;
@@ -81,40 +81,40 @@ Enemy.prototype.turn = function () {
 
     /* Decide where to rotate*/
     if (this.direction === desireDirection) {
-	this.indexX = nodes[nodes.length - 2].movableX;
-	this.indexY = nodes[nodes.length - 2].movableY;
-	this.move(desireDirection);
+        this.indexX = nodes[nodes.length - 2].movableX;
+        this.indexY = nodes[nodes.length - 2].movableY;
+        this.move(desireDirection);
     } else {
-	switch (desireDirection) {
-	    case 'up':
-		if (this.direction === 'right') {
-		this.rotate(false, false);
-	    } else {
-		this.rotate(true, false);
-	    }
-	    break;
-	    case 'down':
-		if (this.direction === 'left') {
-		this.rotate(false, false);
-	    } else {
-		this.rotate(false, false);
-	    }
-	    break;
-	    case 'left':
-		if (this.direction === 'down') {
-		this.rotate(true, false);
-	    } else {
-		this.rotate(false, false);
-	    }
-	    break;
-	    case 'right':
-		if (this.direction === 'up') {
-		this.rotate(true, false);
-	    } else {
-		this.rotate(false, false);
-	    }
-	    break;
-	}
+        switch (desireDirection) {
+        case 'up':
+            if (this.direction === 'right') {
+                this.rotate(false, false);
+            } else {
+                this.rotate(true, false);
+            }
+            break;
+        case 'down':
+            if (this.direction === 'left') {
+                this.rotate(false, false);
+            } else {
+                this.rotate(false, false);
+            }
+            break;
+        case 'left':
+            if (this.direction === 'down') {
+                this.rotate(true, false);
+            } else {
+                this.rotate(false, false);
+            }
+            break;
+        case 'right':
+            if (this.direction === 'up') {
+                this.rotate(true, false);
+            } else {
+                this.rotate(false, false);
+            }
+            break;
+        }
     }
 }
 
@@ -123,31 +123,31 @@ Enemy.prototype.rotate = function (_direction, _shield) {
     var tmpAngle = this.angle;
 
     if (_direction) {
-	if (_shield) {
-	    tmpAngle += 180;
-	} else {
-	    tmpAngle += 90;
-	}
+        if (_shield) {
+            tmpAngle += 180;
+        } else {
+            tmpAngle += 90;
+        }
     } else {
-	if (_shield) {
-	    tmpAngle -= 180;
-	} else {
-	    tmpAngle -= 90;
-	}
+        if (_shield) {
+            tmpAngle -= 180;
+        } else {
+            tmpAngle -= 90;
+        }
     }
 
     e.onStart.add(function () {
-	playerTurn = false;
+        playerTurn = false;
     });
 
     e.to({
-	angle: tmpAngle
+        angle: tmpAngle
     }, 500, Phaser.Easing.Linear.None, false, 0, 0, false);
 
     e.start();
 
     e.onComplete.add(function () {
-	playerTurn = true;
+        playerTurn = true;
     });
 }
 
@@ -155,7 +155,7 @@ Enemy.prototype.move = function (_direction) {
     this.parent.parent.move(this.parent, _direction);
 }
 
-Enemy.prototype.checkPlayer = function (){
+Enemy.prototype.checkPlayer = function () {
     console.log('CheckPlayer');
 
     var tmpMatrix = this.parent.parent.masterMatrix;
@@ -164,60 +164,60 @@ Enemy.prototype.checkPlayer = function (){
     var playerX = 0;
     var playerY = 0;
 
-    for(i = tmpMatrix.length - 1; i >= 0; i--){
-	for(j = tmpMatrix[i].length - 1; j >= 0; j--){
-	    if(tmpMatrix[i][j] === 5){
-		playerX = i;
-		playerY = j;
-	    }
-	}
+    for (i = tmpMatrix.length - 1; i >= 0; i--) {
+        for (j = tmpMatrix[i].length - 1; j >= 0; j--) {
+            if (tmpMatrix[i][j] === 5) {
+                playerX = i;
+                playerY = j;
+            }
+        }
     }
 
-    switch(this.direction){
-	case 'up':
-	    if( playerY !== this.indexY || playerY > this.indexY){
-	    return false;
-	}else{
-	    for(i = this.indexX - 1; i >= playerX; i--){
-		if(tmpMatrix[i][this.indexY] !== 0 && tmpMatrix[i][this.indexY] !== 9 && tmpMatrix[i][this.indexY] !== 5){
-		    return false;
-		}
-	    }
-	}
-	break;
-	case 'down':
-	    if( playerY !== this.indexY || playerY < this.indexY){
-        return false;
-    }else{
-        for(i = playerX - 1; i > this.indexX; i--){
-        if(tmpMatrix[i][this.indexY] !== 0 && tmpMatrix[i][this.indexY] !== 9 && tmpMatrix[i][this.indexY] !== 5){
+    switch (this.direction) {
+    case 'up':
+        if (playerY !== this.indexY || playerY > this.indexY) {
             return false;
+        } else {
+            for (i = this.indexX - 1; i >= playerX; i--) {
+                if (tmpMatrix[i][this.indexY] !== 0 && tmpMatrix[i][this.indexY] !== 9 && tmpMatrix[i][this.indexY] !== 5) {
+                    return false;
+                }
+            }
         }
-        }
-    }
-	break;
-	case 'left':
-	    if( playerX !== this.indexX || playerX < this.indexX){
-        return false;
-    }else{
-        for(i = playerY - 1; i >= this.indexY; i--){
-        if(tmpMatrix[this.indexX][i] !== 0 && tmpMatrix[this.indexX][i] !== 9 && tmpMatrix[this.indexX][i] !== 5){
+        break;
+    case 'down':
+        if (playerY !== this.indexY || playerY < this.indexY) {
             return false;
+        } else {
+            for (i = playerX - 1; i > this.indexX; i--) {
+                if (tmpMatrix[i][this.indexY] !== 0 && tmpMatrix[i][this.indexY] !== 9 && tmpMatrix[i][this.indexY] !== 5) {
+                    return false;
+                }
+            }
         }
-        }
-    }
-	break;
-	case 'right':
-	    if( playerX !== this.indexX || playerX > this.indexX){
-        return false;
-    }else{
-        for(i = this.indexY - 1; i >= playerY; i--){
-        if(tmpMatrix[this.indexX][i] !== 0 && tmpMatrix[this.indexX][i] !== 9 && tmpMatrix[this.indexX][i] !== 5){
+        break;
+    case 'left':
+        if (playerX !== this.indexX || playerX < this.indexX) {
             return false;
+        } else {
+            for (i = playerY - 1; i >= this.indexY; i--) {
+                if (tmpMatrix[this.indexX][i] !== 0 && tmpMatrix[this.indexX][i] !== 9 && tmpMatrix[this.indexX][i] !== 5) {
+                    return false;
+                }
+            }
         }
+        break;
+    case 'right':
+        if (playerX !== this.indexX || playerX > this.indexX) {
+            return false;
+        } else {
+            for (i = this.indexY - 1; i >= playerY; i--) {
+                if (tmpMatrix[this.indexX][i] !== 0 && tmpMatrix[this.indexX][i] !== 9 && tmpMatrix[this.indexX][i] !== 5) {
+                    return false;
+                }
+            }
         }
-    }
-	break;
+        break;
     }
     BUSTED = true;
     return true;

@@ -2,9 +2,9 @@
  * Solver
  * Author: Arlefreak
  * */
- 'use strict';
+'use strict';
 
- var Solver = function (_matrixI, _matrixF, _movableX, _movableY) {
+var Solver = function (_matrixI, _matrixF, _movableX, _movableY) {
     this.open = [];
     this.close = [];
     this.moves = 0;
@@ -52,7 +52,7 @@ Solver.prototype.solve = function () {
             }
             return 0;
         });
-    }/* end while */
+    } /* end while */
 
     console.log('Solved!!');
     return this.open.pop();
@@ -69,7 +69,7 @@ Solver.prototype.swap = function (_nodeC, _direction) {
 
     /* Swap depending the direction */
     switch (_direction) {
-        case 'up':
+    case 'up':
         /* Check if the new position is out of limits */
         limit = (tmpNode.movableX - 1 >= 0);
         if (limit) {
@@ -92,7 +92,7 @@ Solver.prototype.swap = function (_nodeC, _direction) {
         }
         break;
 
-        case 'down':
+    case 'down':
         limit = (tmpNode.movableX + 1 <= 9);
         if (limit) {
             valueB = tmpNode.matrix[tmpNode.movableX + 1][tmpNode.movableY];
@@ -114,7 +114,7 @@ Solver.prototype.swap = function (_nodeC, _direction) {
 
         break;
 
-        case 'left':
+    case 'left':
         limit = (tmpNode.movableY - 1 >= 0);
         if (limit) {
             valueB = tmpNode.matrix[tmpNode.movableX][tmpNode.movableY - 1];
@@ -135,7 +135,7 @@ Solver.prototype.swap = function (_nodeC, _direction) {
         }
         break;
 
-        case 'right':
+    case 'right':
         limit = (tmpNode.movableY + 1 <= 9);
         if (limit) {
             valueB = tmpNode.matrix[tmpNode.movableX][tmpNode.movableY + 1];
@@ -158,7 +158,7 @@ Solver.prototype.swap = function (_nodeC, _direction) {
     }
 
     /* Gen the node that is going to be saved*/
-    tmpNode.moves++;    
+    tmpNode.moves++;
     var finalNode = new SolverNode(tmpNode.matrix, _nodeC, tmpNode.movableX, tmpNode.movableY, _direction, tmpNode.totalCost, tmpNode.moves);
     finalNode.isFinal = tmpNode.isFinal;
     finalNode.calcHueristic();
