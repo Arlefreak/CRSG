@@ -1,9 +1,9 @@
 {
-    "name": "8_Puzzle",
-    "version": "0.1.0",
+    "name": "CRSG",
+    "version": "0.8.0",
     "repository" :
     { "type" : "git"
-	, "url" : "https://github.com/Arlefreak/Phaser-8-puzzle-game"
+	, "url" : "https://github.com/Arlefreak/CRSG"
     },
     "devDependencies": {
 	"grunt": "~0.4.4",

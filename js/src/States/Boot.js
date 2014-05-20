@@ -1,19 +1,18 @@
 (function () {
-  'use strict';
+    'use strict';
 
-  function Boot() {
-  }
+    function Boot() {}
 
-  Boot.prototype = {
-    preload: function() {
-      this.load.image('loadingBG', 'js/res/img/LoadingBG.png');
-      this.load.image('loading', 'js/res/img/Loading.png');
-    },
-    create: function() {
-      game.input.maxPointers = 1;
-      game.state.start('preloader');
-    }
-  };
+    Boot.prototype = {
+        preload: function () {
+            this.load.image('loadingBG', 'js/res/img/LoadingBG.png');
+            this.load.image('loading', 'js/res/img/Loading.png');
+        },
+        create: function () {
+            game.input.maxPointers = 1;
+            game.state.start('preloader');
+        }
+    };
 
-  BootS = Boot;
+    BootS = Boot;
 }());
