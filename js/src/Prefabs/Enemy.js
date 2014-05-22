@@ -48,8 +48,8 @@ Enemy.prototype = Object.create(Phaser.Sprite.prototype);
 Enemy.prototype.constructor = Enemy;
 
 Enemy.prototype.updateDirection = function (_direction) {
- /* Get current direction of the enemy*/
- if (this.angle === 0) {
+   /* Get current direction of the enemy*/
+   if (this.angle === 0) {
     this.direction = 'down';
 } else if (this.angle === 90) {
     this.direction = 'left';
@@ -203,34 +203,36 @@ Enemy.prototype.drawPath = function (_direction) {
 }
 
 Enemy.prototype.checkAwake = function () {
-    var i = 0;
-    var j = 0;
-    var playerPositionX = 0;
-    var playerPositionY = 0;
-    var top, bottom, left, right, topLeft, topRight, bottomRight, bottomLeft;
+    if(!this.awake){
+        var i = 0;
+        var j = 0;
+        var playerPositionX = 0;
+        var playerPositionY = 0;
+        var top, bottom, left, right, topLeft, topRight, bottomRight, bottomLeft;
 
-    var tmpMatrix = this.parent.parent.masterMatrix;
-    for (i = tmpMatrix.length - 1; i >= 0; i--) {
-        for (j = tmpMatrix[i].length - 1; j >= 0; j--) {
-            if(tmpMatrix[i][j] === 5){
-                playerPositionX = i;
-                playerPositionX = j;
+        var tmpMatrix = this.parent.parent.masterMatrix;
+        for (i = tmpMatrix.length - 1; i >= 0; i--) {
+            for (j = tmpMatrix[i].length - 1; j >= 0; j--) {
+                if(tmpMatrix[i][j] === 5){
+                    playerPositionX = i;
+                    playerPositionY = j;
+                }
             }
         }
-    }
 
-    left = playerPositionX - 1 === this.indexX && playerPositionY === this.indexY;
-    right = playerPositionX + 1 === this.indexX && playerPositionY === this.indexY;
-    top = playerPositionY - 1 === this.indexY && playerPositionX === this.indexX;
-    bottom = playerPositionX + 1 === this.indexY && playerPositionX === this.indexX;
-    
-    topLeft = playerPositionX - 1 === this.indexX && playerPositionY - 1 === this.indexY;
-    topRight = playerPositionX + 1 === this.indexX && playerPositionY - 1 === this.indexY;
-    bottomLeft = playerPositionX - 1 === this.indexX && playerPositionY + 1 === this.indexY;
-    bottomRight = playerPositionX + 1 === this.indexX && playerPositionY + 1 === this.indexY;
+        left = playerPositionX - 1 === this.indexX && playerPositionY === this.indexY;
+        right = playerPositionX + 1 === this.indexX && playerPositionY === this.indexY;
+        top = playerPositionY - 1 === this.indexY && playerPositionX === this.indexX;
+        bottom = playerPositionX + 1 === this.indexY && playerPositionX === this.indexX;
 
-    if(top || bottom || left || right || topLeft || topRight || bottomRight || bottomLeft){
-        this.awake = true;
+        topLeft = playerPositionX - 1 === this.indexX && playerPositionY - 1 === this.indexY;
+        topRight = playerPositionX + 1 === this.indexX && playerPositionY - 1 === this.indexY;
+        bottomLeft = playerPositionX - 1 === this.indexX && playerPositionY + 1 === this.indexY;
+        bottomRight = playerPositionX + 1 === this.indexX && playerPositionY + 1 === this.indexY;
+
+        if(top || bottom || left || right || topLeft || topRight || bottomRight || bottomLeft){
+            this.awake = true;
+        }
     }
 }
 
