@@ -42,22 +42,22 @@
                 for (var j = layers[i].length - 1; j >= 0; j--) {
                     var numberType = layers[i][j];
                     switch (numberType) {
-                    case 1:
+                        case 1:
                         name = 'unmovable';
                         break;
-                    case 2:
+                        case 2:
                         name = 'enemy';
                         break;
-                    case 3:
+                        case 3:
                         name = 'final';
                         break;
-                    case 4:
+                        case 4:
                         name = 'collectable';
                         break;
-                    case 5:
+                        case 5:
                         name = 'movable';
                         break;
-                    default:
+                        default:
                         break;
                     }
                 }
@@ -110,7 +110,7 @@
                 this.fpsText.setText(this.game.time.fps + ' FPS');
             }
             if (BUSTED) {
-                this.quitGame('mainmenu', true);
+                this.quitGame('leaderboards', true);
                 console.log('BUSTED !');
             }
         },
@@ -123,31 +123,17 @@
 
         quitGame: function (_state, _gameOver) {
             playerTurn = false;
+            var bdmTransition = game.add.bitmapData(gameWidth, gameHeight);
+            bdmTransition.context.fillStyle = 'rgba(50, 50, 50, 1.0)';
+            bdmTransition.context.fillRect(0, 0, gameWidth, gameHeight);
+            var transition = game.add.sprite(0, 0, bdmTransition);
+            transition.alpha = 0;
             if (!_gameOver) {
                 level++;
-                BUSTED = false;
-                this.grid = {};
-                this.fx.play('', 0, 1, false);
-                localStorage.setItem('lastScore', this.score);
-                game.time.events.remove(this.timer);
-
-                var bdmTransition = game.add.bitmapData(gameWidth, gameHeight);
-                bdmTransition.context.fillStyle = 'rgba(50, 50, 50, 1.0)';
-                bdmTransition.context.fillRect(0, 0, gameWidth, gameHeight);
-                var transition = game.add.sprite(0, 0, bdmTransition);
-                transition.alpha = 0;
-                var e = game.add.tween(transition);
-                e.to({
-                    alpha: 1
-                }, 500, Phaser.Easing.Linear.None, false, 0, 0, false);
-                e.start();
-                e.onComplete.add(function () {
-                    game.state.start(_state);
-                });
+                
             } else {
                 powerUps = 0;
                 level = 1;
-                BUSTED = false;
                 var gameOverText = this.game.add.text(game.world.centerX, game.world.centerY, 'Game Over', {
                     font: "50px Source Code Pro",
                     fill: "#fff",
@@ -155,13 +141,20 @@
                 });
                 gameOverText.anchor.set(0.5, 0.5);
                 gameOverText.alpha = 0;
-                var e = game.add.tween(gameOverText);
-                e.to({
-                    alpha: 1
-                }, 1000, Phaser.Easing.Linear.None, false, 0, 0, false);
-                e.onComplete.add(this.gameOVerText, this);
-                e.start();
             }
+            var e = game.add.tween(transition);
+            e.to({
+                alpha: 1
+            }, 500, Phaser.Easing.Linear.None, false, 0, 0, false);
+            e.start();
+            e.onComplete.add(function () {
+                game.state.start(_state);
+            });
+
+            BUSTED = false;
+            this.grid = {};
+            this.fx.play('', 0, 1, false);
+            game.time.events.remove(this.timer);
         }
     };
 
@@ -224,136 +217,136 @@
         for (var i = elements.length - 1; i >= 0; i--) {
             switch (elements[i]) {
             case 2: //Enemies
-                matrix2[indexes[i]] = elements[i];
-                break;
+            matrix2[indexes[i]] = elements[i];
+            break;
             case 3: //Final
-                matrix3[indexes[i]] = elements[i];
-                break;
+            matrix3[indexes[i]] = elements[i];
+            break;
             case 4: //Collectable
-                matrix4[indexes[i]] = elements[i];
-                break;
+            matrix4[indexes[i]] = elements[i];
+            break;
             case 5: //Movable
-                matrix5[indexes[i]] = elements[i];
-                break;
-            }
-            matrix1[indexes[i]] = 0;
-            if (i > -1) {
-                indexes.splice(i, 1);
-            }
+            matrix5[indexes[i]] = elements[i];
+            break;
         }
-
-
-        for (var i = enemies.length - 1; i >= 0; i--) {
-            var enemyLayer = [];
-            for (var j = 100; j >= 0; j--) {
-                enemyLayer[j] = 0;
-            }
-            var tmpIndex = indexes.pop();
-            matrix1[tmpIndex] = 0;
-            enemyLayer[tmpIndex] = 2;
-            layers.push(enemyLayer);
-
-        }
-
-        var playerIndex = 0;
-
-        matrix5[playerIndex] = 5;
-
-        if (playerIndex >= 10) {
-            if (playerIndex % 10 !== 9) {
-                matrix5[playerIndex - 9] = 9;
-            }
-            if (playerIndex % 10 !== 0) {
-                matrix5[playerIndex - 11] = 9;
-            }
-            matrix5[playerIndex - 10] = 9;
-        }
-
-        if (playerIndex % 10 !== 9) {
-            matrix5[playerIndex + 1] = 9;
-        }
-        if (playerIndex % 10 !== 0) {
-            matrix5[playerIndex - 1] = 9;
-        }
-
-        if (playerIndex < 90) {
-            if (playerIndex % 10 !== 0) {
-                matrix5[playerIndex + 9] = 9;
-            }
-            if (playerIndex % 10 !== 9) {
-                matrix5[playerIndex + 11] = 9;
-            }
-            matrix5[playerIndex + 10] = 9;
-        }
-
-        layers.push(matrix1);
-        layers.push(matrix2);
-        layers.push(matrix3);
-        layers.push(matrix4);
-        layers.push(matrix5);
-
-        return layers;
-    };
-
-    Play.prototype.move = function () {
-        var shield = false;
-        if (this.grid.canMove && playerTurn) {
-            if (Math.round(this.grid.movableSprite.x) === Math.round(this.grid.marker.x)) {
-                if (Math.round(this.grid.movableSprite.y) < Math.round(this.grid.marker.y)) {
-                    this.grid.move(this.grid.movableLayers[0], 'down');
-                } else {
-                    this.grid.move(this.grid.movableLayers[0], 'up');
-                }
-            } else if (Math.round(this.grid.movableSprite.y) === Math.round(this.grid.marker.y)) {
-                if (Math.round(this.grid.movableSprite.x) < Math.round(this.grid.marker.x)) {
-                    this.grid.move(this.grid.movableLayers[0], 'right');
-                } else {
-                    this.grid.move(this.grid.movableLayers[0], 'left');
-                }
-            } else if (Math.round(this.grid.movableSprite.y) < Math.round(this.grid.marker.y) && Math.round(this.grid.movableSprite.x) > Math.round(this.grid.marker.x)) {
-                this.grid.move(this.grid.movableLayers[0], 'bottomleft');
-            } else if (Math.round(this.grid.movableSprite.y) > Math.round(this.grid.marker.y) && Math.round(this.grid.movableSprite.x) > Math.round(this.grid.marker.x)) {
-                this.grid.move(this.grid.movableLayers[0], 'topleft');
-            } else if (Math.round(this.grid.movableSprite.y) > Math.round(this.grid.marker.y) && Math.round(this.grid.movableSprite.x) < Math.round(this.grid.marker.x)) {
-                this.grid.move(this.grid.movableLayers[0], 'topright');
-            } else if (Math.round(this.grid.movableSprite.y) < Math.round(this.grid.marker.y) && Math.round(this.grid.movableSprite.x) < Math.round(this.grid.marker.x)) {
-                this.grid.move(this.grid.movableLayers[0], 'bottomright');
-            }
-
-            if (this.grid.checkLayer(this.grid.marker.x, this.grid.marker.y, 3, this.grid.finalLayers)) {
-                this.quitGame('play', false);
-            }
-
-            if (this.grid.checkLayer(this.grid.marker.x, this.grid.marker.y, 4, this.grid.collectableLayers)) {
-                var spriteArray = this.grid.collect(this.grid.marker.x, this.grid.marker.y, this.grid.collectableLayers);
-                for (var i = spriteArray.length - 1; i >= 0; i--) {
-                    var tmp = spriteArray[i];
-                    var s = game.add.tween(tmp.scale);
-                    s.to({
-                        x: 0.2,
-                        y: 0.2
-                    }, 250, Phaser.Easing.Linear.None);
-                    s.start();
-                    var e = game.add.tween(tmp);
-                    e.onStart.add(function () {
-                        isMoving = true;
-                    });
-                    e.onComplete.add(function () {
-                        isMoving = false;
-                    })
-                    e.to({
-                        x: (160 + (50 * powerUps)),
-                        y: 0
-                    }, 250, Phaser.Easing.Linear.None, false, 0, 0, false);
-                    e.start();
-                    powerUps++;
-                    shield = true;
-                }
-            }
-            for (var i = this.grid.enemiesLayers.length - 1; i >= 0; i--) {
-                this.grid.enemiesLayers[i].callAll('turn');
-            }
+        matrix1[indexes[i]] = 0;
+        if (i > -1) {
+            indexes.splice(i, 1);
         }
     }
-    PlayS = Play;
+
+
+    for (var i = enemies.length - 1; i >= 0; i--) {
+        var enemyLayer = [];
+        for (var j = 100; j >= 0; j--) {
+            enemyLayer[j] = 0;
+        }
+        var tmpIndex = indexes.pop();
+        matrix1[tmpIndex] = 0;
+        enemyLayer[tmpIndex] = 2;
+        layers.push(enemyLayer);
+
+    }
+
+    var playerIndex = 0;
+
+    matrix5[playerIndex] = 5;
+
+    if (playerIndex >= 10) {
+        if (playerIndex % 10 !== 9) {
+            matrix5[playerIndex - 9] = 9;
+        }
+        if (playerIndex % 10 !== 0) {
+            matrix5[playerIndex - 11] = 9;
+        }
+        matrix5[playerIndex - 10] = 9;
+    }
+
+    if (playerIndex % 10 !== 9) {
+        matrix5[playerIndex + 1] = 9;
+    }
+    if (playerIndex % 10 !== 0) {
+        matrix5[playerIndex - 1] = 9;
+    }
+
+    if (playerIndex < 90) {
+        if (playerIndex % 10 !== 0) {
+            matrix5[playerIndex + 9] = 9;
+        }
+        if (playerIndex % 10 !== 9) {
+            matrix5[playerIndex + 11] = 9;
+        }
+        matrix5[playerIndex + 10] = 9;
+    }
+
+    layers.push(matrix1);
+    layers.push(matrix2);
+    layers.push(matrix3);
+    layers.push(matrix4);
+    layers.push(matrix5);
+
+    return layers;
+};
+
+Play.prototype.move = function () {
+    var shield = false;
+    if (this.grid.canMove && playerTurn) {
+        if (Math.round(this.grid.movableSprite.x) === Math.round(this.grid.marker.x)) {
+            if (Math.round(this.grid.movableSprite.y) < Math.round(this.grid.marker.y)) {
+                this.grid.move(this.grid.movableLayers[0], 'down');
+            } else {
+                this.grid.move(this.grid.movableLayers[0], 'up');
+            }
+        } else if (Math.round(this.grid.movableSprite.y) === Math.round(this.grid.marker.y)) {
+            if (Math.round(this.grid.movableSprite.x) < Math.round(this.grid.marker.x)) {
+                this.grid.move(this.grid.movableLayers[0], 'right');
+            } else {
+                this.grid.move(this.grid.movableLayers[0], 'left');
+            }
+        } else if (Math.round(this.grid.movableSprite.y) < Math.round(this.grid.marker.y) && Math.round(this.grid.movableSprite.x) > Math.round(this.grid.marker.x)) {
+            this.grid.move(this.grid.movableLayers[0], 'bottomleft');
+        } else if (Math.round(this.grid.movableSprite.y) > Math.round(this.grid.marker.y) && Math.round(this.grid.movableSprite.x) > Math.round(this.grid.marker.x)) {
+            this.grid.move(this.grid.movableLayers[0], 'topleft');
+        } else if (Math.round(this.grid.movableSprite.y) > Math.round(this.grid.marker.y) && Math.round(this.grid.movableSprite.x) < Math.round(this.grid.marker.x)) {
+            this.grid.move(this.grid.movableLayers[0], 'topright');
+        } else if (Math.round(this.grid.movableSprite.y) < Math.round(this.grid.marker.y) && Math.round(this.grid.movableSprite.x) < Math.round(this.grid.marker.x)) {
+            this.grid.move(this.grid.movableLayers[0], 'bottomright');
+        }
+
+        if (this.grid.checkLayer(this.grid.marker.x, this.grid.marker.y, 3, this.grid.finalLayers)) {
+            this.quitGame('play', false);
+        }
+
+        if (this.grid.checkLayer(this.grid.marker.x, this.grid.marker.y, 4, this.grid.collectableLayers)) {
+            var spriteArray = this.grid.collect(this.grid.marker.x, this.grid.marker.y, this.grid.collectableLayers);
+            for (var i = spriteArray.length - 1; i >= 0; i--) {
+                var tmp = spriteArray[i];
+                var s = game.add.tween(tmp.scale);
+                s.to({
+                    x: 0.2,
+                    y: 0.2
+                }, 250, Phaser.Easing.Linear.None);
+                s.start();
+                var e = game.add.tween(tmp);
+                e.onStart.add(function () {
+                    isMoving = true;
+                });
+                e.onComplete.add(function () {
+                    isMoving = false;
+                })
+                e.to({
+                    x: (160 + (50 * powerUps)),
+                    y: 0
+                }, 250, Phaser.Easing.Linear.None, false, 0, 0, false);
+                e.start();
+                powerUps++;
+                shield = true;
+            }
+        }
+        for (var i = this.grid.enemiesLayers.length - 1; i >= 0; i--) {
+            this.grid.enemiesLayers[i].callAll('turn');
+        }
+    }
+}
+PlayS = Play;
 }());
