@@ -30,6 +30,7 @@ var Grid = function (_game, _rows, _columns, _width, _height, _margin, _square, 
     this.movableLayers = [];
     this.unMovableLayers = [];
     this.finalLayers = [];
+    this.fogLayers = [];
     this.enemiesLayers = [];
     this.collectableLayers = [];
     this.canMove = false;
@@ -254,6 +255,8 @@ Grid.prototype.addLayer = function (_matrix, _type, _tileset, _tilesetKeys) {
     case 'collectable':
         this.collectableLayers.push(layer);
         break;
+    /*case 'fog':
+        this.fogLayers.push(layer);*/
     }
     this.updateMasterMatrix();
 };

@@ -57,7 +57,10 @@
                         case 5:
                         name = 'movable';
                         break;
-                        default:
+                        case 5:
+                        name = 'movable';
+                        /*default:
+                        name = 'fog';*/
                         break;
                     }
                 }
@@ -183,6 +186,7 @@
         var matrix3 = [];
         var matrix4 = [];
         var matrix5 = [];
+        var matrix6 = [];
         var indexes = [];
 
         for (var i = level - 1; i > 0; i--) {
@@ -195,6 +199,7 @@
             matrix3.push(0);
             matrix4.push(0);
             matrix5.push(0);
+            matrix6.push(1);
         }
 
         for (var i = 5; i >= 0; i--) {
@@ -251,32 +256,41 @@
     var playerIndex = 0;
 
     matrix5[playerIndex] = 5;
+    matrix6[playerIndex] = 0;
 
     if (playerIndex >= 10) {
         if (playerIndex % 10 !== 9) {
             matrix5[playerIndex - 9] = 9;
+            matrix6[playerIndex - 9] = 0;
         }
         if (playerIndex % 10 !== 0) {
             matrix5[playerIndex - 11] = 9;
+            matrix6[playerIndex - 11] = 0;
         }
         matrix5[playerIndex - 10] = 9;
+        matrix6[playerIndex - 10] = 0;
     }
 
     if (playerIndex % 10 !== 9) {
         matrix5[playerIndex + 1] = 9;
+        matrix6[playerIndex + 1] = 0;
     }
     if (playerIndex % 10 !== 0) {
         matrix5[playerIndex - 1] = 9;
+        matrix6[playerIndex - 1] = 0;
     }
 
     if (playerIndex < 90) {
         if (playerIndex % 10 !== 0) {
             matrix5[playerIndex + 9] = 9;
+            matrix6[playerIndex + 9] = 0;
         }
         if (playerIndex % 10 !== 9) {
             matrix5[playerIndex + 11] = 9;
+            matrix6[playerIndex + 11] = 0;
         }
         matrix5[playerIndex + 10] = 9;
+        matrix6[playerIndex + 10] = 0;
     }
 
     layers.push(matrix1);
