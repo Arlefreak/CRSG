@@ -291,12 +291,20 @@ Grid.prototype.updateMarker = function () {
     /*this.debugS.x = this.marker.x;
     this.debugS.y = this.marker.y;*/
 
-    if ((game.input.activePointer.worldX > this.limitLeft && game.input.activePointer.worldX < this.limitRight) && (game.input.activePointer.worldY > this.limitTop && game.input.activePointer.worldY < this.limitBottom)) {
-        this.marker.x = Math.round(((game.input.activePointer.worldX - this.cellWidth / 2) - (this.margin % this.cellWidth)) / this.cellWidth) * this.cellWidth + (this.margin % this.cellWidth);
-        this.marker.y = Math.round(((game.input.activePointer.worldY - this.cellHeight / 2) - (this.margin % this.cellHeight)) / this.cellHeight) * this.cellHeight + (this.margin % this.cellHeight);
+    var markerLimitLeft = game.input.activePointer.worldX > this.limitLeft;
+    var markerLimitRight = game.input.activePointer.worldX < this.limitRight;
+    var markerLimitTop = game.input.activePointer.worldY > this.limitTop;
+    var markerLimitBottom = game.input.activePointer.worldY < this.limitBottom;
+    var unMovableLayer = !this.checkLayer(this.marker.x, this.marker.y, 1, this.unMovableLayers);
+    var enemyLayer = !this.checkLayer(this.marker.x, this.marker.y, 2, this.enemiesLayers);
+    var movableCell = this.checkLayer(this.marker.x, this.marker.y, 9, this.movableLayers);
+
+    if ((markerLimitLeft && markerLimitRight) && (markerLimitTop && markerLimitBottom)) {
+        this.marker.x = this.snapToGrid((game.input.activePointer.worldX - this.cellWidth / 2),true);
+        this.marker.y = this.snapToGrid((game.input.activePointer.worldY - this.cellHeight / 2),false);
     }
 
-    if (!this.checkLayer(this.marker.x, this.marker.y, 1, this.unMovableLayers) && this.checkLayer(this.marker.x, this.marker.y, 9, this.movableLayers)) {
+    if ( unMovableLayer && movableCell&& enemyLayer) {
         this.changeMarkerColor(0x529024);
         this.canMove = true;
     } else {
@@ -324,7 +332,7 @@ Grid.prototype.collect = function (_x, _y, _layers) {
                 if (x === tmpX && y === tmpY) {
                     /*this.debugW.x = tmpX;
                     this.debugW.y = tmpY;*/
-                    _layers[i][j] = 0;
+                    _layers[i].matrix[j] = 0;
                 }
             }
         }
