@@ -11,9 +11,9 @@
  *
  *
  */
-'use strict';
+ 'use strict';
 
-var Enemy = function (_game, _x, _y, _cellWidth, _cellHeight, _tileset, _i, _indexX, _indexY) {
+ var Enemy = function (_game, _x, _y, _cellWidth, _cellHeight, _tileset, _i, _indexX, _indexY) {
     Phaser.Sprite.call(this, _game, _x + (_cellWidth / 2), _y + (_cellHeight / 2), 'tiles');
     this.game = _game;
     this.anchor.set(0.5, 0.5);
@@ -42,10 +42,8 @@ var Enemy = function (_game, _x, _y, _cellWidth, _cellHeight, _tileset, _i, _ind
 Enemy.prototype = Object.create(Phaser.Sprite.prototype);
 Enemy.prototype.constructor = Enemy;
 
-Enemy.prototype.turn = function () {
-    this.nodes = [];
-
-    /* Get current direction of the enemy*/
+Enemy.prototype.updateDirection = function (_direction) {
+     /* Get current direction of the enemy*/
     if (this.angle === 0) {
         this.direction = 'down';
     } else if (this.angle === 90) {
@@ -55,7 +53,12 @@ Enemy.prototype.turn = function () {
     } else if (this.angle === -180) {
         this.direction = 'up';
     }
+}
 
+Enemy.prototype.turn = function () {
+    this.nodes = [];
+    this.updateDirection();
+   
     /* Final Matrix */
     var masterMatrix = Phaser.Utils.extend(true, [], this.parent.parent.masterMatrix);
     masterMatrix[this.indexX][this.indexY] = 0;
@@ -90,28 +93,28 @@ Enemy.prototype.turn = function () {
         this.move(desireDirection);
     } else {
         switch (desireDirection) {
-        case 'up':
+            case 'up':
             if (this.direction === 'right') {
                 this.rotate(false, false);
             } else {
                 this.rotate(true, false);
             }
             break;
-        case 'down':
+            case 'down':
             if (this.direction === 'left') {
                 this.rotate(false, false);
             } else {
                 this.rotate(false, false);
             }
             break;
-        case 'left':
+            case 'left':
             if (this.direction === 'down') {
                 this.rotate(true, false);
             } else {
                 this.rotate(false, false);
             }
             break;
-        case 'right':
+            case 'right':
             if (this.direction === 'up') {
                 this.rotate(true, false);
             } else {
@@ -153,7 +156,9 @@ Enemy.prototype.rotate = function (_direction, _shield) {
     e.start();
 
     e.onComplete.add(function () {
-        ref.checkPlayer();
+        if(!_shield){
+            ref.checkPlayer();
+        }        
         playerTurn = true;
     });
 }
@@ -164,12 +169,27 @@ Enemy.prototype.move = function (_direction) {
 }
 
 Enemy.prototype.checkPlayer = function () {
+    
     console.log('CheckPlayer');
     var i = 0
+    var nodesDifDirection = false;
+    var directionNull = false;
+    var thisDifDirection = false;
+
+    if (this.nodes[this.nodes.length - 2].direction !== this.direction){
+        return false;
+    }
     for (i = this.nodes.length - 1; i > 0; i--) {
-        if (this.nodes[i].direction !== this.nodes[i-1].direction && this.nodes[i].direction !== null){
-            return;
+        nodesDifDirection = this.nodes[i].direction !== this.nodes[i-1].direction;
+        directionNull = this.nodes[i].direction !== null;
+        if(nodesDifDirection && directionNull){
+            return
         }
     };
-    BUSTED = true;
+    if(powerUps > 0){
+        this.rotate(true,true);
+        powerUps--;
+    }else{
+        BUSTED = true;
+    }
 }

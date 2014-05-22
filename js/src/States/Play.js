@@ -340,7 +340,6 @@ Play.prototype.move = function () {
                 }, 250, Phaser.Easing.Linear.None, false, 0, 0, false);
                 e.start();
                 powerUps++;
-                shield = true;
             }
         }
         for (var i = this.grid.enemiesLayers.length - 1; i >= 0; i--) {
