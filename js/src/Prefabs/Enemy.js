@@ -28,6 +28,8 @@ var Enemy = function (_game, _x, _y, _cellWidth, _cellHeight, _tileset, _i, _ind
     this.direction = 'down';
     this.canMove = false;
 
+    this.nodes = [];
+
     /* Random Rotation */
     var rotate = Math.floor(Math.random() * 5) + 1;
     for (var i = rotate; i > 0; i--) {
@@ -41,6 +43,8 @@ Enemy.prototype = Object.create(Phaser.Sprite.prototype);
 Enemy.prototype.constructor = Enemy;
 
 Enemy.prototype.turn = function () {
+    this.nodes = [];
+
     /* Get current direction of the enemy*/
     if (this.angle === 0) {
         this.direction = 'down';
@@ -69,20 +73,20 @@ Enemy.prototype.turn = function () {
     //console.log('New Solver x: ' + this.indexX + ' y: ' + this.indexY);
     this.solver = new Solver(this.parent.parent.masterMatrix, masterMatrix, this.indexX, this.indexY);
     var nodeSolved = this.solver.solve();
-    var nodes = [];
-    nodes.push(nodeSolved);
+    this.nodes = [];
+    this.nodes.push(nodeSolved);
     while (nodeSolved.parent !== null) {
-        nodes.push(nodeSolved.parent);
+        this.nodes.push(nodeSolved.parent);
         nodeSolved = nodeSolved.parent;
     }
 
-    var desireDirection = nodes[nodes.length - 2].direction;
+    var desireDirection = this.nodes[this.nodes.length - 2].direction;
     //console.log('Direction: ' + this.direction + ' DesireDirection: ' + desireDirection);
 
     /* Decide where to rotate*/
     if (this.direction === desireDirection) {
-        this.indexX = nodes[nodes.length - 2].movableX;
-        this.indexY = nodes[nodes.length - 2].movableY;
+        this.indexX = this.nodes[this.nodes.length - 2].movableX;
+        this.indexY = this.nodes[this.nodes.length - 2].movableY;
         this.move(desireDirection);
     } else {
         switch (desireDirection) {
@@ -136,6 +140,8 @@ Enemy.prototype.rotate = function (_direction, _shield) {
         }
     }
 
+    var ref = this;
+
     e.onStart.add(function () {
         playerTurn = false;
     });
@@ -147,79 +153,23 @@ Enemy.prototype.rotate = function (_direction, _shield) {
     e.start();
 
     e.onComplete.add(function () {
+        ref.checkPlayer();
         playerTurn = true;
     });
 }
 
 Enemy.prototype.move = function (_direction) {
     this.parent.parent.move(this.parent, _direction);
+    this.checkPlayer();
 }
 
 Enemy.prototype.checkPlayer = function () {
     console.log('CheckPlayer');
-
-    var tmpMatrix = this.parent.parent.masterMatrix;
-    var i = 0;
-    var j = 0;
-    var playerX = 0;
-    var playerY = 0;
-
-    for (i = tmpMatrix.length - 1; i >= 0; i--) {
-        for (j = tmpMatrix[i].length - 1; j >= 0; j--) {
-            if (tmpMatrix[i][j] === 5) {
-                playerX = i;
-                playerY = j;
-            }
+    var i = 0
+    for (i = this.nodes.length - 1; i > 0; i--) {
+        if (this.nodes[i].direction !== this.nodes[i-1].direction && this.nodes[i].direction !== null){
+            return;
         }
-    }
-
-    switch (this.direction) {
-    case 'up':
-        if (playerY !== this.indexY || playerY > this.indexY) {
-            return false;
-        } else {
-            for (i = this.indexX - 1; i >= playerX; i--) {
-                if (tmpMatrix[i][this.indexY] !== 0 && tmpMatrix[i][this.indexY] !== 9 && tmpMatrix[i][this.indexY] !== 5) {
-                    return false;
-                }
-            }
-        }
-        break;
-    case 'down':
-        if (playerY !== this.indexY || playerY < this.indexY) {
-            return false;
-        } else {
-            for (i = playerX - 1; i > this.indexX; i--) {
-                if (tmpMatrix[i][this.indexY] !== 0 && tmpMatrix[i][this.indexY] !== 9 && tmpMatrix[i][this.indexY] !== 5) {
-                    return false;
-                }
-            }
-        }
-        break;
-    case 'left':
-        if (playerX !== this.indexX || playerX < this.indexX) {
-            return false;
-        } else {
-            for (i = playerY - 1; i >= this.indexY; i--) {
-                if (tmpMatrix[this.indexX][i] !== 0 && tmpMatrix[this.indexX][i] !== 9 && tmpMatrix[this.indexX][i] !== 5) {
-                    return false;
-                }
-            }
-        }
-        break;
-    case 'right':
-        if (playerX !== this.indexX || playerX > this.indexX) {
-            return false;
-        } else {
-            for (i = this.indexY - 1; i >= playerY; i--) {
-                if (tmpMatrix[this.indexX][i] !== 0 && tmpMatrix[this.indexX][i] !== 9 && tmpMatrix[this.indexX][i] !== 5) {
-                    return false;
-                }
-            }
-        }
-        break;
-    }
+    };
     BUSTED = true;
-    return true;
-
 }

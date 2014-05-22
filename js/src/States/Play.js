@@ -109,6 +109,10 @@
             if (this.game.time.fps !== 0) {
                 this.fpsText.setText(this.game.time.fps + ' FPS');
             }
+            if (BUSTED) {
+                this.quitGame('mainmenu', true);
+                console.log('BUSTED !');
+            }
         },
         render: function () {
             //game.debug.spriteInfo(this.grid.movableSprite, gameWidth - 500, 50);
@@ -348,14 +352,6 @@
             }
             for (var i = this.grid.enemiesLayers.length - 1; i >= 0; i--) {
                 this.grid.enemiesLayers[i].callAll('turn');
-            }
-            for (var i = this.grid.enemiesLayers.length - 1; i >= 0; i--) {
-                this.grid.enemiesLayers[i].callAll('checkPlayer');
-            }
-
-            if (BUSTED) {
-                this.quitGame('mainmenu', true);
-                console.log('BUSTED !');
             }
         }
     }
