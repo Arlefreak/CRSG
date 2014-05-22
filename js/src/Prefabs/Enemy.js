@@ -48,8 +48,8 @@ Enemy.prototype = Object.create(Phaser.Sprite.prototype);
 Enemy.prototype.constructor = Enemy;
 
 Enemy.prototype.updateDirection = function (_direction) {
-   /* Get current direction of the enemy*/
-   if (this.angle === 0) {
+ /* Get current direction of the enemy*/
+ if (this.angle === 0) {
     this.direction = 'down';
 } else if (this.angle === 90) {
     this.direction = 'left';
@@ -61,71 +61,73 @@ Enemy.prototype.updateDirection = function (_direction) {
 }
 
 Enemy.prototype.turn = function () {
-    this.nodes = [];
-    this.updateDirection();
+    if(this.awake){
+        this.nodes = [];
+        this.updateDirection();
 
-    /* Final Matrix */
-    var masterMatrix = Phaser.Utils.extend(true, [], this.parent.parent.masterMatrix);
-    masterMatrix[this.indexX][this.indexY] = 0;
+        /* Final Matrix */
+        var masterMatrix = Phaser.Utils.extend(true, [], this.parent.parent.masterMatrix);
+        masterMatrix[this.indexX][this.indexY] = 0;
 
-    for (var i = masterMatrix.length - 1; i >= 0; i--) {
-        for (var j = masterMatrix[i].length - 1; j >= 0; j--) {
-            if (masterMatrix[i][j] === 5) {
-                masterMatrix[i][j] = 2;
+        for (var i = masterMatrix.length - 1; i >= 0; i--) {
+            for (var j = masterMatrix[i].length - 1; j >= 0; j--) {
+                if (masterMatrix[i][j] === 5) {
+                    masterMatrix[i][j] = 2;
+                }
             }
+
         }
 
-    }
+        /* Solver  */
+        //console.log('New Solver x: ' + this.indexX + ' y: ' + this.indexY);
+        this.solver = new Solver(this.parent.parent.masterMatrix, masterMatrix, this.indexX, this.indexY);
+        var nodeSolved = this.solver.solve();
+        this.nodes = [];
+        this.nodes.push(nodeSolved);
+        while (nodeSolved.parent !== null) {
+            this.nodes.push(nodeSolved.parent);
+            nodeSolved = nodeSolved.parent;
+        }
 
-    /* Solver  */
-    //console.log('New Solver x: ' + this.indexX + ' y: ' + this.indexY);
-    this.solver = new Solver(this.parent.parent.masterMatrix, masterMatrix, this.indexX, this.indexY);
-    var nodeSolved = this.solver.solve();
-    this.nodes = [];
-    this.nodes.push(nodeSolved);
-    while (nodeSolved.parent !== null) {
-        this.nodes.push(nodeSolved.parent);
-        nodeSolved = nodeSolved.parent;
-    }
+        var desireDirection = this.nodes[this.nodes.length - 2].direction;
+        //console.log('Direction: ' + this.direction + ' DesireDirection: ' + desireDirection);
 
-    var desireDirection = this.nodes[this.nodes.length - 2].direction;
-    //console.log('Direction: ' + this.direction + ' DesireDirection: ' + desireDirection);
-
-    /* Decide where to rotate*/
-    if (this.direction === desireDirection) {
-        this.indexX = this.nodes[this.nodes.length - 2].movableX;
-        this.indexY = this.nodes[this.nodes.length - 2].movableY;
-        this.move(desireDirection);
-    } else {
-        switch (desireDirection) {
-            case 'up':
-            if (this.direction === 'right') {
-                this.rotate(false, false);
-            } else {
-                this.rotate(true, false);
+        /* Decide where to rotate*/
+        if (this.direction === desireDirection) {
+            this.indexX = this.nodes[this.nodes.length - 2].movableX;
+            this.indexY = this.nodes[this.nodes.length - 2].movableY;
+            this.move(desireDirection);
+        } else {
+            switch (desireDirection) {
+                case 'up':
+                if (this.direction === 'right') {
+                    this.rotate(false, false);
+                } else {
+                    this.rotate(true, false);
+                }
+                break;
+                case 'down':
+                if (this.direction === 'left') {
+                    this.rotate(false, false);
+                } else {
+                    this.rotate(false, false);
+                }
+                break;
+                case 'left':
+                if (this.direction === 'down') {
+                    this.rotate(true, false);
+                } else {
+                    this.rotate(false, false);
+                }
+                break;
+                case 'right':
+                if (this.direction === 'up') {
+                    this.rotate(true, false);
+                } else {
+                    this.rotate(false, false);
+                }
+                break;
             }
-            break;
-            case 'down':
-            if (this.direction === 'left') {
-                this.rotate(false, false);
-            } else {
-                this.rotate(false, false);
-            }
-            break;
-            case 'left':
-            if (this.direction === 'down') {
-                this.rotate(true, false);
-            } else {
-                this.rotate(false, false);
-            }
-            break;
-            case 'right':
-            if (this.direction === 'up') {
-                this.rotate(true, false);
-            } else {
-                this.rotate(false, false);
-            }
-            break;
         }
     }
 }
@@ -193,10 +195,42 @@ Enemy.prototype.drawPath = function (_direction) {
             this.path.add(tmpPath);
         }
 
-        var x = this.parent.parent.snapToGrid(((this.nodes[i].movableX + 1) * this.cellWidth + 10),true); //Math.round((((this.nodes[i].movableX + 1) * this.cellWidth + 10) - (this.margin % this.cellWidth)) / this.cellWidth) * this.cellWidth + (this.margin % this.cellWidth);
-        var y = this.parent.parent.snapToGrid(((this.nodes[i].movableY + 1) * this.cellWidth + 10),true); // Math.round((((this.nodes[i].movableY + 1) * this.cellHeight + 10) - (this.margin % this.cellHeight)) / this.cellHeight) * this.cellHeight + (this.margin % this.cellHeight);
+        var x = this.parent.parent.snapToGrid(((this.nodes[i].movableX + 1) * this.cellWidth + 10),true);
+        var y = this.parent.parent.snapToGrid(((this.nodes[i].movableY + 1) * this.cellWidth + 10),true);
         this.path.getAt(i).x = y + this.cellWidth/2;
         this.path.getAt(i).y = x + this.cellHeight/2;
+    }
+}
+
+Enemy.prototype.checkAwake = function () {
+    var i = 0;
+    var j = 0;
+    var playerPositionX = 0;
+    var playerPositionY = 0;
+    var top, bottom, left, right, topLeft, topRight, bottomRight, bottomLeft;
+
+    var tmpMatrix = this.parent.parent.masterMatrix;
+    for (i = tmpMatrix.length - 1; i >= 0; i--) {
+        for (j = tmpMatrix[i].length - 1; j >= 0; j--) {
+            if(tmpMatrix[i][j] === 5){
+                playerPositionX = i;
+                playerPositionX = j;
+            }
+        }
+    }
+
+    left = playerPositionX - 1 === this.indexX && playerPositionY === this.indexY;
+    right = playerPositionX + 1 === this.indexX && playerPositionY === this.indexY;
+    top = playerPositionY - 1 === this.indexY && playerPositionX === this.indexX;
+    bottom = playerPositionX + 1 === this.indexY && playerPositionX === this.indexX;
+    
+    topLeft = playerPositionX - 1 === this.indexX && playerPositionY - 1 === this.indexY;
+    topRight = playerPositionX + 1 === this.indexX && playerPositionY - 1 === this.indexY;
+    bottomLeft = playerPositionX - 1 === this.indexX && playerPositionY + 1 === this.indexY;
+    bottomRight = playerPositionX + 1 === this.indexX && playerPositionY + 1 === this.indexY;
+
+    if(top || bottom || left || right || topLeft || topRight || bottomRight || bottomLeft){
+        this.awake = true;
     }
 }
 

@@ -345,6 +345,9 @@ Play.prototype.move = function () {
         for (var i = this.grid.enemiesLayers.length - 1; i >= 0; i--) {
             this.grid.enemiesLayers[i].callAll('turn');
         }
+        for (var i = this.grid.enemiesLayers.length - 1; i >= 0; i--) {
+            this.grid.enemiesLayers[i].callAll('checkAwake');
+        }
     }
 }
 PlayS = Play;
