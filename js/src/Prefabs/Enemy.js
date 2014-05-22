@@ -169,6 +169,7 @@ Enemy.prototype.move = function (_direction) {
 }
 
 Enemy.prototype.checkPlayer = function () {
+    this.updateDirection();
     
     console.log('CheckPlayer');
     var i = 0
