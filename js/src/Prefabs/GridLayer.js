@@ -16,6 +16,7 @@
 var GridLayer = function (_game, _matrix, _type, _tileset, _tilesetKeys, _margin, _cellWidth, _cellHeight) {
     Phaser.Group.call(this, _game);
     this.game = _game;
+    this.type = _type;
     this.matrix = _matrix;
     this.frameNames = [];
     this.margin = _margin;
@@ -39,13 +40,19 @@ var GridLayer = function (_game, _matrix, _type, _tileset, _tilesetKeys, _margin
             case 2:
                 console.log('x: ' + k + ' y: ' + j);
                 tmpTile = new Enemy(this.game, x, y, this.cellWidth, this.cellHeight, _tileset, i, j, k);
+                tmpTile.frameName = this.frameNames[_matrix[i]];
+                break;
+            case 6:
+                var pathTexture = game.add.bitmapData(this.cellWidth,this.cellHeight);
+                pathTexture.context.fillStyle = '0x000000';
+                pathTexture.context.fillRect(0,0, this.cellWidth, this.cellHeight);
+                tmpTile = this.game.add.sprite(x, y, pathTexture);
                 break;
             default:
                 tmpTile = this.game.add.sprite(x, y, _tileset);
+                tmpTile.frameName = this.frameNames[_matrix[i]];
                 break;
             }
-
-            tmpTile.frameName = this.frameNames[_matrix[i]];
             var convertion = this.cellWidth / tmpTile.width;
             tmpTile.scale.set(convertion);
             this.add(tmpTile);

@@ -59,8 +59,9 @@
                         break;
                         case 5:
                         name = 'movable';
-                        /*default:
-                        name = 'fog';*/
+                        case 6:
+                        name = 'fog';
+                        default:
                         break;
                     }
                 }
@@ -133,7 +134,7 @@
             transition.alpha = 0;
             if (!_gameOver) {
                 level++;
-                
+
             } else {
                 powerUps = 0;
                 level = 1;
@@ -199,7 +200,7 @@
             matrix3.push(0);
             matrix4.push(0);
             matrix5.push(0);
-            matrix6.push(1);
+            matrix6.push(6);
         }
 
         for (var i = 5; i >= 0; i--) {
@@ -293,12 +294,12 @@
         matrix6[playerIndex + 10] = 0;
     }
 
+    //layers.push(matrix6);
     layers.push(matrix1);
     layers.push(matrix2);
     layers.push(matrix3);
     layers.push(matrix4);
     layers.push(matrix5);
-
     return layers;
 };
 
@@ -332,7 +333,7 @@ Play.prototype.move = function () {
         }
 
         if (this.grid.checkLayer(this.grid.marker.x, this.grid.marker.y, 4, this.grid.collectableLayers)) {
-            var spriteArray = this.grid.collect(this.grid.marker.x, this.grid.marker.y, this.grid.collectableLayers);
+            var spriteArray = this.grid.collect(this.grid.marker.x, this.grid.marker.y, this.grid.collectableLayers,4);
             for (var i = spriteArray.length - 1; i >= 0; i--) {
                 var tmp = spriteArray[i];
                 var s = game.add.tween(tmp.scale);

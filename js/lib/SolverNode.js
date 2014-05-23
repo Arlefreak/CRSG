@@ -20,7 +20,7 @@ SolverNode.prototype.calcHueristic = function () {
     var h = 0;/* The new heuristic */
     var i = 0;/* Loop variable */
     var j = 0;/* Loop variable */
-    
+
     /* Objective index */
     var playerIndexX = 0;
     var playerIndexY = 0;
@@ -74,6 +74,12 @@ SolverNode.prototype.calcHueristic = function () {
     /* Add the distance between the two index */
     h += Math.abs(this.movableX - playerIndexX);
     h += Math.abs(this.movableY - playerIndexY);
+    if(this.movableX === playerIndexX){
+        h=-3;
+    }
+    if(this.movableY === playerIndexY){
+        h-=3;
+    }
     this.heuristic = h;
 };
 

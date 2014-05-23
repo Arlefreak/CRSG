@@ -92,7 +92,7 @@ Grid.prototype.updateMasterMatrix = function () {
     this.cleanMasterMatrix();
 
     for (var i = this.length - 1; i >= 0; i--) {
-        if (this.getAt(i).hasOwnProperty('matrix')) {
+        if (this.getAt(i).hasOwnProperty('matrix')  && this.getAt(i).type !== 'fog') {
             tmpLayer = this.getAt(i);
             tmpMatrix = tmpLayer.matrix;
             for (var j = tmpMatrix.length - 1; j >= 0; j--) {
@@ -255,8 +255,8 @@ Grid.prototype.addLayer = function (_matrix, _type, _tileset, _tilesetKeys) {
     case 'collectable':
         this.collectableLayers.push(layer);
         break;
-    /*case 'fog':
-        this.fogLayers.push(layer);*/
+    case 'fog':
+        this.fogLayers.push(layer);
     }
     this.updateMasterMatrix();
 };
@@ -317,7 +317,7 @@ Grid.prototype.updateMarker = function () {
 
 }
 
-Grid.prototype.collect = function (_x, _y, _layers) {
+Grid.prototype.collect = function (_x, _y, _layers, _value) {
     var tmpX = 0;
     var tmpY = 0;
     var x = this.snapToGrid(_x, true);
@@ -327,7 +327,7 @@ Grid.prototype.collect = function (_x, _y, _layers) {
     for (var i = _layers.length - 1; i >= 0; i--) {
         tmpMatrix = _layers[i].matrix;
         for (var j = tmpMatrix.length - 1; j >= 0; j--) {
-            if (tmpMatrix[j] === 4) {
+            if (tmpMatrix[j] === _value) {
                 tmpX = Math.floor(j / (Math.pow(10, 0)) % 10);
                 tmpY = Math.floor(j / (Math.pow(10, 1)) % 10);
                 tmpX = this.snapToGrid(((tmpX + 1) * this.cellWidth), true);
