@@ -1,5 +1,5 @@
 module.exports = function (grunt) {
-    // 1. All configuration goes here 
+    // 1. All configuration goes here
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         watch: {
@@ -25,6 +25,7 @@ module.exports = function (grunt) {
                     'js/src/Prefabs/Grid.js',
                     'js/src/Prefabs/GridLayer.js',
                     'js/src/Prefabs/Enemy.js',
+                    'js/src/Prefabs/Fog.js',
                     'js/src/States/Boot.js',
                     'js/src/States/Preloader.js',
                     'js/src/States/MainMenu.js',
