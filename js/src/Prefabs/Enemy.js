@@ -15,7 +15,7 @@
 
  var Enemy = function (_game, _x, _y, _cellWidth, _cellHeight, _tileset, _i, _indexX, _indexY) {
     Phaser.Sprite.call(this, _game, _x + (_cellWidth / 2), _y + (_cellHeight / 2), 'tiles');
-    this.awake = true;
+    this.awake = false;
     this.game = _game;
     this.anchor.set(0.5, 0.5);
     this.game.add.existing(this);

@@ -43,10 +43,7 @@ var GridLayer = function (_game, _matrix, _type, _tileset, _tilesetKeys, _margin
                 tmpTile.frameName = this.frameNames[_matrix[i]];
                 break;
             case 6:
-                var pathTexture = game.add.bitmapData(this.cellWidth,this.cellHeight);
-                pathTexture.context.fillStyle = '0x000000';
-                pathTexture.context.fillRect(0,0, this.cellWidth, this.cellHeight);
-                tmpTile = this.game.add.sprite(x, y, pathTexture);
+                tmpTile = new Fog(this.game, x, y, this.cellWidth, this.cellHeight, i, j, k);
                 break;
             default:
                 tmpTile = this.game.add.sprite(x, y, _tileset);

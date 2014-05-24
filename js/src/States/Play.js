@@ -241,8 +241,45 @@
         }
     }
 
+    var playerIndex = 0;
 
-    for (var i = enemies.length - 1; i >= 0; i--) {
+    matrix5[playerIndex] = 5;
+
+    if (playerIndex >= 10) {
+        if (playerIndex % 10 !== 9) {
+            matrix5[playerIndex - 9] = 9;
+        }
+        if (playerIndex % 10 !== 0) {
+            matrix5[playerIndex - 11] = 9;
+        }
+        matrix5[playerIndex - 10] = 9;
+    }
+
+    if (playerIndex % 10 !== 9) {
+        matrix5[playerIndex + 1] = 9;
+    }
+    if (playerIndex % 10 !== 0) {
+        matrix5[playerIndex - 1] = 9;
+    }
+
+    if (playerIndex < 90) {
+        if (playerIndex % 10 !== 0) {
+            matrix5[playerIndex + 9] = 9;
+        }
+        if (playerIndex % 10 !== 9) {
+            matrix5[playerIndex + 11] = 9;
+        }
+        matrix5[playerIndex + 10] = 9;
+    }
+
+    layers.push(matrix6);
+    layers.push(matrix1);
+    layers.push(matrix2);
+    layers.push(matrix3);
+    layers.push(matrix4);
+    layers.push(matrix5);
+
+     for (var i = enemies.length - 1; i >= 0; i--) {
         var enemyLayer = [];
         for (var j = 100; j >= 0; j--) {
             enemyLayer[j] = 0;
@@ -254,52 +291,6 @@
 
     }
 
-    var playerIndex = 0;
-
-    matrix5[playerIndex] = 5;
-    matrix6[playerIndex] = 0;
-
-    if (playerIndex >= 10) {
-        if (playerIndex % 10 !== 9) {
-            matrix5[playerIndex - 9] = 9;
-            matrix6[playerIndex - 9] = 0;
-        }
-        if (playerIndex % 10 !== 0) {
-            matrix5[playerIndex - 11] = 9;
-            matrix6[playerIndex - 11] = 0;
-        }
-        matrix5[playerIndex - 10] = 9;
-        matrix6[playerIndex - 10] = 0;
-    }
-
-    if (playerIndex % 10 !== 9) {
-        matrix5[playerIndex + 1] = 9;
-        matrix6[playerIndex + 1] = 0;
-    }
-    if (playerIndex % 10 !== 0) {
-        matrix5[playerIndex - 1] = 9;
-        matrix6[playerIndex - 1] = 0;
-    }
-
-    if (playerIndex < 90) {
-        if (playerIndex % 10 !== 0) {
-            matrix5[playerIndex + 9] = 9;
-            matrix6[playerIndex + 9] = 0;
-        }
-        if (playerIndex % 10 !== 9) {
-            matrix5[playerIndex + 11] = 9;
-            matrix6[playerIndex + 11] = 0;
-        }
-        matrix5[playerIndex + 10] = 9;
-        matrix6[playerIndex + 10] = 0;
-    }
-
-    //layers.push(matrix6);
-    layers.push(matrix1);
-    layers.push(matrix2);
-    layers.push(matrix3);
-    layers.push(matrix4);
-    layers.push(matrix5);
     return layers;
 };
 
