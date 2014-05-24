@@ -296,7 +296,7 @@
 
 Play.prototype.move = function () {
     var shield = false;
-    if (this.grid.canMove && playerTurn) {
+    if (this.grid.canMove && playerTurn && !isMoving) {
         if (Math.round(this.grid.movableSprite.x) === Math.round(this.grid.marker.x)) {
             if (Math.round(this.grid.movableSprite.y) < Math.round(this.grid.marker.y)) {
                 this.grid.move(this.grid.movableLayers[0], 'down');
