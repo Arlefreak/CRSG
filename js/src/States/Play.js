@@ -33,8 +33,10 @@
             var powerup;
 
             for (var i = 0; i < powerUps; i++) {
-                powerup = this.TilePowerUpsG.create((160 + (50 * i)), 0, 'tiles', 'TilePowerUp');
-                powerup.scale.set(0.2);
+                powerup = this.TilePowerUpsG.create(160 + i, 10, 'tiles', 'Shield');
+                var convertion = (margin * 0.5) / powerup.width;
+                powerup.scale.set(convertion);
+                powerup.x = 160 + (i*powerup.width);
             }
 
             for (var i = layers.length - 1; i >= 0; i--) {
@@ -65,7 +67,7 @@
                         break;
                     }
                 }
-                this.grid.addLayer(layers[i], name, 'tiles', [null, 'TileWall', 'TileEnemy', 'TileExit', 'TilePowerUp', 'TilePlayer']);
+                this.grid.addLayer(layers[i], name, 'tiles', [null, 'Wall', 'Enemy', 'Exit', 'Shield', 'Player']);
             }
 
             /* Text */
@@ -279,7 +281,7 @@
     layers.push(matrix4);
     layers.push(matrix5);
 
-     for (var i = enemies.length - 1; i >= 0; i--) {
+    for (var i = enemies.length - 1; i >= 0; i--) {
         var enemyLayer = [];
         for (var j = 100; j >= 0; j--) {
             enemyLayer[j] = 0;

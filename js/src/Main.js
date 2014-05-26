@@ -27,7 +27,7 @@ window.onload = function () {
     BUSTED = false;
     playerTurn = true;
     level = 1;
-    powerUps = 0;
+    powerUps = 3;
     COLORS =  Phaser.Color.HSVColorWheel();
     game = new Phaser.Game(gameWidth, gameHeight, Phaser.AUTO, 'gameContainer');
 

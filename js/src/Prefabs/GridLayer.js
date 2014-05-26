@@ -27,7 +27,6 @@ var GridLayer = function (_game, _matrix, _type, _tileset, _tilesetKeys, _margin
     } else {
         this.frameNames = _tilesetKeys;
     }
-
     var tmpTile = {};
     for (var i = _matrix.length - 1; i >= 0; i--) {
         tmpTile = {};

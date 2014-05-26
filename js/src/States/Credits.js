@@ -17,7 +17,11 @@
             this.bttBack = game.add.button(game.world.centerX - 200, game.world.centerY + 200, 'buttons', function () {
                 this.startState('mainmenu');
             }, this, 'bttBackHover', 'bttBackInactive', 'bttBackActive');
-            
+
+            this.bttPlay = game.add.button(game.world.centerX + 200, game.world.centerY + 200, 'buttons', function () {
+                this.startState('play');
+            }, this, 'bttPlayHover', 'bttPlayInactive', 'bttPlayActive');
+
             var convertion = 0;
             if (gameWidth > gameHeight) {
                 convertion = gameHeight;
@@ -28,6 +32,10 @@
             this.bttBack.scale.set((convertion / 10) / this.bttBack.width);
             this.bttBack.x = game.world.centerX - (this.bttBack.width * 1.5);
             this.bttBack.y = game.world.centerY + (this.bttBack.height * 3);
+
+            this.bttPlay.scale.set((convertion / 10) / this.bttPlay.width);
+            this.bttPlay.x = game.world.centerX + (this.bttPlay.width * 1.5);
+            this.bttPlay.y = game.world.centerY + (this.bttPlay.height * 3);
 
             /* Text */
             this.text = game.add.text(game.world.centerX, game.world.centerY, "CRSG\n A one man job\n by Arlefreak \n", {
@@ -46,6 +54,7 @@
             this.text.anchor.setTo(0.5, 0.5);
             this.creditsTxt.anchor.setTo(0.5, 0.5);
             this.bttBack.anchor.setTo(0.5, 0.5);
+            this.bttPlay.anchor.setTo(0.5, 0.5);
 
             /* Transition */
             var bdmTransition = game.add.bitmapData(gameWidth, gameHeight);
