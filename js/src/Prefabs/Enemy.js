@@ -181,8 +181,8 @@ Enemy.prototype.drawPath = function (_direction) {
     this.path.callAll('kill');
 
     for (var i = this.nodes.length - 2; i > 0; i--) {
-        var x = this.parent.parent.snapToGrid(((this.nodes[i].movableX + 1) * this.cellWidth + 10),true);
-        var y = this.parent.parent.snapToGrid(((this.nodes[i].movableY + 1) * this.cellWidth + 10),true);
+        var x = this.parent.parent.snapToGrid(((this.nodes[i].movableX + 1) * this.cellWidth),true);
+        var y = this.parent.parent.snapToGrid(((this.nodes[i].movableY + 1) * this.cellWidth),true);
         var enough = this.path.getFirstExists(false);
         if (enough)
         {

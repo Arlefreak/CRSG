@@ -21,9 +21,9 @@
             /* Groups */
             var margin = 0;
             if (gameWidth > gameHeight) {
-                margin = gameHeight * 0.10;
+                margin = gameHeight * 0.05;
             } else {
-                margin = gameWidth * 0.10;
+                margin = gameWidth * 0.05;
             }
 
             /* Grid */
@@ -337,9 +337,9 @@ Play.prototype.move = function () {
 
                 var margin = 0;
                 if (gameWidth > gameHeight) {
-                    margin = gameHeight * 0.10;
+                    margin = gameHeight * 0.05;
                 } else {
-                    margin = gameWidth * 0.10;
+                    margin = gameWidth * 0.05;
                 }
                 var tmp = spriteArray[i];
                 var convertion = (margin * 0.5) / tmp.width;
