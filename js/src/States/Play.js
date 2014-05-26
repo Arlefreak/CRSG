@@ -363,6 +363,7 @@ Play.prototype.move = function () {
                     y: (margin * 0.25)
                 }, 250, Phaser.Easing.Linear.None, false, 0, 0, false);
                 e.start();
+                this.TilePowerUpsG.add(tmp);
                 powerUps++;
             }
         }
