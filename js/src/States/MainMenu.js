@@ -17,6 +17,11 @@
                 this.startState('play');
             }, this);
 
+            this.tutorialKey = game.input.keyboard.addKey(Phaser.Keyboard.H);
+            this.tutorialKey.onDown.add(function () {
+                this.startState('tutorial');
+            }, this);
+
             /* Buttons */
             this.bttPlay = game.add.button(game.world.centerX, game.world.centerY, 'buttons', function () {
                 this.startState('play');

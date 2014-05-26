@@ -1,7 +1,7 @@
 'use strict';
 var gameWidth, gameHeight, isMoving, level, powerUps, playerTurn, BUSTED, COLORS, SCORE;
 
-var BootS, PreloaderS, MainMenuS, PlayS, CreditsS, LeaderBoardsS, game;
+var BootS, PreloaderS, MainMenuS, PlayS, TutorialS, CreditsS, LeaderBoardsS, game;
 
 var WebFontConfig;
 WebFontConfig = {
@@ -37,6 +37,7 @@ window.onload = function () {
     game.state.add('preloader', PreloaderS);
     game.state.add('credits', CreditsS);
     game.state.add('leaderboards', LeaderBoardsS);
+    game.state.add('tutorial', TutorialS);
     game.state.add('mainmenu', MainMenuS);
     game.state.add('play', PlayS);
     game.state.start('boot');
