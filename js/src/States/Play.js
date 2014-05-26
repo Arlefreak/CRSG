@@ -33,7 +33,7 @@
             var powerup;
 
             for (var i = 0; i < powerUps; i++) {
-                powerup = this.TilePowerUpsG.create(160 + i, 10, 'tiles', 'Shield');
+                powerup = this.TilePowerUpsG.create(160 + i, (margin * 0.25), 'tiles', 'Shield');
                 var convertion = (margin * 0.5) / powerup.width;
                 powerup.scale.set(convertion);
                 powerup.x = 160 + (i*powerup.width);
@@ -71,20 +71,22 @@
             }
 
             /* Text */
-            this.fpsText = this.game.add.text(game.world.width - 50, 10, '0', {
+            this.fpsText = this.game.add.text(game.world.width - 50, (margin * 0.25) , '0', {
                 font: "20px Source Code Pro",
                 fill: "#f0f0f0",
                 align: "center"
             });
 
-            this.levelText = this.game.add.text(50, 10, 'Level: ' + level, {
+            this.levelText = this.game.add.text(50, (margin * 0.25), 'Level: ' + level, {
                 font: "20px Source Code Pro",
                 fill: "#f0f0f0",
                 align: "center"
             });
 
             this.fpsText.anchor.set(1.0, 0);
-
+            var convertion = (margin * 0.5) / this.fpsText.height;
+            this.fpsText.scale.set(convertion);
+            this.levelText.scale.set(convertion);
             /* Keyboard */
 
             this.escKey = game.input.keyboard.addKey(Phaser.Keyboard.ESC);
@@ -358,7 +360,7 @@ Play.prototype.move = function () {
                 })
                 e.to({
                     x: (160 + ((convertion * tmp.width ) * powerUps)),
-                    y: 10
+                    y: (margin * 0.25)
                 }, 250, Phaser.Easing.Linear.None, false, 0, 0, false);
                 e.start();
                 powerUps++;
