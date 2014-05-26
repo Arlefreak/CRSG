@@ -72,13 +72,13 @@
 
             /* Text */
             this.fpsText = this.game.add.text(game.world.width - 50, (margin * 0.25) , '0', {
-                font: "50px Source Code Pro",
+                font: "20px Source Code Pro",
                 fill: "#f0f0f0",
                 align: "center"
             });
 
             this.levelText = this.game.add.text(50, (margin * 0.25), 'Level: ' + level, {
-                font: "50px Source Code Pro",
+                font: "20px Source Code Pro",
                 fill: "#f0f0f0",
                 align: "center"
             });
