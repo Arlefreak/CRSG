@@ -119,6 +119,9 @@
                 this.quitGame('leaderboards', true);
                 console.log('BUSTED !');
             }
+            if(powerUps < this.TilePowerUpsG.length){
+                this.TilePowerUpsG.remove(this.TilePowerUpsG.getAt(this.TilePowerUpsG.length-1));
+            }
         },
         render: function () {
             //game.debug.spriteInfo(this.grid.movableSprite, gameWidth - 500, 50);
@@ -328,11 +331,19 @@ Play.prototype.move = function () {
         if (this.grid.checkLayer(this.grid.marker.x, this.grid.marker.y, 4, this.grid.collectableLayers)) {
             var spriteArray = this.grid.collect(this.grid.marker.x, this.grid.marker.y, this.grid.collectableLayers,4);
             for (var i = spriteArray.length - 1; i >= 0; i--) {
+
+                var margin = 0;
+                if (gameWidth > gameHeight) {
+                    margin = gameHeight * 0.10;
+                } else {
+                    margin = gameWidth * 0.10;
+                }
                 var tmp = spriteArray[i];
+                var convertion = (margin * 0.5) / tmp.width;
                 var s = game.add.tween(tmp.scale);
                 s.to({
-                    x: 0.2,
-                    y: 0.2
+                    x: convertion,
+                    y: convertion
                 }, 250, Phaser.Easing.Linear.None);
                 s.start();
                 var e = game.add.tween(tmp);
@@ -343,8 +354,8 @@ Play.prototype.move = function () {
                     isMoving = false;
                 })
                 e.to({
-                    x: (160 + (50 * powerUps)),
-                    y: 0
+                    x: (160 + ((convertion * tmp.width ) * powerUps)),
+                    y: 10
                 }, 250, Phaser.Easing.Linear.None, false, 0, 0, false);
                 e.start();
                 powerUps++;
