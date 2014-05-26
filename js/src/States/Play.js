@@ -139,8 +139,10 @@
             transition.alpha = 0;
             if (!_gameOver) {
                 level++;
-
+                SCORE += 100;
             } else {
+                localStorage.setItem('lastScore', SCORE);
+                SCORE = 0;
                 powerUps = 0;
                 level = 1;
                 var gameOverText = this.game.add.text(game.world.centerX, game.world.centerY, 'Game Over', {
@@ -330,6 +332,7 @@ Play.prototype.move = function () {
 
         if (this.grid.checkLayer(this.grid.marker.x, this.grid.marker.y, 4, this.grid.collectableLayers)) {
             var spriteArray = this.grid.collect(this.grid.marker.x, this.grid.marker.y, this.grid.collectableLayers,4);
+            SCORE += 10;
             for (var i = spriteArray.length - 1; i >= 0; i--) {
 
                 var margin = 0;

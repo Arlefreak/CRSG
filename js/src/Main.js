@@ -1,5 +1,5 @@
 'use strict';
-var gameWidth, gameHeight, isMoving, level, powerUps, playerTurn, BUSTED, COLORS;
+var gameWidth, gameHeight, isMoving, level, powerUps, playerTurn, BUSTED, COLORS, SCORE;
 
 var BootS, PreloaderS, MainMenuS, PlayS, CreditsS, LeaderBoardsS, game;
 
@@ -28,6 +28,7 @@ window.onload = function () {
     playerTurn = true;
     level = 1;
     powerUps = 0;
+    SCORE = 0;
     COLORS =  Phaser.Color.HSVColorWheel();
     game = new Phaser.Game(gameWidth, gameHeight, Phaser.AUTO, 'gameContainer');
 

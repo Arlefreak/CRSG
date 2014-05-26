@@ -22,7 +22,8 @@
         "playerTurn": true,
         "Solver": true,
         "SolverNode": true,
-        "BUSTED": true
+        "BUSTED": true,
+        "SCORE": true
     },
     // Ignore Environment Globals
     "browser": true, // Standard browser globals e.g. `window`, `document`.
