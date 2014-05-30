@@ -28,10 +28,17 @@
             }, this, 'bttStartHover', 'bttStartInactive', 'bttStartActive');
             this.bttAbout = game.add.button(game.world.centerX - 200, game.world.centerY + 200, 'buttons', function () {
                 this.startState('credits');
-            }, this, 'bttAboutHover', 'bttAboutInactive', 'bttAboutActive');
+            }, this, 'bttInfoHover', 'bttInfoInactive', 'bttInfoActive');
             this.bttLeader = game.add.button(game.world.centerX + 200, game.world.centerY + 200, 'buttons', function () {
                 this.startState('leaderboards');
             }, this, 'bttLeaderHover', 'bttLeaderInactive', 'bttLeaderActive');
+
+            this.bttTutorial = game.add.button(game.world.centerX - 10, game.world.centerY + 200, 'buttons', function () {
+                this.startState('tutorial');
+            }, this, 'bttAboutHover', 'bttAboutInactive', 'bttAboutActive');
+            this.bttSettings = game.add.button(game.world.centerX + 10, game.world.centerY + 200, 'buttons', function () {
+                this.startState('mainmenu');
+            }, this, 'bttSettingsHover', 'bttSettingsInactive', 'bttSettingsActive');
 
             /* Scales */
             var convertion = 0;
@@ -44,27 +51,38 @@
             this.bttPlay.scale.set((convertion / 6) / this.bttPlay.width);
             this.bttAbout.scale.set((convertion / 10) / this.bttAbout.width);
             this.bttLeader.scale.set((convertion / 10) / this.bttLeader.width);
+            this.bttTutorial.scale.set((convertion / 10) / this.bttTutorial.width);
+            this.bttSettings.scale.set((convertion / 10) / this.bttSettings.width);
 
             this.bttPlay.x = game.world.centerX;
             this.bttPlay.y = game.world.centerY;
-            this.bttAbout.x = game.world.centerX - (this.bttAbout.width * 1.5);
+
+            this.bttAbout.x = game.world.centerX - (this.bttAbout.width + 20);
             this.bttAbout.y = game.world.centerY + (this.bttAbout.height * 3);
-            this.bttLeader.x = game.world.centerX + (this.bttLeader.width * 1.5);
+            this.bttLeader.x = game.world.centerX + (this.bttLeader.width + 20);
             this.bttLeader.y = game.world.centerY + (this.bttLeader.height * 3);
 
+            this.bttTutorial.x = game.world.centerX - (this.bttLeader.width + 5);
+            this.bttSettings.x = game.world.centerX + (this.bttLeader.width + 5);
+            this.bttTutorial.y = game.world.centerY + (this.bttLeader.height * 3);
+            this.bttSettings.y = game.world.centerY + (this.bttLeader.height * 3);
 
             /* Text */
-            this.titleTxt = game.add.text(game.world.centerX, game.world.centerY - this.bttPlay.height + 10, "CRSG", {
+            /*this.titleTxt = game.add.text(game.world.centerX, game.world.centerY - this.bttPlay.height + 10, "CRSG", {
                 font: (this.bttPlay.height / 2) + "px Source Code Pro",
                 fill: "#f0f0f0",
                 align: "center"
-            });
+            });*/
+            this.title = game.add.sprite(game.world.centerX, game.world.centerY - this.bttPlay.height + 10, 'title');
+            this.title.scale.set((convertion / 3) / this.title.width);
 
             /* Anchords */
+            this.title.anchor.setTo(0.5, 0.5);
             this.bttPlay.anchor.setTo(0.5, 0.5);
-            this.bttAbout.anchor.setTo(0.5, 0.5);
-            this.bttLeader.anchor.setTo(0.5, 0.5);
-            this.titleTxt.anchor.setTo(0.5, 0.5);
+            this.bttAbout.anchor.setTo(1.0, 0.5);
+            this.bttLeader.anchor.setTo(0.0, 0.5);
+            this.bttTutorial.anchor.setTo(0.0, 0.5);
+            this.bttSettings.anchor.setTo(1.0, 0.5);
 
             /* Transition */
             var bdmTransition = game.add.bitmapData(gameWidth, gameHeight);

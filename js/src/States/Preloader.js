@@ -14,6 +14,7 @@
             this.preloadBarBg.anchor.setTo(0.5, 0.5);
             this.preloadBar.anchor.setTo(0.5, 0.5);
 
+            this.load.image('title', 'js/res/img/title.png');
             game.load.audio('sfx', ['js/res/sound/die.mp3', 'js/res/sound/die.ogg']);
             game.load.audio('soundtrack', ['js/res/sound/soundtrack.mp3', 'js/res/sound/soundtrack.ogg']);
             this.load.setPreloadSprite(this.preloadBar);
