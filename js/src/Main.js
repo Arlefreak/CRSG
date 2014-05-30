@@ -1,5 +1,5 @@
 'use strict';
-var gameWidth, gameHeight, isMoving, level, powerUps, playerTurn, BUSTED, COLORS, SCORE;
+var gameWidth, gameHeight, isMoving, level, powerUps, playerTurn, BUSTED, COLORS, SCORE, SIGNIN, CLIENT;
 
 var BootS, PreloaderS, MainMenuS, PlayS, TutorialS, CreditsS, LeaderBoardsS, game;
 

@@ -9,6 +9,7 @@
             this.highScore = 0;
             this.lastScore = 0;
             this.getScore();
+            console.log('test');
 
             /* Keyboard */
             this.enterKey = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
@@ -91,6 +92,31 @@
         getScore: function () {
             this.lastScore = localStorage.getItem('lastScore');
             this.highScore = localStorage.getItem('highScore');
+            /*var ref = this;
+            CLIENT.load('games','v1',function(response) {
+                console.log('test');
+                var request = gapi.client.games.leaderboards.list(
+                  {maxResults: 1}
+                  );
+                request.execute(function(response) {
+                    ref.highScore = response['formattedScore'];
+                    console.log(response['formattedScore']);
+                    console.log(response);
+                });
+
+                var request2 = gapi.client.games.scores.submit(
+                {
+                    leaderboardId: "CgkIlcH21rkDEAIQBw",
+                    score: 20
+                }
+                );
+                request2.execute(function(response) {
+                    console.log('test2');
+                    console.log(response);
+                })
+            });*/
+
+
             if (typeof (this.highScore) == 'undefined' || this.highScore == null || isNaN(this.highScore)) {
                 this.highScore = 0;
                 this.lastScore = 0;
