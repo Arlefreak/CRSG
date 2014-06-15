@@ -238,7 +238,7 @@
         Phaser.Utils.shuffle(elements);
         Phaser.Utils.shuffle(indexes);
 
-        /*for (var i = elements.length - 1; i >= 0; i--) {
+        for (var i = elements.length - 1; i >= 0; i--) {
             switch (elements[i]) {
                 case 2: //Enemies
                     //matrix2[indexes[i]] = elements[i];
@@ -257,7 +257,7 @@
             if (i > -1) {
                 indexes.splice(i, 1);
             }
-        }*/
+        }
 
         var playerIndex = 0;
 
@@ -303,10 +303,10 @@
                 enemyLayer[j] = 0;
             }
             var tmpIndex = indexes.pop();
-            //matrix1[tmpIndex] = 0;
-            //enemyLayer[tmpIndex] = 2;
-            enemyLayer[67] = 2;
-            matrix1[67] = 0;
+            matrix1[tmpIndex] = 0;
+            enemyLayer[tmpIndex] = 2;
+            //enemyLayer[67] = 2;
+            //matrix1[67] = 0;
             layers.push(enemyLayer);
         }
         return layers;
