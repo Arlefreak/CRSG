@@ -73,67 +73,67 @@
                 fill: "#f0f0f0",
                 align: "center"
             });*/
-            this.title = game.add.sprite(game.world.centerX, game.world.centerY - this.bttPlay.height + 10, 'title');
-            this.title.scale.set((convertion / 3) / this.title.width);
+this.title = game.add.sprite(game.world.centerX, game.world.centerY - this.bttPlay.height + 10, 'title');
+this.title.scale.set((convertion / 3) / this.title.width);
 
-            /* Anchords */
-            this.title.anchor.setTo(0.5, 0.5);
-            this.bttPlay.anchor.setTo(0.5, 0.5);
-            this.bttAbout.anchor.setTo(1.0, 0.5);
-            this.bttLeader.anchor.setTo(0.0, 0.5);
-            this.bttTutorial.anchor.setTo(0.0, 0.5);
-            this.bttSettings.anchor.setTo(1.0, 0.5);
+/* Anchords */
+this.title.anchor.setTo(0.5, 0.5);
+this.bttPlay.anchor.setTo(0.5, 0.5);
+this.bttAbout.anchor.setTo(1.0, 0.5);
+this.bttLeader.anchor.setTo(0.0, 0.5);
+this.bttTutorial.anchor.setTo(0.0, 0.5);
+this.bttSettings.anchor.setTo(1.0, 0.5);
 
-            /* Transition */
-            var bdmTransition = game.add.bitmapData(gameWidth, gameHeight);
-            bdmTransition.context.fillStyle = 'rgba(50, 50, 50, 1.0)';
-            bdmTransition.context.fillRect(0, 0, gameWidth, gameHeight);
-            var transition = game.add.sprite(0, 0, bdmTransition);
-            var e = game.add.tween(transition);
-            e.onStart.add(function() {
-                isMoving = true;
-            });
-            e.onComplete.add(function() {
-                isMoving = false;
-            })
-            e.to({
-                alpha: 0
-            }, 500, Phaser.Easing.Linear.None, false, 0, 0, false);
-            e.start();
-        },
+/* Transition */
+var bdmTransition = game.add.bitmapData(gameWidth, gameHeight);
+bdmTransition.context.fillStyle = 'rgba(50, 50, 50, 1.0)';
+bdmTransition.context.fillRect(0, 0, gameWidth, gameHeight);
+var transition = game.add.sprite(0, 0, bdmTransition);
+var e = game.add.tween(transition);
+e.onStart.add(function() {
+    isMoving = true;
+});
+e.onComplete.add(function() {
+    isMoving = false;
+})
+e.to({
+    alpha: 0
+}, 500, Phaser.Easing.Linear.None, false, 0, 0, false);
+e.start();
+},
 
-        startState: function(_state) {
-            var bdmTransition = game.add.bitmapData(gameWidth, gameHeight);
-            bdmTransition.context.fillStyle = 'rgba(50, 50, 50, 1.0)';
-            bdmTransition.context.fillRect(0, 0, gameWidth, gameHeight);
-            var transition = game.add.sprite(0, 0, bdmTransition);
-            transition.alpha = 0;
-            var e = game.add.tween(transition);
-            e.to({
-                alpha: 1
-            }, 500, Phaser.Easing.Linear.None, false, 0, 0, false);
-            e.start();
-            e.onComplete.add(function() {
-                game.state.start(_state);
-            });
-        },
+startState: function(_state) {
+    var bdmTransition = game.add.bitmapData(gameWidth, gameHeight);
+    bdmTransition.context.fillStyle = 'rgba(50, 50, 50, 1.0)';
+    bdmTransition.context.fillRect(0, 0, gameWidth, gameHeight);
+    var transition = game.add.sprite(0, 0, bdmTransition);
+    transition.alpha = 0;
+    var e = game.add.tween(transition);
+    e.to({
+        alpha: 1
+    }, 500, Phaser.Easing.Linear.None, false, 0, 0, false);
+    e.start();
+    e.onComplete.add(function() {
+        game.state.start(_state);
+    });
+},
 
-        getScore: function() {
-            this.lastScore = localStorage.getItem('lastScore');
-            this.highScore = localStorage.getItem('highScore');
-            if (typeof(this.highScore) == 'undefined' || this.highScore == null || isNaN(this.highScore)) {
-                this.highScore = 0;
-                this.lastScore = 0;
-                localStorage.setItem('highScore', this.highScore);
-                localStorage.setItem('lastScore', this.lastScore);
-            }
-            this.highScore = parseInt(this.highScore, 10);
-            this.lastScore = parseInt(this.lastScore, 10);
-            if (this.highScore < this.lastScore) {
-                this.highScore = this.lastScore;
-                localStorage.setItem('highScore', this.lastScore);
-            }
-        }
-    };
-    MainMenuS = Menu;
+getScore: function() {
+    this.lastScore = localStorage.getItem('lastScore');
+    this.highScore = localStorage.getItem('highScore');
+    if (typeof(this.highScore) == 'undefined' || this.highScore == null || isNaN(this.highScore)) {
+        this.highScore = 0;
+        this.lastScore = 0;
+        localStorage.setItem('highScore', this.highScore);
+        localStorage.setItem('lastScore', this.lastScore);
+    }
+    this.highScore = parseInt(this.highScore, 10);
+    this.lastScore = parseInt(this.lastScore, 10);
+    if (this.highScore < this.lastScore) {
+        this.highScore = this.lastScore;
+        localStorage.setItem('highScore', this.lastScore);
+    }
+}
+};
+MainMenuS = Menu;
 }());

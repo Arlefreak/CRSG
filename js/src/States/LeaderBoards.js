@@ -67,7 +67,11 @@
 
             /* Transition */
             var bdmTransition = game.add.bitmapData(gameWidth, gameHeight);
-            bdmTransition.context.fillStyle = 'rgba(50, 50, 50, 1.0)';
+            if (BUSTED) {
+                bdmTransition.context.fillStyle = 'rgba(255, 84, 76, 1.0)';
+            }else{
+                bdmTransition.context.fillStyle = 'rgba(50, 50, 50, 1.0)';
+            }
             bdmTransition.context.fillRect(0, 0, gameWidth, gameHeight);
             var transition = game.add.sprite(0, 0, bdmTransition);
             var e = game.add.tween(transition);
@@ -81,6 +85,7 @@
                 alpha: 0
             }, 500, Phaser.Easing.Linear.None, false, 0, 0, false);
             e.start();
+            BUSTED = false;
         },
 
         startState: function(_state) {

@@ -28,7 +28,7 @@
 
             /* Grid */
             this.grid = new Grid(game, 10, 10, gameWidth, gameHeight, margin, true, true);
-            var layers = this.genLayers();
+            var layers = this.genRandomLayers();
             this.TilePowerUpsG = game.add.group();
             var powerup;
 
@@ -95,7 +95,7 @@
 
             game.input.onDown.add(this.move, this);
             this.escKey.onDown.add(function() {
-                this.quitGame('mainmenu', true);
+                this.quitGame('mainmenu', false);
             }, this);
 
             var bdmTransition = game.add.bitmapData(gameWidth, gameHeight);
@@ -137,7 +137,11 @@
         quitGame: function(_state, _gameOver) {
             playerTurn = false;
             var bdmTransition = game.add.bitmapData(gameWidth, gameHeight);
-            bdmTransition.context.fillStyle = 'rgba(50, 50, 50, 1.0)';
+            if (!_gameOver) {
+                bdmTransition.context.fillStyle = 'rgba(50, 50, 50, 1.0)';
+            } else {
+                bdmTransition.context.fillStyle = 'rgba(255, 84, 76, 1.0)';
+            }
             bdmTransition.context.fillRect(0, 0, gameWidth, gameHeight);
             var transition = game.add.sprite(0, 0, bdmTransition);
             transition.alpha = 0;
@@ -173,9 +177,8 @@
                 game.state.start(_state);
             });
 
-            BUSTED = false;
             this.grid = {};
-            this.fx.play('', 0, 1, false);
+            //this.fx.play('', 0, 1, false);
             game.time.events.remove(this.timer);
         }
     };
@@ -194,6 +197,125 @@
         e.onComplete.add(function() {
             game.state.start('mainmenu');
         });
+    };
+
+    Play.prototype.genRandomLayers = function() {
+        var layers = [];
+        var enemies = [2];
+        var elements = [3, 4, 5];
+        var matrix1 = [];
+        var matrix2 = [];
+        var matrix3 = [];
+        var matrix4 = [];
+        var matrix5 = [];
+        var matrix6 = [];
+        var indexes = [];
+        var playerIndex = 0;
+
+        for (var i = 20; i >= 0; i--) {
+            elements.push(1);
+        }
+        for (var i = level - 1; i > 0; i--) {
+            elements.push(2);
+        }
+
+        for (var i = level - 1; i > 0; i--) {
+            enemies.push(2);
+        }
+
+        for (var i = 99; i >= 0; i--) {
+            matrix1.push(0);
+            matrix2.push(0);
+            matrix3.push(0);
+            matrix4.push(0);
+            matrix5.push(0);
+            matrix6.push(6);
+        }
+
+        for (var i = elements.length; i >= 0; i--) {
+            var randomTmp = 0;
+            do {
+                randomTmp = Math.floor(Math.random() * 99) + 1;
+            } while (indexOf.call(indexes, randomTmp) > -1);
+            indexes.push(randomTmp);
+        }
+
+        Phaser.Utils.shuffle(elements);
+        Phaser.Utils.shuffle(indexes);
+
+        for (var i = elements.length - 1; i >= 0; i--) {
+            switch (elements[i]) {
+                case 1: //Walls
+                    matrix1[indexes[i]] = elements[i];
+                    break;
+                case 2: //Enemies
+                    matrix2[indexes[i]] = elements[i];
+                    break;
+                case 3: //Final
+                    matrix3[indexes[i]] = elements[i];
+                    break;
+                case 4: //Collectable
+                    matrix4[indexes[i]] = elements[i];
+                    break;
+                case 5: //Movable
+                    matrix5[indexes[i]] = elements[i];
+                    playerIndex = indexes[i];
+                    break;
+            }
+            if (i > -1) {
+                indexes.splice(i, 1);
+            }
+        }
+
+        //matrix5[playerIndex] = 5;
+
+        if (playerIndex >= 10) {
+            if (playerIndex % 10 !== 9) {
+                matrix5[playerIndex - 9] = 9;
+            }
+            if (playerIndex % 10 !== 0) {
+                matrix5[playerIndex - 11] = 9;
+            }
+            matrix5[playerIndex - 10] = 9;
+        }
+
+        if (playerIndex % 10 !== 9) {
+            matrix5[playerIndex + 1] = 9;
+        }
+        if (playerIndex % 10 !== 0) {
+            matrix5[playerIndex - 1] = 9;
+        }
+
+        if (playerIndex < 90) {
+            if (playerIndex % 10 !== 0) {
+                matrix5[playerIndex + 9] = 9;
+            }
+            if (playerIndex % 10 !== 9) {
+                matrix5[playerIndex + 11] = 9;
+            }
+            matrix5[playerIndex + 10] = 9;
+        }
+
+        layers.push(matrix6);
+        layers.push(matrix1);
+        layers.push(matrix2);
+        layers.push(matrix3);
+        layers.push(matrix4);
+        layers.push(matrix5);
+
+        for (var i = enemies.length - 1; i >= 0; i--) {
+            var enemyLayer = [];
+            for (var j = 100; j >= 0; j--) {
+                enemyLayer[j] = 0;
+            }
+            var tmpIndex = indexes.pop();
+            matrix1[tmpIndex] = 0;
+            enemyLayer[tmpIndex] = 2;
+            //enemyLayer[67] = 2;
+            //matrix1[67] = 0;
+            layers.push(enemyLayer);
+        }
+        return layers;
     };
 
     Play.prototype.genLayers = function() {
@@ -241,7 +363,13 @@
         for (var i = elements.length - 1; i >= 0; i--) {
             switch (elements[i]) {
                 case 2: //Enemies
-                    //matrix2[indexes[i]] = elements[i];
+                    var enemyLayer = [];
+                    for (var j = 100; j >= 0; j--) {
+                        enemyLayer[j] = 0;
+                    }
+                    var tmpIndex = indexes[i];
+                    enemyLayer[tmpIndex] = 2;
+                    layers.push(enemyLayer);
                     break;
                 case 3: //Final
                     matrix3[indexes[i]] = elements[i];
@@ -298,16 +426,7 @@
         layers.push(matrix5);
 
         for (var i = enemies.length - 1; i >= 0; i--) {
-            var enemyLayer = [];
-            for (var j = 100; j >= 0; j--) {
-                enemyLayer[j] = 0;
-            }
-            var tmpIndex = indexes.pop();
-            matrix1[tmpIndex] = 0;
-            enemyLayer[tmpIndex] = 2;
-            //enemyLayer[67] = 2;
-            //matrix1[67] = 0;
-            layers.push(enemyLayer);
+
         }
         return layers;
     };

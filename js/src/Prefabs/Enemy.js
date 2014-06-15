@@ -26,7 +26,7 @@ var Enemy = function(_game, _x, _y, _cellWidth, _cellHeight, _tileset, _i, _inde
     this.indexX = _indexX;
     this.indexY = _indexY;
     var randomColor = Math.floor(Math.random() * 359) + 1;
-    this.colorPath = COLORS[game.math.wrapValue(randomColor, 1, 359)].rgba;
+    this.colorPath = '#fff';//COLORS[game.math.wrapValue(randomColor, 1, 359)].rgba;
 
     this.direction = 'down';
     this.canMove = false;

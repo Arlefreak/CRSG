@@ -25,7 +25,7 @@ var Fog = function(_game, _x, _y, _cellWidth, _cellHeight, _i, _indexX, _indexY)
     this.indexX = _indexX;
     this.indexY = _indexY;
     this.game.add.existing(this);
-    this.alpha = 0.5;
+    //this.alpha = 0.5;
 };
 
 Fog.prototype = Object.create(Phaser.Sprite.prototype);
