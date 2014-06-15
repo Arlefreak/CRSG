@@ -212,7 +212,7 @@
             enemies.push(2);
         }
 
-        for (var i = 100; i >= 0; i--) {
+        for (var i = 99; i >= 0; i--) {
             matrix1.push(0);
             matrix2.push(0);
             matrix3.push(0);
@@ -313,7 +313,6 @@
     };
 
     Play.prototype.move = function() {
-        var shield = false;
         if (this.grid.canMove && playerTurn && !isMoving) {
             if (Math.round(this.grid.movableSprite.x) === Math.round(this.grid.marker.x)) {
                 if (Math.round(this.grid.movableSprite.y) < Math.round(this.grid.marker.y)) {

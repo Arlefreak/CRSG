@@ -11,9 +11,9 @@
  *
  *
  */
-'use strict';
+ 'use strict';
 
-var Grid = function(_game, _rows, _columns, _width, _height, _margin, _square, _draw) {
+ var Grid = function(_game, _rows, _columns, _width, _height, _margin, _square, _draw) {
     Phaser.Group.call(this, _game);
     this.game = _game;
     this.rows = _rows;
@@ -131,7 +131,7 @@ Grid.prototype.updateFog = function() {
                     tmpFog.alpha = 0.5;
                 }
             }
-        };
+        }
     }
 }
 
@@ -211,73 +211,73 @@ Grid.prototype.move = function(_layer, _direction) {
         if (!isMoving) {
             switch (_direction) {
                 case 'left':
-                    if (tmpSprite.x - (this.cellWidth / 2) >= this.limitLeft) {
-                        e.to({
-                            x: mLeft
-                        }, 250, Phaser.Easing.Linear.None, false, 0, 0, false);
-                        e.start();
-                    }
-                    break;
+                if (tmpSprite.x - (this.cellWidth / 2) >= this.limitLeft) {
+                    e.to({
+                        x: mLeft
+                    }, 250, Phaser.Easing.Linear.None, false, 0, 0, false);
+                    e.start();
+                }
+                break;
                 case 'up':
-                    if (tmpSprite.y - (this.cellHeight / 2) > this.limitTop) {
-                        e.to({
-                            y: mUp
-                        }, 250, Phaser.Easing.Linear.None, false, 0, 0, false);
-                        e.start();
-                    }
-                    break;
+                if (tmpSprite.y - (this.cellHeight / 2) > this.limitTop) {
+                    e.to({
+                        y: mUp
+                    }, 250, Phaser.Easing.Linear.None, false, 0, 0, false);
+                    e.start();
+                }
+                break;
                 case 'right':
-                    if (tmpSprite.x + (this.cellWidth / 2) < this.limitRight) {
-                        e.to({
-                            x: mRight
-                        }, 250, Phaser.Easing.Linear.None, false, 0, 0, false);
-                        e.start();
-                    }
-                    break;
+                if (tmpSprite.x + (this.cellWidth / 2) < this.limitRight) {
+                    e.to({
+                        x: mRight
+                    }, 250, Phaser.Easing.Linear.None, false, 0, 0, false);
+                    e.start();
+                }
+                break;
                 case 'down':
-                    if (tmpSprite.y + (this.cellHeight / 2) < this.limitBottom) {
-                        e.to({
-                            y: mDown
-                        }, 250, Phaser.Easing.Linear.None, false, 0, 0, false);
-                        e.start();
-                    }
-                    break;
+                if (tmpSprite.y + (this.cellHeight / 2) < this.limitBottom) {
+                    e.to({
+                        y: mDown
+                    }, 250, Phaser.Easing.Linear.None, false, 0, 0, false);
+                    e.start();
+                }
+                break;
                 case 'topleft':
-                    if (tmpSprite.y + (this.cellHeight / 2) < this.limitBottom) {
-                        e.to({
-                            x: mLeft,
-                            y: mUp
-                        }, 250, Phaser.Easing.Linear.None, false, 0, 0, false);
-                        e.start();
-                    }
-                    break;
+                if (tmpSprite.y + (this.cellHeight / 2) < this.limitBottom) {
+                    e.to({
+                        x: mLeft,
+                        y: mUp
+                    }, 250, Phaser.Easing.Linear.None, false, 0, 0, false);
+                    e.start();
+                }
+                break;
                 case 'topright':
-                    if (tmpSprite.y + (this.cellHeight / 2) < this.limitBottom) {
-                        e.to({
-                            x: mRight,
-                            y: mUp
-                        }, 250, Phaser.Easing.Linear.None, false, 0, 0, false);
-                        e.start();
-                    }
-                    break;
+                if (tmpSprite.y + (this.cellHeight / 2) < this.limitBottom) {
+                    e.to({
+                        x: mRight,
+                        y: mUp
+                    }, 250, Phaser.Easing.Linear.None, false, 0, 0, false);
+                    e.start();
+                }
+                break;
                 case 'bottomleft':
-                    if (tmpSprite.y + (this.cellHeight / 2) < this.limitBottom) {
-                        e.to({
-                            x: mLeft,
-                            y: mDown
-                        }, 250, Phaser.Easing.Linear.None, false, 0, 0, false);
-                        e.start();
-                    }
-                    break;
+                if (tmpSprite.y + (this.cellHeight / 2) < this.limitBottom) {
+                    e.to({
+                        x: mLeft,
+                        y: mDown
+                    }, 250, Phaser.Easing.Linear.None, false, 0, 0, false);
+                    e.start();
+                }
+                break;
                 case 'bottomright':
-                    if (tmpSprite.y + (this.cellHeight / 2) < this.limitBottom) {
-                        e.to({
-                            x: mRight,
-                            y: mDown
-                        }, 250, Phaser.Easing.Linear.None, false, 0, 0, false);
-                        e.start();
-                    }
-                    break;
+                if (tmpSprite.y + (this.cellHeight / 2) < this.limitBottom) {
+                    e.to({
+                        x: mRight,
+                        y: mDown
+                    }, 250, Phaser.Easing.Linear.None, false, 0, 0, false);
+                    e.start();
+                }
+                break;
             }
         }
     }
@@ -290,23 +290,24 @@ Grid.prototype.addLayer = function(_matrix, _type, _tileset, _tilesetKeys) {
     this.add(layer);
     switch (_type) {
         case 'movable':
-            this.movableSprite = layer.getFirstAlive();
-            this.movableLayers.push(layer);
-            break;
+        this.movableSprite = layer.getFirstAlive();
+        this.movableLayers.push(layer);
+        break;
         case 'unmovable':
-            this.unMovableLayers.push(layer);
-            break;
+        this.unMovableLayers.push(layer);
+        break;
         case 'final':
-            this.finalLayers.push(layer);
-            break;
+        this.finalLayers.push(layer);
+        break;
         case 'enemy':
-            this.enemiesLayers.push(layer);
-            break;
+        this.enemiesLayers.push(layer);
+        break;
         case 'collectable':
-            this.collectableLayers.push(layer);
-            break;
+        this.collectableLayers.push(layer);
+        break;
         case 'fog':
-            this.fogLayers.push(layer);
+        this.fogLayers.push(layer);
+        break;
     }
     this.updateMasterMatrix();
 };
@@ -314,6 +315,8 @@ Grid.prototype.addLayer = function(_matrix, _type, _tileset, _tilesetKeys) {
 Grid.prototype.createMarker = function() {
     this.marker = game.add.graphics();
     this.changeMarkerColor(0xcc3333);
+    this.marker.x = 10;
+    this.marker.y = 10;
 
     /*this.debugS = game.add.graphics();
       this.debugS.beginFill(0xffffff, 1.0);
@@ -324,9 +327,9 @@ Grid.prototype.createMarker = function() {
       this.debugW.beginFill(0x964514, 0.5);
       this.debugW.drawRect(0, 0, this.cellWidth, this.cellHeight);
       this.debugW.endFill();*/
-};
+  };
 
-Grid.prototype.changeMarkerColor = function(_color) {
+  Grid.prototype.changeMarkerColor = function(_color) {
     /* Reset graphic */
     this.marker.clear();
     /* Border style */
