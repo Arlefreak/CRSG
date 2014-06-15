@@ -6,7 +6,6 @@
         create: function() {
             playerTurn = true;
             game.stage.backgroundColor = '#333333';
-            this.score = 0;
 
             /* Transition */
 
@@ -126,6 +125,7 @@
             if (BUSTED) {
                 this.quitGame('leaderboards', true);
                 console.log('BUSTED !');
+                BUSTED = false;
             }
             if (powerUps < this.TilePowerUpsG.length) {
                 this.TilePowerUpsG.remove(this.TilePowerUpsG.getAt(this.TilePowerUpsG.length - 1));
@@ -153,6 +153,7 @@
                 level++;
                 SCORE += 100;
             } else {
+                console.log('score: ' + SCORE);
                 localStorage.setItem('lastScore', SCORE);
                 gapi.client.load('games', 'v1', function(response) {
                     console.log('Submiting Score');
@@ -164,13 +165,6 @@
                 SCORE = 0;
                 powerUps = 0;
                 level = 1;
-                var gameOverText = this.game.add.text(game.world.centerX, game.world.centerY, 'Game Over', {
-                    font: "50px Source Code Pro",
-                    fill: "#fff",
-                    align: "center"
-                });
-                gameOverText.anchor.set(0.5, 0.5);
-                gameOverText.alpha = 0;
             }
             var e = game.add.tween(transition);
             e.to({

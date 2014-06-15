@@ -9,7 +9,7 @@
             this.highScore = 0;
             this.lastScore = 0;
             this.getScore();
-            console.log('test');
+            console.log('LeaderBoards initiates');
 
             /* Keyboard */
             this.enterKey = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
@@ -110,7 +110,6 @@
             this.highScore = 100000000;
 
             gapi.client.load('games', 'v1', function(response) {
-                console.log(response);
                 console.log(gapi.client);
                 var request = gapi.client.games.scores.get({
                     leaderboardId: "CgkIlcH21rkDEAIQBw",
