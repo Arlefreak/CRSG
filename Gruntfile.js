@@ -1,16 +1,6 @@
-module.exports = function (grunt) {
-    // 1. All configuration goes here
+module.exports = function(grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
-        watch: {
-            scripts: {
-                files: 'js/',
-                tasks: ['concat', 'uglify'],
-                options: {
-                    livereload: 9090,
-                }
-            }
-        },
         concat: {
             options: {
                 separator: ';',
@@ -39,7 +29,7 @@ module.exports = function (grunt) {
             },
         },
         replace: {
-            example: {
+            main: {
                 src: ['build/CRSG.js'], // source files array (supports minimatch)
                 dest: 'build/CRSG.js', // destination directory or file
                 replacements: [{
@@ -64,6 +54,21 @@ module.exports = function (grunt) {
                 }]
             }
         },
+        clean: {
+            build: {
+                src: ['build']
+            },
+            server: {
+                options: {
+                    force: true
+                },
+                src: ['../../../Web/Django/arlefreaksite/portfolio/static/Games/CRSG/**/*',
+                    '!../../../Web/Django/arlefreaksite/portfolio/static/Games/CRSG/CRSG400x200.png',
+                    '!../../../Web/Django/arlefreaksite/portfolio/static/Games/CRSG/CRSG1024x300.png',
+                    '!../../../Web/Django/arlefreaksite/portfolio/static/Games/CRSG/CRSG.css'
+                ]
+            },
+        },
         copy: {
             main: {
                 files: [{
@@ -77,16 +82,54 @@ module.exports = function (grunt) {
                     src: ['fonts/**'],
                     dest: 'build/assets/'
                 }, ]
+            },
+            server: {
+                files: [{
+                    expand: true,
+                    cwd: 'build/',
+                    src: ['**', '!CRSG.js', '!index.html'],
+                    dest: '../../../Web/Django/arlefreaksite/portfolio/static/Games/CRSG/'
+                }]
             }
+        },
+        watch: {
+            scripts: {
+                files: 'js/**/*.js',
+                tasks: ['build']
+            },
+            images: {
+                files: '**/*.{png,jpg,gif}',
+                tasks: ['build']
+            },
         },
     });
 
-    // 3. Where we tell Grunt we plan to use this plug-in.
+    grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-text-replace');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-imagemin');
     grunt.loadNpmTasks('grunt-contrib-copy');
-    grunt.registerTask('default', ['concat', 'replace', 'uglify', 'imagemin', 'copy']);
+    grunt.loadNpmTasks('grunt-contrib-watch');
 
+    grunt.registerTask(
+        'scripts',
+        'Compiles the JavaScript files.', ['concat', 'replace', 'uglify']
+    );
+
+    grunt.registerTask(
+        'images',
+        'Compiles the JavaScript files.', ['imagemin']
+    );
+
+
+    grunt.registerTask(
+        'build',
+        'Compiles all of the assets and copies the files to the build directory.', ['scripts', 'images', 'copy', 'clean:server', 'copy:server']
+    );
+
+    grunt.registerTask(
+        'default',
+        'Watches the project for changes, automatically builds them and runs a server.', ['build', 'watch']
+    );
 };

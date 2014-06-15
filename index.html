@@ -3,28 +3,61 @@
 <head>
 	<meta charset="UTF-8" />
 	<title>CRSG</title>
-	<link rel="stylesheet" type="text/css" href="css/crsg.css">
-	<script src="js/lib/Helpers.js"></script>
-	<script src="js/lib/Phaser.js"></script>
-	<script src="js/lib/SolverNode.js"></script>
-	<script src="js/lib/Solver.js"></script>
-	<script src="js/lib/Underscore.js"></script>
-	<script src="js/src/Main.js"></script>
-	<script src="js/src/States/Boot.js"></script>
-	<script src="js/src/States/Preloader.js"></script>
-	<script src="js/src/States/MainMenu.js"></script>
-	<script src="js/src/States/Tutorial.js"></script>
-	<script src="js/src/States/Credits.js"></script>
-	<script src="js/src/States/LeaderBoards.js"></script>
-	<script src="js/src/Prefabs/Grid.js"></script>
-	<script src="js/src/Prefabs/GridLayer.js"></script>
+    <meta name="google-signin-clientid" content="118562332821-fe9us2kvresdi66q7mmur7816ekcmioh.apps.googleusercontent.com"/>
+    <meta name="google-signin-cookiepolicy" content="single_host_origin"/>
+    <meta name="google-signin-callback" content="signinCallback"/>
+    <meta name="google-signin-scope" content="https://www.googleapis.com/auth/plus.login https://www.googleapis.com/auth/games"/>
+    <link rel="stylesheet" type="text/css" href="css/crsg.css">
+    <script src="js/lib/Helpers.js"></script>
+    <script src="js/lib/Phaser.js"></script>
+    <script src="js/lib/SolverNode.js"></script>
+    <script src="js/lib/Solver.js"></script>
+    <script src="js/lib/Underscore.js"></script>
+    <script src="js/src/Main.js"></script>
+    <script src="js/src/States/Boot.js"></script>
+    <script src="js/src/States/Preloader.js"></script>
+    <script src="js/src/States/MainMenu.js"></script>
+    <script src="js/src/States/Tutorial.js"></script>
+    <script src="js/src/States/Credits.js"></script>
+    <script src="js/src/States/LeaderBoards.js"></script>
+    <script src="js/src/Prefabs/Grid.js"></script>
+    <script src="js/src/Prefabs/GridLayer.js"></script>
     <script src="js/src/Prefabs/Fog.js"></script>
-	<script src="js/src/Prefabs/Enemy.js"></script>
-	<script src="js/src/States/Play.js"></script>
+    <script src="js/src/Prefabs/Enemy.js"></script>
+    <script src="js/src/States/Play.js"></script>
+    <script src="https://apis.google.com/js/client.js"></script>
 </head>
 <body>
+    <script type="text/javascript">
+      (function() {
+         var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+         po.src = 'https://apis.google.com/js/client:plusone.js';
+         var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+     })();
+ </script>
 
-	<div class="gameContainer"></div>
+ <script type="text/javascript">
+   (function() {
+     var po = document.createElement('script');
+     po.type = 'text/javascript'; po.async = true;
+     po.src = 'https://apis.google.com/js/client:plusone.js?onload=render';
+     var s = document.getElementsByTagName('script')[0];
+     s.parentNode.insertBefore(po, s);
+ })();
+ </script>
+
+ <script type="text/javascript">
+    function signinCallback(authResult) {
+      if (authResult['status']['signed_in']) {
+        SIGNIN = true;
+        CLIENT = gapi.client;
+    } else {
+        console.log('Sign-in state: ' + authResult['error']);
+    }
+}
+</script>
+
+ <div class="gameContainer"></div>
 
 </body>
 </html>

@@ -11,9 +11,9 @@
  *
  *
  */
- 'use strict';
+'use strict';
 
- var Enemy = function (_game, _x, _y, _cellWidth, _cellHeight, _tileset, _i, _indexX, _indexY) {
+var Enemy = function(_game, _x, _y, _cellWidth, _cellHeight, _tileset, _i, _indexX, _indexY) {
     Phaser.Sprite.call(this, _game, _x + (_cellWidth / 2), _y + (_cellHeight / 2), 'tiles');
     this.awake = false;
     this.game = _game;
@@ -25,7 +25,7 @@
     this.cellHeight = _cellHeight;
     this.indexX = _indexX;
     this.indexY = _indexY;
-    var randomColor = Math.floor(Math.random()*359)+1;
+    var randomColor = Math.floor(Math.random() * 359) + 1;
     this.colorPath = COLORS[game.math.wrapValue(randomColor, 1, 359)].rgba;
 
     this.direction = 'down';
@@ -46,21 +46,21 @@
 Enemy.prototype = Object.create(Phaser.Sprite.prototype);
 Enemy.prototype.constructor = Enemy;
 
-Enemy.prototype.updateDirection = function (_direction) {
- /* Get current direction of the enemy*/
- if (this.angle === 0) {
-    this.direction = 'down';
-} else if (this.angle === 90) {
-    this.direction = 'left';
-} else if (this.angle === -90) {
-    this.direction = 'right';
-} else if (this.angle === -180) {
-    this.direction = 'up';
-}
+Enemy.prototype.updateDirection = function() {
+    /* Get current direction of the enemy*/
+    if (this.angle === 0) {
+        this.direction = 'down';
+    } else if (this.angle === 90) {
+        this.direction = 'left';
+    } else if (this.angle === -90) {
+        this.direction = 'right';
+    } else if (this.angle === -180) {
+        this.direction = 'up';
+    }
 }
 
-Enemy.prototype.turn = function () {
-    if(this.awake){
+Enemy.prototype.turn = function() {
+    if (this.awake) {
         this.nodes = [];
         this.updateDirection();
 
@@ -99,39 +99,39 @@ Enemy.prototype.turn = function () {
         } else {
             switch (desireDirection) {
                 case 'up':
-                if (this.direction === 'right') {
-                    this.rotate(false, false);
-                } else {
-                    this.rotate(true, false);
-                }
-                break;
+                    if (this.direction === 'right') {
+                        this.rotate(false, false);
+                    } else {
+                        this.rotate(true, false);
+                    }
+                    break;
                 case 'down':
-                if (this.direction === 'left') {
-                    this.rotate(false, false);
-                } else {
-                    this.rotate(false, false);
-                }
-                break;
+                    if (this.direction === 'left') {
+                        this.rotate(false, false);
+                    } else {
+                        this.rotate(false, false);
+                    }
+                    break;
                 case 'left':
-                if (this.direction === 'down') {
-                    this.rotate(true, false);
-                } else {
-                    this.rotate(false, false);
-                }
-                break;
+                    if (this.direction === 'down') {
+                        this.rotate(true, false);
+                    } else {
+                        this.rotate(false, false);
+                    }
+                    break;
                 case 'right':
-                if (this.direction === 'up') {
-                    this.rotate(true, false);
-                } else {
-                    this.rotate(false, false);
-                }
-                break;
+                    if (this.direction === 'up') {
+                        this.rotate(true, false);
+                    } else {
+                        this.rotate(false, false);
+                    }
+                    break;
             }
         }
     }
 }
 
-Enemy.prototype.rotate = function (_direction, _shield) {
+Enemy.prototype.rotate = function(_direction, _shield) {
     var e = this.game.add.tween(this);
     var tmpAngle = this.angle;
 
@@ -151,7 +151,7 @@ Enemy.prototype.rotate = function (_direction, _shield) {
 
     var ref = this;
 
-    e.onStart.add(function () {
+    e.onStart.add(function() {
         playerTurn = false;
     });
 
@@ -161,8 +161,8 @@ Enemy.prototype.rotate = function (_direction, _shield) {
 
     e.start();
 
-    e.onComplete.add(function () {
-        if(!_shield){
+    e.onComplete.add(function() {
+        if (!_shield) {
             ref.checkPlayer();
             ref.drawPath();
         }
@@ -170,40 +170,39 @@ Enemy.prototype.rotate = function (_direction, _shield) {
     });
 }
 
-Enemy.prototype.move = function (_direction) {
+Enemy.prototype.move = function(_direction) {
     this.parent.parent.move(this.parent, _direction);
     this.checkPlayer();
     this.drawPath();
 }
 
-Enemy.prototype.drawPath = function (_direction) {
+Enemy.prototype.drawPath = function() {
     console.log("drawPath");
     this.path.callAll('kill');
 
     for (var i = this.nodes.length - 2; i > 0; i--) {
-        var x = this.parent.parent.snapToGrid(((this.nodes[i].movableX + 1) * this.cellWidth),true);
-        var y = this.parent.parent.snapToGrid(((this.nodes[i].movableY + 1) * this.cellWidth),true);
+        var x = this.parent.parent.snapToGrid(((this.nodes[i].movableX + 1) * this.cellWidth), true);
+        var y = this.parent.parent.snapToGrid(((this.nodes[i].movableY + 1) * this.cellWidth), true);
         var enough = this.path.getFirstExists(false);
-        if (enough)
-        {
+        if (enough) {
             enough.revive();
-            enough.x = (y + this.cellWidth/2) - 5;
-            enough.y = (x + this.cellHeight/2) - 5;
-        }else{
-            var pathTexture = game.add.bitmapData(10,10);
+            enough.x = (y + this.cellWidth / 2) - 5;
+            enough.y = (x + this.cellHeight / 2) - 5;
+        } else {
+            var pathTexture = game.add.bitmapData(10, 10);
             pathTexture.context.fillStyle = this.colorPath;
-            pathTexture.context.fillRect(0,0, 50, 50);
+            pathTexture.context.fillRect(0, 0, 50, 50);
             var tmpPath = game.add.sprite(0, 0, pathTexture);
             tmpPath.alpha = 0.4;
-            tmpPath.x = (y + this.cellWidth/2) - 5;
-            tmpPath.y = (x + this.cellHeight/2) - 5;
+            tmpPath.x = (y + this.cellWidth / 2) - 5;
+            tmpPath.y = (x + this.cellHeight / 2) - 5;
             this.path.add(tmpPath);
         }
     }
 }
 
-Enemy.prototype.checkAwake = function () {
-    if(!this.awake){
+Enemy.prototype.checkAwake = function() {
+    if (!this.awake) {
         var i = 0;
         var j = 0;
         var playerPositionX = 0;
@@ -213,7 +212,7 @@ Enemy.prototype.checkAwake = function () {
         var tmpMatrix = this.parent.parent.masterMatrix;
         for (i = tmpMatrix.length - 1; i >= 0; i--) {
             for (j = tmpMatrix[i].length - 1; j >= 0; j--) {
-                if(tmpMatrix[i][j] === 5){
+                if (tmpMatrix[i][j] === 5) {
                     playerPositionX = i;
                     playerPositionY = j;
                 }
@@ -230,35 +229,34 @@ Enemy.prototype.checkAwake = function () {
         bottomLeft = playerPositionX - 1 === this.indexX && playerPositionY + 1 === this.indexY;
         bottomRight = playerPositionX + 1 === this.indexX && playerPositionY + 1 === this.indexY;
 
-        if(top || bottom || left || right || topLeft || topRight || bottomRight || bottomLeft){
+        if (top || bottom || left || right || topLeft || topRight || bottomRight || bottomLeft) {
             this.awake = true;
         }
     }
 }
 
-Enemy.prototype.checkPlayer = function () {
+Enemy.prototype.checkPlayer = function() {
     this.updateDirection();
 
     console.log('CheckPlayer');
     var i = 0
     var nodesDifDirection = false;
     var directionNull = false;
-    var thisDifDirection = false;
 
-    if (this.nodes[this.nodes.length - 2].direction !== this.direction){
+    if (this.nodes[this.nodes.length - 2].direction !== this.direction) {
         return false;
     }
     for (i = this.nodes.length - 1; i > 0; i--) {
-        nodesDifDirection = this.nodes[i].direction !== this.nodes[i-1].direction;
+        nodesDifDirection = this.nodes[i].direction !== this.nodes[i - 1].direction;
         directionNull = this.nodes[i].direction !== null;
-        if(nodesDifDirection && directionNull){
+        if (nodesDifDirection && directionNull) {
             return
         }
-    };
-    if(powerUps > 0){
-        this.rotate(true,true);
+    }
+    if (powerUps > 0) {
+        this.rotate(true, true);
         powerUps--;
-    }else{
+    } else {
         BUSTED = true;
     }
 }

@@ -1,4 +1,4 @@
-Array.prototype.equals = function (array) {
+Array.prototype.equals = function(array) {
     if (!array) {
         return false;
     }
@@ -19,6 +19,6 @@ Array.prototype.equals = function (array) {
     return true;
 };
 
-var randomBoolean = function () {
+var randomBoolean = function() {
     return Math.random() < 0.5;
 }

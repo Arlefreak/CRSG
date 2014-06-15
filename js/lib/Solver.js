@@ -4,7 +4,7 @@
  * */
 'use strict';
 
-var Solver = function (_matrixI, _matrixF, _movableX, _movableY) {
+var Solver = function(_matrixI, _matrixF, _movableX, _movableY) {
     this.open = [];
     this.close = [];
     this.moves = 0;
@@ -16,7 +16,7 @@ var Solver = function (_matrixI, _matrixF, _movableX, _movableY) {
     this.open.push(tmpNode);
 };
 
-Solver.prototype.checkClosed = function (_matrix) {
+Solver.prototype.checkClosed = function(_matrix) {
     var i = 0;
     for (i = this.close.length - 1; i >= 0; i--) {
         if (this.close[i].matrix.equals(_matrix)) {
@@ -26,8 +26,8 @@ Solver.prototype.checkClosed = function (_matrix) {
     return false;
 };
 
-Solver.prototype.solve = function () {
-    var count = 0;
+Solver.prototype.solve = function() {
+    //var count = 0;
 
     while (!this.open[this.open.length - 1].matrix.equals(this.matrixF) && this.open.length > 0) {
         /* nodeC the current node that is going to be evaluated */
@@ -43,7 +43,7 @@ Solver.prototype.solve = function () {
         this.swap(nodeC, 'down');
 
         /* Sort open nodes */
-        this.open.sort(function (a, b) {
+        this.open.sort(function(a, b) {
             if (a.totalCost > b.totalCost) {
                 return -1;
             }
@@ -58,7 +58,7 @@ Solver.prototype.solve = function () {
     return this.open.pop();
 };
 
-Solver.prototype.swap = function (_nodeC, _direction) {
+Solver.prototype.swap = function(_nodeC, _direction) {
     var tmpNode = Phaser.Utils.extend(true, {}, _nodeC);
     //console.log('ValueA: ' + _nodeC.matrix[_nodeC.movableX][_nodeC.movableY] + ' x: ' + _nodeC.movableX + ' y: ' + _nodeC.movableY + ' Direction: ' + _direction);
 
@@ -69,92 +69,92 @@ Solver.prototype.swap = function (_nodeC, _direction) {
 
     /* Swap depending the direction */
     switch (_direction) {
-    case 'up':
-        /* Check if the new position is out of limits */
-        limit = (tmpNode.movableX - 1 >= 0);
-        if (limit) {
-            valueB = tmpNode.matrix[tmpNode.movableX - 1][tmpNode.movableY];
-            /* Check if there isn't ocupied by other game object */
-            if (valueB === 0 || valueB === 9 || valueB === 5) {
-                if (valueB === 5) {
-                    tmpNode.matrix[tmpNode.movableX][tmpNode.movableY] = 0;
-                    tmpNode.isFinal = true;
+        case 'up':
+            /* Check if the new position is out of limits */
+            limit = (tmpNode.movableX - 1 >= 0);
+            if (limit) {
+                valueB = tmpNode.matrix[tmpNode.movableX - 1][tmpNode.movableY];
+                /* Check if there isn't ocupied by other game object */
+                if (valueB === 0 || valueB === 9 || valueB === 5) {
+                    if (valueB === 5) {
+                        tmpNode.matrix[tmpNode.movableX][tmpNode.movableY] = 0;
+                        tmpNode.isFinal = true;
+                    } else {
+                        tmpNode.matrix[tmpNode.movableX][tmpNode.movableY] = valueB;
+                    }
+                    tmpNode.matrix[tmpNode.movableX - 1][tmpNode.movableY] = valueA;
+                    tmpNode.movableX--;
                 } else {
-                    tmpNode.matrix[tmpNode.movableX][tmpNode.movableY] = valueB;
+                    return;
                 }
-                tmpNode.matrix[tmpNode.movableX - 1][tmpNode.movableY] = valueA;
-                tmpNode.movableX--;
             } else {
                 return;
             }
-        } else {
-            return;
-        }
-        break;
+            break;
 
-    case 'down':
-        limit = (tmpNode.movableX + 1 <= 9);
-        if (limit) {
-            valueB = tmpNode.matrix[tmpNode.movableX + 1][tmpNode.movableY];
-            if (valueB === 0 || valueB === 9 || valueB === 5) {
-                if (valueB === 5) {
-                    tmpNode.matrix[tmpNode.movableX][tmpNode.movableY] = 0;
-                    tmpNode.isFinal = true;
+        case 'down':
+            limit = (tmpNode.movableX + 1 <= 9);
+            if (limit) {
+                valueB = tmpNode.matrix[tmpNode.movableX + 1][tmpNode.movableY];
+                if (valueB === 0 || valueB === 9 || valueB === 5) {
+                    if (valueB === 5) {
+                        tmpNode.matrix[tmpNode.movableX][tmpNode.movableY] = 0;
+                        tmpNode.isFinal = true;
+                    } else {
+                        tmpNode.matrix[tmpNode.movableX][tmpNode.movableY] = valueB;
+                    }
+                    tmpNode.matrix[tmpNode.movableX + 1][tmpNode.movableY] = valueA;
+                    tmpNode.movableX++;
                 } else {
-                    tmpNode.matrix[tmpNode.movableX][tmpNode.movableY] = valueB;
+                    return;
                 }
-                tmpNode.matrix[tmpNode.movableX + 1][tmpNode.movableY] = valueA;
-                tmpNode.movableX++;
             } else {
                 return;
             }
-        } else {
-            return;
-        }
 
-        break;
+            break;
 
-    case 'left':
-        limit = (tmpNode.movableY - 1 >= 0);
-        if (limit) {
-            valueB = tmpNode.matrix[tmpNode.movableX][tmpNode.movableY - 1];
-            if (valueB === 0 || valueB === 9 || valueB === 5) {
-                if (valueB === 5) {
-                    tmpNode.matrix[tmpNode.movableX][tmpNode.movableY] = 0;
-                    tmpNode.isFinal = true;
+        case 'left':
+            limit = (tmpNode.movableY - 1 >= 0);
+            if (limit) {
+                valueB = tmpNode.matrix[tmpNode.movableX][tmpNode.movableY - 1];
+                if (valueB === 0 || valueB === 9 || valueB === 5) {
+                    if (valueB === 5) {
+                        tmpNode.matrix[tmpNode.movableX][tmpNode.movableY] = 0;
+                        tmpNode.isFinal = true;
+                    } else {
+                        tmpNode.matrix[tmpNode.movableX][tmpNode.movableY] = valueB;
+                    }
+                    tmpNode.matrix[tmpNode.movableX][tmpNode.movableY - 1] = valueA;
+                    tmpNode.movableY--;
                 } else {
-                    tmpNode.matrix[tmpNode.movableX][tmpNode.movableY] = valueB;
+                    return;
                 }
-                tmpNode.matrix[tmpNode.movableX][tmpNode.movableY - 1] = valueA;
-                tmpNode.movableY--;
             } else {
                 return;
             }
-        } else {
-            return;
-        }
-        break;
+            break;
 
-    case 'right':
-        limit = (tmpNode.movableY + 1 <= 9);
-        if (limit) {
-            valueB = tmpNode.matrix[tmpNode.movableX][tmpNode.movableY + 1];
-            if (valueB === 0 || valueB === 9 || valueB === 5) {
-                if (valueB === 5) {
-                    tmpNode.matrix[tmpNode.movableX][tmpNode.movableY] = 0;
-                    tmpNode.isFinal = true;
+        case 'right':
+            limit = (tmpNode.movableY + 1 <= 9);
+            if (limit) {
+                valueB = tmpNode.matrix[tmpNode.movableX][tmpNode.movableY + 1];
+                if (valueB === 0 || valueB === 9 || valueB === 5) {
+                    if (valueB === 5) {
+                        tmpNode.matrix[tmpNode.movableX][tmpNode.movableY] = 0;
+                        tmpNode.isFinal = true;
+                    } else {
+                        tmpNode.matrix[tmpNode.movableX][tmpNode.movableY] = valueB;
+                    }
+                    tmpNode.matrix[tmpNode.movableX][tmpNode.movableY + 1] = valueA;
+                    tmpNode.movableY++;
                 } else {
-                    tmpNode.matrix[tmpNode.movableX][tmpNode.movableY] = valueB;
+                    return;
                 }
-                tmpNode.matrix[tmpNode.movableX][tmpNode.movableY + 1] = valueA;
-                tmpNode.movableY++;
             } else {
                 return;
             }
-        } else {
-            return;
-        }
-        break;
+            break;
     }
 
     /* Gen the node that is going to be saved*/

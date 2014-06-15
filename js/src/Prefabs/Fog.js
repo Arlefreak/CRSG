@@ -11,12 +11,12 @@
  *
  *
  */
- 'use strict';
+'use strict';
 
- var Fog = function (_game, _x, _y, _cellWidth, _cellHeight, _i, _indexX, _indexY) {
-    var pathTexture = game.add.bitmapData(_cellWidth,_cellHeight);
+var Fog = function(_game, _x, _y, _cellWidth, _cellHeight, _i, _indexX, _indexY) {
+    var pathTexture = game.add.bitmapData(_cellWidth, _cellHeight);
     pathTexture.context.fillStyle = '0x000000';
-    pathTexture.context.fillRect(0,0, _cellWidth, _cellWidth);
+    pathTexture.context.fillRect(0, 0, _cellWidth, _cellWidth);
 
     Phaser.Sprite.call(this, _game, _x, _y, pathTexture);
     this.game = _game;

@@ -20,10 +20,16 @@
         "Grid": true,
         "GridLayer": true,
         "playerTurn": true,
+        "Fog": true,
+        "Enemy": true,
         "Solver": true,
         "SolverNode": true,
         "BUSTED": true,
-        "SCORE": true
+        "SCORE": true,
+        "signinCallback": true,
+        "gapi": true,
+        "COLORS": true,
+        "SIGNIN": true
     },
     // Ignore Environment Globals
     "browser": true, // Standard browser globals e.g. `window`, `document`.

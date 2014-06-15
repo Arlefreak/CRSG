@@ -1,10 +1,10 @@
 /*
-* SolverNode
-* Author: Arlefreak
-* */
+ * SolverNode
+ * Author: Arlefreak
+ * */
 'use strict';
 
-var SolverNode = function (_matrix, _parent, _movableX, _movableY, _direction, _totalCost, _moves) {
+var SolverNode = function(_matrix, _parent, _movableX, _movableY, _direction, _totalCost, _moves) {
     this.matrix = _matrix;
     this.parent = _parent;
     this.movableX = _movableX;
@@ -16,10 +16,10 @@ var SolverNode = function (_matrix, _parent, _movableX, _movableY, _direction, _
 };
 
 
-SolverNode.prototype.calcHueristic = function () {
-    var h = 0;/* The new heuristic */
-    var i = 0;/* Loop variable */
-    var j = 0;/* Loop variable */
+SolverNode.prototype.calcHueristic = function() {
+    var h = 0; /* The new heuristic */
+    var i = 0; /* Loop variable */
+    var j = 0; /* Loop variable */
 
     /* Objective index */
     var playerIndexX = 0;
@@ -74,15 +74,15 @@ SolverNode.prototype.calcHueristic = function () {
     /* Add the distance between the two index */
     h += Math.abs(this.movableX - playerIndexX);
     h += Math.abs(this.movableY - playerIndexY);
-    if(this.movableX === playerIndexX){
-        h=-3;
+    if (this.movableX === playerIndexX) {
+        h = -3;
     }
-    if(this.movableY === playerIndexY){
-        h-=3;
+    if (this.movableY === playerIndexY) {
+        h -= 3;
     }
     this.heuristic = h;
 };
 
-SolverNode.prototype.calcTotalCost = function () {
+SolverNode.prototype.calcTotalCost = function() {
     this.totalCost = this.moves + this.heuristic;
 };

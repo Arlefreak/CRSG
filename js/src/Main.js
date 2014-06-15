@@ -1,5 +1,5 @@
 'use strict';
-var gameWidth, gameHeight, isMoving, level, powerUps, playerTurn, BUSTED, COLORS, SCORE, SIGNIN, CLIENT;
+var gameWidth, gameHeight, isMoving, level, powerUps, playerTurn, BUSTED, COLORS, SCORE, SIGNIN;
 
 var BootS, PreloaderS, MainMenuS, PlayS, TutorialS, CreditsS, LeaderBoardsS, game;
 
@@ -10,7 +10,7 @@ WebFontConfig = {
     }
 };
 
-(function () {
+(function() {
     var wf = document.createElement('script');
     wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
         '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
@@ -20,7 +20,7 @@ WebFontConfig = {
     s.parentNode.insertBefore(wf, s);
 })();
 
-window.onload = function () {
+window.onload = function() {
     gameWidth = window.innerWidth;
     gameHeight = window.innerHeight;
     isMoving = false;
@@ -29,7 +29,7 @@ window.onload = function () {
     level = 1;
     powerUps = 0;
     SCORE = 0;
-    COLORS =  Phaser.Color.HSVColorWheel();
+    COLORS = Phaser.Color.HSVColorWheel();
     game = new Phaser.Game(gameWidth, gameHeight, Phaser.AUTO, 'gameContainer');
 
     // Game States

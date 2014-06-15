@@ -13,7 +13,7 @@
  */
 'use strict';
 
-var GridLayer = function (_game, _matrix, _type, _tileset, _tilesetKeys, _margin, _cellWidth, _cellHeight) {
+var GridLayer = function(_game, _matrix, _type, _tileset, _tilesetKeys, _margin, _cellWidth, _cellHeight) {
     Phaser.Group.call(this, _game);
     this.game = _game;
     this.type = _type;
@@ -23,7 +23,7 @@ var GridLayer = function (_game, _matrix, _type, _tileset, _tilesetKeys, _margin
     this.cellWidth = _cellWidth;
     this.cellHeight = _cellHeight;
     if (_tilesetKeys === null) {
-        this.frameNames = _.keys(this.this.game.cache._images[_tileset].frameData._frameNames);
+        this.frameNames = _.keys(this.game.cache._images[_tileset].frameData._frameNames);
     } else {
         this.frameNames = _tilesetKeys;
     }
@@ -36,18 +36,18 @@ var GridLayer = function (_game, _matrix, _type, _tileset, _tilesetKeys, _margin
             var x = Math.round((((k + 1) * this.cellWidth) - (this.margin % this.cellWidth)) / this.cellWidth) * this.cellWidth + (this.margin % this.cellWidth);
             var y = Math.round((((j + 1) * this.cellHeight) - (this.margin % this.cellHeight)) / this.cellHeight) * this.cellHeight + (this.margin % this.cellHeight);
             switch (_matrix[i]) {
-            case 2:
-                console.log('x: ' + k + ' y: ' + j);
-                tmpTile = new Enemy(this.game, x, y, this.cellWidth, this.cellHeight, _tileset, i, j, k);
-                tmpTile.frameName = this.frameNames[_matrix[i]];
-                break;
-            case 6:
-                tmpTile = new Fog(this.game, x, y, this.cellWidth, this.cellHeight, i, j, k);
-                break;
-            default:
-                tmpTile = this.game.add.sprite(x, y, _tileset);
-                tmpTile.frameName = this.frameNames[_matrix[i]];
-                break;
+                case 2:
+                    console.log('x: ' + k + ' y: ' + j);
+                    tmpTile = new Enemy(this.game, x, y, this.cellWidth, this.cellHeight, _tileset, i, j, k);
+                    tmpTile.frameName = this.frameNames[_matrix[i]];
+                    break;
+                case 6:
+                    tmpTile = new Fog(this.game, x, y, this.cellWidth, this.cellHeight, i, j, k);
+                    break;
+                default:
+                    tmpTile = this.game.add.sprite(x, y, _tileset);
+                    tmpTile.frameName = this.frameNames[_matrix[i]];
+                    break;
             }
             var convertion = this.cellWidth / tmpTile.width;
             tmpTile.scale.set(convertion);
@@ -67,7 +67,7 @@ GridLayer.prototype = Object.create(Phaser.Group.prototype);
 GridLayer.prototype.constructor = GridLayer;
 
 
-GridLayer.prototype.moveMatrix = function (_direction) {
+GridLayer.prototype.moveMatrix = function(_direction) {
     var movable = 0;
     var value = 0;
     for (var i = this.matrix.length - 1; i >= 0; i--) {
@@ -78,37 +78,37 @@ GridLayer.prototype.moveMatrix = function (_direction) {
         this.matrix[i] = 0;
     }
     switch (_direction) {
-    case 'left':
-        movable--;
-        break;
+        case 'left':
+            movable--;
+            break;
 
-    case 'up':
-        movable -= 10;
-        break;
+        case 'up':
+            movable -= 10;
+            break;
 
-    case 'right':
-        movable++;
-        break;
+        case 'right':
+            movable++;
+            break;
 
-    case 'down':
-        movable += 10;
-        break;
+        case 'down':
+            movable += 10;
+            break;
 
-    case 'topleft':
-        movable -= 11;
-        break;
+        case 'topleft':
+            movable -= 11;
+            break;
 
-    case 'topright':
-        movable -= 9;
-        break;
+        case 'topright':
+            movable -= 9;
+            break;
 
-    case 'bottomleft':
-        movable += 9;
-        break;
+        case 'bottomleft':
+            movable += 9;
+            break;
 
-    case 'bottomright':
-        movable += 11;
-        break;
+        case 'bottomright':
+            movable += 11;
+            break;
     }
 
     this.matrix[movable] = value;

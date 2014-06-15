@@ -1,4 +1,4 @@
-(function () {
+(function() {
     'use strict';
 
     function Preload() {
@@ -7,7 +7,7 @@
     }
 
     Preload.prototype = {
-        preload: function () {
+        preload: function() {
             game.stage.backgroundColor = '#000';
             this.preloadBarBg = this.add.sprite(game.world.centerX, game.world.centerY, 'loadingBG');
             this.preloadBar = this.add.sprite(game.world.centerX + 4, game.world.centerY, 'loading');
@@ -21,7 +21,7 @@
             this.load.atlasJSONHash('buttons', 'js/res/spritesheets/buttons.png', 'js/res/spritesheets/buttons.json');
             this.load.atlasJSONHash('tiles', 'js/res/spritesheets/tiles.png', 'js/res/spritesheets/tiles.json');
         },
-        create: function () {
+        create: function() {
             this.preloadBar.cropEnabled = false;
             game.state.start('mainmenu');
         }

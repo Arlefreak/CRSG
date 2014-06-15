@@ -11,9 +11,9 @@
  *
  *
  */
- 'use strict';
+'use strict';
 
- var Grid = function (_game, _rows, _columns, _width, _height, _margin, _square, _draw) {
+var Grid = function(_game, _rows, _columns, _width, _height, _margin, _square, _draw) {
     Phaser.Group.call(this, _game);
     this.game = _game;
     this.rows = _rows;
@@ -63,12 +63,12 @@
 /* Functions to extend Phaser Group*/
 Grid.prototype = Object.create(Phaser.Group.prototype);
 Grid.prototype.constructor = Grid;
-Grid.prototype.update = function () {
+Grid.prototype.update = function() {
     Phaser.Group.prototype.update.apply(this);
     this.updateMarker();
 }
 
-Grid.prototype.snapToGrid = function (_value, _X) {
+Grid.prototype.snapToGrid = function(_value, _X) {
     if (_X) {
         return Math.round((_value - (this.margin % this.cellWidth)) / this.cellWidth) * this.cellWidth + (this.margin % this.cellWidth);
     } else {
@@ -76,7 +76,7 @@ Grid.prototype.snapToGrid = function (_value, _X) {
     }
 }
 
-Grid.prototype.cleanMasterMatrix = function () {
+Grid.prototype.cleanMasterMatrix = function() {
     for (var i = this.rows - 1; i >= 0; i--) {
         this.masterMatrix[i] = [];
         for (var j = this.columns - 1; j >= 0; j--) {
@@ -85,7 +85,7 @@ Grid.prototype.cleanMasterMatrix = function () {
     }
 }
 
-Grid.prototype.updateFog = function (){
+Grid.prototype.updateFog = function() {
     var tmpFog = {};
     var playerIndexX = 0;
     var playerIndexY = 0;
@@ -103,7 +103,7 @@ Grid.prototype.updateFog = function (){
 
     for (i = this.masterMatrix.length - 1; i >= 0; i--) {
         for (j = this.masterMatrix[i].length - 1; j >= 0; j--) {
-            if(this.masterMatrix[i][j] === 5){
+            if (this.masterMatrix[i][j] === 5) {
                 playerIndexX = i;
                 playerIndexY = j;
             }
@@ -123,10 +123,10 @@ Grid.prototype.updateFog = function (){
             playerRightTop = tmpFog.indexX === playerIndexX + 1 && tmpFog.indexY === playerIndexY - 1;
             playerRightBottom = tmpFog.indexX === playerIndexX + 1 && tmpFog.indexY === playerIndexY + 1;
 
-            if(playerOverlap || playerLeft || playerRight || playerTop || playerBottom || playerLeftTop || playerLeftBottom || playerRightTop || playerRightBottom){
+            if (playerOverlap || playerLeft || playerRight || playerTop || playerBottom || playerLeftTop || playerLeftBottom || playerRightTop || playerRightBottom) {
                 tmpFog.kill();
-            }else{
-                if(!tmpFog.visible){
+            } else {
+                if (!tmpFog.visible) {
                     tmpFog.revive();
                     tmpFog.alpha = 0.5;
                 }
@@ -135,13 +135,13 @@ Grid.prototype.updateFog = function (){
     }
 }
 
-Grid.prototype.updateMasterMatrix = function () {
+Grid.prototype.updateMasterMatrix = function() {
     var tmpLayer = {};
     var tmpMatrix = [];
     this.cleanMasterMatrix();
 
     for (var i = this.length - 1; i >= 0; i--) {
-        if (this.getAt(i).hasOwnProperty('matrix')  && this.getAt(i).type !== 'fog') {
+        if (this.getAt(i).hasOwnProperty('matrix') && this.getAt(i).type !== 'fog') {
             tmpLayer = this.getAt(i);
             tmpMatrix = tmpLayer.matrix;
             for (var j = tmpMatrix.length - 1; j >= 0; j--) {
@@ -157,7 +157,7 @@ Grid.prototype.updateMasterMatrix = function () {
     this.updateFog();
 }
 
-Grid.prototype.drawGrid = function () {
+Grid.prototype.drawGrid = function() {
     var x;
     var grid = {};
     this.bdmGrid = game.add.bitmapData(this.width, this.height);
@@ -185,16 +185,16 @@ Grid.prototype.drawGrid = function () {
     this.add(grid);
 }
 
-Grid.prototype.move = function (_layer, _direction) {
+Grid.prototype.move = function(_layer, _direction) {
     var tmpSprite = {};
 
     for (var i = _layer.length - 1; i >= 0; i--) {
         tmpSprite = _layer.getAt(i);
         var e = game.add.tween(tmpSprite);
-        e.onStart.add(function () {
+        e.onStart.add(function() {
             isMoving = true;
         });
-        e.onComplete.add(function () {
+        e.onComplete.add(function() {
             isMoving = false;
         })
 
@@ -211,73 +211,73 @@ Grid.prototype.move = function (_layer, _direction) {
         if (!isMoving) {
             switch (_direction) {
                 case 'left':
-                if (tmpSprite.x - (this.cellWidth / 2) >= this.limitLeft) {
-                    e.to({
-                        x: mLeft
-                    }, 250, Phaser.Easing.Linear.None, false, 0, 0, false);
-                    e.start();
-                }
-                break;
+                    if (tmpSprite.x - (this.cellWidth / 2) >= this.limitLeft) {
+                        e.to({
+                            x: mLeft
+                        }, 250, Phaser.Easing.Linear.None, false, 0, 0, false);
+                        e.start();
+                    }
+                    break;
                 case 'up':
-                if (tmpSprite.y - (this.cellHeight / 2) > this.limitTop) {
-                    e.to({
-                        y: mUp
-                    }, 250, Phaser.Easing.Linear.None, false, 0, 0, false);
-                    e.start();
-                }
-                break;
+                    if (tmpSprite.y - (this.cellHeight / 2) > this.limitTop) {
+                        e.to({
+                            y: mUp
+                        }, 250, Phaser.Easing.Linear.None, false, 0, 0, false);
+                        e.start();
+                    }
+                    break;
                 case 'right':
-                if (tmpSprite.x + (this.cellWidth / 2) < this.limitRight) {
-                    e.to({
-                        x: mRight
-                    }, 250, Phaser.Easing.Linear.None, false, 0, 0, false);
-                    e.start();
-                }
-                break;
+                    if (tmpSprite.x + (this.cellWidth / 2) < this.limitRight) {
+                        e.to({
+                            x: mRight
+                        }, 250, Phaser.Easing.Linear.None, false, 0, 0, false);
+                        e.start();
+                    }
+                    break;
                 case 'down':
-                if (tmpSprite.y + (this.cellHeight / 2) < this.limitBottom) {
-                    e.to({
-                        y: mDown
-                    }, 250, Phaser.Easing.Linear.None, false, 0, 0, false);
-                    e.start();
-                }
-                break;
+                    if (tmpSprite.y + (this.cellHeight / 2) < this.limitBottom) {
+                        e.to({
+                            y: mDown
+                        }, 250, Phaser.Easing.Linear.None, false, 0, 0, false);
+                        e.start();
+                    }
+                    break;
                 case 'topleft':
-                if (tmpSprite.y + (this.cellHeight / 2) < this.limitBottom) {
-                    e.to({
-                        x: mLeft,
-                        y: mUp
-                    }, 250, Phaser.Easing.Linear.None, false, 0, 0, false);
-                    e.start();
-                }
-                break;
+                    if (tmpSprite.y + (this.cellHeight / 2) < this.limitBottom) {
+                        e.to({
+                            x: mLeft,
+                            y: mUp
+                        }, 250, Phaser.Easing.Linear.None, false, 0, 0, false);
+                        e.start();
+                    }
+                    break;
                 case 'topright':
-                if (tmpSprite.y + (this.cellHeight / 2) < this.limitBottom) {
-                    e.to({
-                        x: mRight,
-                        y: mUp
-                    }, 250, Phaser.Easing.Linear.None, false, 0, 0, false);
-                    e.start();
-                }
-                break;
+                    if (tmpSprite.y + (this.cellHeight / 2) < this.limitBottom) {
+                        e.to({
+                            x: mRight,
+                            y: mUp
+                        }, 250, Phaser.Easing.Linear.None, false, 0, 0, false);
+                        e.start();
+                    }
+                    break;
                 case 'bottomleft':
-                if (tmpSprite.y + (this.cellHeight / 2) < this.limitBottom) {
-                    e.to({
-                        x: mLeft,
-                        y: mDown
-                    }, 250, Phaser.Easing.Linear.None, false, 0, 0, false);
-                    e.start();
-                }
-                break;
+                    if (tmpSprite.y + (this.cellHeight / 2) < this.limitBottom) {
+                        e.to({
+                            x: mLeft,
+                            y: mDown
+                        }, 250, Phaser.Easing.Linear.None, false, 0, 0, false);
+                        e.start();
+                    }
+                    break;
                 case 'bottomright':
-                if (tmpSprite.y + (this.cellHeight / 2) < this.limitBottom) {
-                    e.to({
-                        x: mRight,
-                        y: mDown
-                    }, 250, Phaser.Easing.Linear.None, false, 0, 0, false);
-                    e.start();
-                }
-                break;
+                    if (tmpSprite.y + (this.cellHeight / 2) < this.limitBottom) {
+                        e.to({
+                            x: mRight,
+                            y: mDown
+                        }, 250, Phaser.Easing.Linear.None, false, 0, 0, false);
+                        e.start();
+                    }
+                    break;
             }
         }
     }
@@ -285,33 +285,33 @@ Grid.prototype.move = function (_layer, _direction) {
     this.updateMasterMatrix();
 };
 
-Grid.prototype.addLayer = function (_matrix, _type, _tileset, _tilesetKeys) {
+Grid.prototype.addLayer = function(_matrix, _type, _tileset, _tilesetKeys) {
     var layer = new GridLayer(this.game, _matrix, _type, _tileset, _tilesetKeys, this.margin, this.cellWidth, this.cellHeight);
     this.add(layer);
     switch (_type) {
         case 'movable':
-        this.movableSprite = layer.getFirstAlive();
-        this.movableLayers.push(layer);
-        break;
+            this.movableSprite = layer.getFirstAlive();
+            this.movableLayers.push(layer);
+            break;
         case 'unmovable':
-        this.unMovableLayers.push(layer);
-        break;
+            this.unMovableLayers.push(layer);
+            break;
         case 'final':
-        this.finalLayers.push(layer);
-        break;
+            this.finalLayers.push(layer);
+            break;
         case 'enemy':
-        this.enemiesLayers.push(layer);
-        break;
+            this.enemiesLayers.push(layer);
+            break;
         case 'collectable':
-        this.collectableLayers.push(layer);
-        break;
+            this.collectableLayers.push(layer);
+            break;
         case 'fog':
-        this.fogLayers.push(layer);
+            this.fogLayers.push(layer);
     }
     this.updateMasterMatrix();
 };
 
-Grid.prototype.createMarker = function () {
+Grid.prototype.createMarker = function() {
     this.marker = game.add.graphics();
     this.changeMarkerColor(0xcc3333);
 
@@ -324,9 +324,9 @@ Grid.prototype.createMarker = function () {
       this.debugW.beginFill(0x964514, 0.5);
       this.debugW.drawRect(0, 0, this.cellWidth, this.cellHeight);
       this.debugW.endFill();*/
-  };
+};
 
-  Grid.prototype.changeMarkerColor = function (_color) {
+Grid.prototype.changeMarkerColor = function(_color) {
     /* Reset graphic */
     this.marker.clear();
     /* Border style */
@@ -338,7 +338,7 @@ Grid.prototype.createMarker = function () {
     this.marker.endFill();
 };
 
-Grid.prototype.updateMarker = function () {
+Grid.prototype.updateMarker = function() {
     this.canMove = false;
 
     /*this.debugS.x = this.marker.x;
@@ -353,11 +353,11 @@ Grid.prototype.updateMarker = function () {
     var movableCell = this.checkLayer(this.marker.x, this.marker.y, 9, this.movableLayers);
 
     if ((markerLimitLeft && markerLimitRight) && (markerLimitTop && markerLimitBottom)) {
-        this.marker.x = this.snapToGrid((game.input.activePointer.worldX - this.cellWidth / 2),true);
-        this.marker.y = this.snapToGrid((game.input.activePointer.worldY - this.cellHeight / 2),false);
+        this.marker.x = this.snapToGrid((game.input.activePointer.worldX - this.cellWidth / 2), true);
+        this.marker.y = this.snapToGrid((game.input.activePointer.worldY - this.cellHeight / 2), false);
     }
 
-    if ( unMovableLayer && movableCell&& enemyLayer) {
+    if (unMovableLayer && movableCell && enemyLayer) {
         this.changeMarkerColor(0x529024);
         this.canMove = true;
     } else {
@@ -367,7 +367,7 @@ Grid.prototype.updateMarker = function () {
 
 }
 
-Grid.prototype.collect = function (_x, _y, _layers, _value) {
+Grid.prototype.collect = function(_x, _y, _layers, _value) {
     var tmpX = 0;
     var tmpY = 0;
     var x = this.snapToGrid(_x, true);
@@ -394,7 +394,7 @@ Grid.prototype.collect = function (_x, _y, _layers, _value) {
     return tmpSprites;
 }
 
-Grid.prototype.checkLayer = function (_x, _y, _tileID, _layers) {
+Grid.prototype.checkLayer = function(_x, _y, _tileID, _layers) {
     var tmpX = 0;
     var tmpY = 0;
     var x = this.snapToGrid(_x, true);
