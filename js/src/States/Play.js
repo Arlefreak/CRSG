@@ -28,7 +28,11 @@
 
             /* Grid */
             this.grid = new Grid(game, 10, 10, gameWidth, gameHeight, margin, true, true);
-            var layers = this.genRandomLayers();
+            if(level !== 1){
+                var layers = this.genRandomLayers();
+            }else{
+                var layers = this.genLayers();
+            }
             this.TilePowerUpsG = game.add.group();
             var powerup;
 
@@ -45,28 +49,28 @@
                     var numberType = layers[i][j];
                     switch (numberType) {
                         case 1:
-                            name = 'unmovable';
-                            break;
+                        name = 'unmovable';
+                        break;
                         case 2:
-                            name = 'enemy';
-                            break;
+                        name = 'enemy';
+                        break;
                         case 3:
-                            name = 'final';
-                            break;
+                        name = 'final';
+                        break;
                         case 4:
-                            name = 'collectable';
-                            break;
+                        name = 'collectable';
+                        break;
                         case 5:
-                            name = 'movable';
-                            break;
+                        name = 'movable';
+                        break;
                         case 5:
-                            name = 'movable';
-                            break;
+                        name = 'movable';
+                        break;
                         case 6:
-                            name = 'fog';
-                            break;
+                        name = 'fog';
+                        break;
                         default:
-                            break;
+                        break;
                     }
                 }
                 this.grid.addLayer(layers[i], name, 'tiles', [null, 'Wall', 'Enemy', 'Exit', 'Shield', 'Player']);
@@ -246,21 +250,21 @@
         for (var i = elements.length - 1; i >= 0; i--) {
             switch (elements[i]) {
                 case 1: //Walls
-                    matrix1[indexes[i]] = elements[i];
-                    break;
+                matrix1[indexes[i]] = elements[i];
+                break;
                 case 2: //Enemies
-                    matrix2[indexes[i]] = elements[i];
-                    break;
+                matrix2[indexes[i]] = elements[i];
+                break;
                 case 3: //Final
-                    matrix3[indexes[i]] = elements[i];
-                    break;
+                matrix3[indexes[i]] = elements[i];
+                break;
                 case 4: //Collectable
-                    matrix4[indexes[i]] = elements[i];
-                    break;
+                matrix4[indexes[i]] = elements[i];
+                break;
                 case 5: //Movable
-                    matrix5[indexes[i]] = elements[i];
-                    playerIndex = indexes[i];
-                    break;
+                matrix5[indexes[i]] = elements[i];
+                playerIndex = indexes[i];
+                break;
             }
             if (i > -1) {
                 indexes.splice(i, 1);
@@ -363,23 +367,23 @@
         for (var i = elements.length - 1; i >= 0; i--) {
             switch (elements[i]) {
                 case 2: //Enemies
-                    var enemyLayer = [];
-                    for (var j = 100; j >= 0; j--) {
-                        enemyLayer[j] = 0;
-                    }
-                    var tmpIndex = indexes[i];
-                    enemyLayer[tmpIndex] = 2;
-                    layers.push(enemyLayer);
-                    break;
+                var enemyLayer = [];
+                for (var j = 100; j >= 0; j--) {
+                    enemyLayer[j] = 0;
+                }
+                var tmpIndex = indexes[i];
+                enemyLayer[tmpIndex] = 2;
+                layers.push(enemyLayer);
+                break;
                 case 3: //Final
-                    matrix3[indexes[i]] = elements[i];
-                    break;
+                matrix3[indexes[i]] = elements[i];
+                break;
                 case 4: //Collectable
-                    matrix4[indexes[i]] = elements[i];
-                    break;
+                matrix4[indexes[i]] = elements[i];
+                break;
                 case 5: //Movable
-                    matrix5[indexes[i]] = elements[i];
-                    break;
+                matrix5[indexes[i]] = elements[i];
+                break;
             }
             matrix1[indexes[i]] = 0;
             if (i > -1) {
