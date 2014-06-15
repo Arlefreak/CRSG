@@ -8,7 +8,7 @@
 
     Preload.prototype = {
         preload: function() {
-            game.stage.backgroundColor = '#000';
+            game.stage.backgroundColor = '#333333';
             this.preloadBarBg = this.add.sprite(game.world.centerX, game.world.centerY, 'loadingBG');
             this.preloadBar = this.add.sprite(game.world.centerX + 4, game.world.centerY, 'loading');
             this.preloadBarBg.anchor.setTo(0.5, 0.5);

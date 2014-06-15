@@ -218,11 +218,12 @@ Enemy.prototype.checkAwake = function() {
                 }
             }
         }
+        //console.log(playerPositionX + ',' + playerPositionY);
 
         left = playerPositionX - 1 === this.indexX && playerPositionY === this.indexY;
         right = playerPositionX + 1 === this.indexX && playerPositionY === this.indexY;
         top = playerPositionY - 1 === this.indexY && playerPositionX === this.indexX;
-        bottom = playerPositionX + 1 === this.indexY && playerPositionX === this.indexX;
+        bottom = playerPositionY + 1 === this.indexY && playerPositionX === this.indexX && playerPositionY !== this.indexY;
 
         topLeft = playerPositionX - 1 === this.indexX && playerPositionY - 1 === this.indexY;
         topRight = playerPositionX + 1 === this.indexX && playerPositionY - 1 === this.indexY;
