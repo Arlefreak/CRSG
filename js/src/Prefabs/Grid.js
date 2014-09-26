@@ -18,8 +18,8 @@
     this.game = _game;
     this.rows = _rows;
     this.columns = _columns;
-    this.width = _width;
-    this.height = _height;
+    this.WIDTH = _width;
+    this.HEIGHT = _height;
     this.margin = _margin;
     this.square = _square;
     this.draw = _draw;
@@ -37,16 +37,16 @@
 
     if (this.square) {
         if (gameWidth > gameHeight) {
-            this.width = gameHeight;
-            this.height = gameHeight;
+            this.WIDTH = gameHeight;
+            this.HEIGHT = gameHeight;
         } else {
-            this.width = gameWidth;
-            this.height = gameWidth;
+            this.WIDTH = gameWidth;
+            this.HEIGHT = gameWidth;
         }
     }
 
-    this.cellWidth = (this.width - this.margin * 2) / this.columns;
-    this.cellHeight = (this.height - this.margin * 2) / this.rows;
+    this.cellWidth = (this.WIDTH - this.margin * 2) / this.columns;
+    this.cellHeight = (this.HEIGHT - this.margin * 2) / this.rows;
 
     this.limitTop = this.margin;
     this.limitBottom = (this.cellHeight * this.rows) + this.margin;
@@ -160,25 +160,25 @@ Grid.prototype.updateMasterMatrix = function() {
 Grid.prototype.drawGrid = function() {
     var x;
     var grid = {};
-    this.bdmGrid = game.add.bitmapData(this.width, this.height);
+    this.bdmGrid = game.add.bitmapData(this.WIDTH, this.HEIGHT);
 
     /* Draw vertical lines */
     for (x = 0; x <= this.columns; x++) {
-        this.bdmGrid.context.moveTo(x * this.cellWidth + this.margin, this.margin);
-        this.bdmGrid.context.lineTo(x * this.cellWidth + this.margin, this.height - this.margin);
+        this.bdmGrid.ctx.moveTo(x * this.cellWidth + this.margin, this.margin);
+        this.bdmGrid.ctx.lineTo(x * this.cellWidth + this.margin, this.HEIGHT - this.margin);
         //console.log('Limit: ' + x * this.cellWidth + this.margin);
     }
 
     /* Draw horizontal Lines */
     for (x = 0; x <= this.rows; x++) {
-        this.bdmGrid.context.moveTo(this.margin, x * this.cellHeight + this.margin);
-        this.bdmGrid.context.lineTo(this.width - this.margin, x * this.cellHeight + this.margin);
+        this.bdmGrid.ctx.moveTo(this.margin, x * this.cellHeight + this.margin);
+        this.bdmGrid.ctx.lineTo(this.WIDTH - this.margin, x * this.cellHeight + this.margin);
     }
 
     /* Define line style */
-    this.bdmGrid.context.strokeStyle = "#e3e3e3";
-    this.bdmGrid.context.lineWidth = 2;
-    this.bdmGrid.context.stroke();
+    this.bdmGrid.ctx.strokeStyle = "#e3e3e3";
+    this.bdmGrid.ctx.lineWidth = 2;
+    this.bdmGrid.ctx.stroke();
 
     /* Add the new sprite to the group */
     grid = game.add.sprite(0, 0, this.bdmGrid);
